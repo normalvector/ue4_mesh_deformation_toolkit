@@ -45,16 +45,16 @@ class MESHDEFORMATIONTOOLKIT_API UMeshDeformationComponent : public UActorCompon
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	/// Sets default values for this component's properties
 	UMeshDeformationComponent();
 
 	/// This is the mesh geometry currently stored within the component
 	UPROPERTY(BlueprintReadonly, Category = MeshDeformationComponent)
 		UMeshGeometry *MeshGeometry = nullptr;
-	
+
 	/// Loads the geometry from a static mesh
-	/// 
+	///
 	/// This stores the geometryin *meshGeometry* and replaces any existing
 	/// geometry.
 	///
@@ -70,7 +70,7 @@ public:
 		);
 
 	/// Write the current geometry to a *ProceduralMeshComponent*.
-	/// 
+	///
 	/// This will rebuild the mesh, completely replacing any geometry it has there.
 	///
 	/// \param MeshDeformationComponent		This component (Out param, helps with method chaining)
@@ -130,7 +130,7 @@ public:
 	/// \param LineEnd			The position of the end of the line in local spac3e
 	/// \param InnerRadius		The inner radius, all points closer to the line segment than this distance
 	///							will be selected at maximum strength
-	/// \param IuterRadius		The outer radius, all points further from the line segment than this distance
+	/// \param OuterRadius		The outer radius, all points further from the line segment than this distance
 	///							will not be selected
 	/// \param LineIsInfinite	If this is checked then lineStart/lineEnd will treated as two points on an
 	///							infinite line instead of being the start/end of a line segment
@@ -257,7 +257,7 @@ public:
 		);
 
 	/// Rotates the vertices of the mesh a specified amount round the specified position.
-	/// 
+	///
 	/// If a SelectionSet is provided then the actual rotator will be scaled accordingly allowing
 	/// whorls and similar to be easily created.
 	///
