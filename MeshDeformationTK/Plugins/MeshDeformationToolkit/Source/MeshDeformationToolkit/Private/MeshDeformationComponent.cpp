@@ -141,6 +141,14 @@ USelectionSet * UMeshDeformationComponent::SelectInVolume(FVector CornerA, FVect
 	return MeshGeometry->SelectInVolume(CornerA, CornerB);
 }
 
+USelectionSet * UMeshDeformationComponent::SelectBySection(int32 SectionIndex) {
+	if (!MeshGeometry) {
+		UE_LOG(LogTemp, Warning, TEXT("SelectBySection: No meshGeometry loaded"));
+		return nullptr;
+	}
+	return MeshGeometry->SelectBySection(SectionIndex);
+}
+
 void UMeshDeformationComponent::Jitter(UMeshDeformationComponent *&MeshDeformationComponent, FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection)
 {
 	MeshDeformationComponent = this;

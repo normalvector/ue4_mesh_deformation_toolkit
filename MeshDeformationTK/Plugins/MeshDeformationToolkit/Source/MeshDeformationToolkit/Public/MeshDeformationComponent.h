@@ -228,6 +228,14 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent)
 		USelectionSet *SelectInVolume(FVector CornerA, FVector CornerB);
 
+	/// Select all of the vertices which go to make up one of the Sections that a mesh
+	/// can consist of.  This can be thought of as the same as a Material slot for many
+	/// uses.
+	///
+	/// \param SectionIndex
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+		USelectionSet *SelectBySection(int32 SectionIndex);
+
 	/// Adds random jitter to the position of the points.
 	///
 	///  The jitter will be a vector randomly selected

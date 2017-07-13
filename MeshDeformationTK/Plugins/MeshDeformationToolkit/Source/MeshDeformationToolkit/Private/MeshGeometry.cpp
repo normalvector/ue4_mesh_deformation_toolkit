@@ -407,6 +407,27 @@ USelectionSet *UMeshGeometry::SelectInVolume(FVector CornerA, FVector CornerB) {
 	return newSelectionSet;
 }
 
+
+USelectionSet * UMeshGeometry::SelectBySection(int32 SectionIndex)
+{
+	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	
+	// Keep track of the current section index.
+	int32 currentSectionIndex = 0;
+
+	// Iterate over the sections, and the vertices in each section
+	for (auto &section : this->sections) {
+		for (auto &vertex : section.vertices) {
+			// Add a new weight- 1.0 if section indices match, 0.0 otherwise.
+			newSelectionSet->weights.Emplace(SectionIndex == currentSectionIndex ? 1.0f : 0.0f);
+		}
+		// Increment the current section index, we've finished with this section
+		currentSectionIndex++;
+	}
+
+	return newSelectionSet;
+}
+
 void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection /*=nullptr*/)
 {
 	// TODO: Check selectionSet size.
