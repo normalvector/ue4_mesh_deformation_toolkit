@@ -69,7 +69,7 @@ public:
 			int32 LOD = 0
 		);
 
-	/// Write the current geometry to a *ProceduralMeshComponent*.
+	/// Save the current geometry to a *ProceduralMeshComponent*.
 	///
 	/// This will rebuild the mesh, completely replacing any geometry it has there.
 	///
@@ -78,7 +78,7 @@ public:
 	/// \param CreateCollision				Whether to create a collision shape for it
 	/// \return *True* if the update was successful, *False* if not
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent)
-		bool UpdateProceduralMeshComponent(
+		bool SaveToProceduralMeshComponent(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			UProceduralMeshComponent *ProceduralMeshComponent,
 			bool CreateCollision

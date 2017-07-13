@@ -54,11 +54,11 @@ bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD /*= 0*
 	return true;
 }
 
-bool UMeshGeometry::UpdateProceduralMeshComponent(UProceduralMeshComponent *proceduralMeshComponent, bool createCollision)
+bool UMeshGeometry::SaveToProceduralMeshComponent(UProceduralMeshComponent *proceduralMeshComponent, bool createCollision)
 {
 	// If there's no PMC we have nothing to do..
 	if (!proceduralMeshComponent) {
-		UE_LOG(LogTemp, Warning, TEXT("UpdateProceduralMeshComponent: No proceduralMeshComponent provided"));
+		UE_LOG(LogTemp, Warning, TEXT("SaveToProceduralMeshComponent: No proceduralMeshComponent provided"));
 		return false;
 	}
 

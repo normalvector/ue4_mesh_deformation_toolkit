@@ -27,15 +27,15 @@ bool UMeshDeformationComponent::LoadFromStaticMesh(UMeshDeformationComponent *&M
 }
 
 
-bool UMeshDeformationComponent::UpdateProceduralMeshComponent(UMeshDeformationComponent *&MeshDeformationComponent, UProceduralMeshComponent *proceduralMeshComponent, bool createCollision)
+bool UMeshDeformationComponent::SaveToProceduralMeshComponent(UMeshDeformationComponent *&MeshDeformationComponent, UProceduralMeshComponent *proceduralMeshComponent, bool createCollision)
 {
 	MeshDeformationComponent = this;
 	if (!MeshGeometry) {
-		UE_LOG(LogTemp, Warning, TEXT("UpdateProceduralMeshComponent: No meshGeometry loaded"));
+		UE_LOG(LogTemp, Warning, TEXT("SaveToProceduralMeshComponent: No meshGeometry loaded"));
 		return false;
 	}
 
-	return MeshGeometry->UpdateProceduralMeshComponent(proceduralMeshComponent, createCollision);
+	return MeshGeometry->SaveToProceduralMeshComponent(proceduralMeshComponent, createCollision);
 }
 
 USelectionSet * UMeshDeformationComponent::SelectAll()
