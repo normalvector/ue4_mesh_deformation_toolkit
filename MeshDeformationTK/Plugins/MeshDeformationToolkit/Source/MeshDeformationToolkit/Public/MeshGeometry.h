@@ -264,6 +264,13 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
 		USelectionSet *SelectLinear(FVector LineStart, FVector LineEnd, bool Reverse = false, bool LimitToLine = false);
 
+	/// Select vertices inside a volume defined by two opposite corner points.
+	/// \param CornerA						The first corner to define the volume
+	/// \param CornerB						The second corner to define the volume
+	///
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+		USelectionSet *SelectInVolume(FVector CornerA, FVector CornerB);
+
 	/// Adds random jitter to the position of the points.
 	///
 	///  The jitter will be a vector randomly selected

@@ -199,7 +199,7 @@ public:
 	/// \param Texture2D		The Texture to extract the selection channel from
 	/// \param TextureChannel	The channel to use for the selection
 	/// \return Return the SelectionSet corresponding to the texture channel
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent)
 		USelectionSet *SelectByTexture(
 			UTexture2D *Texture2D,
 			ETextureChannel TextureChannel = ETextureChannel::Red
@@ -212,13 +212,21 @@ public:
 	/// \param Reverse		Swaps LineStart/LineEnd to allow the linear effect to be reversed
 	/// \param LimitToLine	Whether the effect finishes at the end of the line or if weight=1 continues
 	/// \return The SelectionSet with all of the vertices selected according to the gradient
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent)
 		USelectionSet *SelectLinear(
 			FVector LineStart,
 			FVector LineEnd,
 			bool Reverse = false,
 			bool LimitToLine = false
 		);
+
+
+	/// Select vertices inside a volume defined by two opposite corner points.
+	/// \param CornerA						The first corner to define the volume
+	/// \param CornerB						The second corner to define the volume
+	///
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent)
+		USelectionSet *SelectInVolume(FVector CornerA, FVector CornerB);
 
 	/// Adds random jitter to the position of the points.
 	///

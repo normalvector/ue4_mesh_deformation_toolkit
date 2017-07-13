@@ -339,7 +339,6 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 
 USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, bool Reverse /*= false*/, bool LimitToLine /*= false*/)
 {
-
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
 
 	// Do the reverse if needed..
@@ -375,6 +374,33 @@ USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, 
 				float DistanceToLineStart = (NearestPointOnLine - LineStart).Size();
 				newSelectionSet->weights.Emplace(DistanceToLineStart / LineLength);
 			}
+		}
+	}
+
+	return newSelectionSet;
+}
+
+USelectionSet *UMeshGeometry::SelectInVolume(FVector CornerA, FVector CornerB) {
+	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+
+	// Get the minimum/maximum of X, Y, and Z from the corner vectors so we can check
+	auto minX = FMath::Min(CornerA.X, CornerB.X);
+	auto maxX = FMath::Max(CornerA.X, CornerB.X);
+	auto minY = FMath::Min(CornerA.Y, CornerB.Y);
+	auto maxY = FMath::Max(CornerA.Y, CornerB.Y);
+	auto minZ = FMath::Min(CornerA.Z, CornerB.Z);
+	auto maxZ = FMath::Max(CornerA.Z, CornerB.Z);
+
+	// Iterate over the sections, and the vertices in each section
+	for (auto &section : this->sections) {
+		for (auto &vertex : section.vertices) {
+			// We only need to know if the vertex is between min/max inclusive.
+			const bool vertexInVolume =
+				(vertex.X >= minX) && (vertex.X <= maxX) &&
+				(vertex.Y >= minY) && (vertex.Y <= maxY) &&
+				(vertex.Z >= minZ) && (vertex.Z <= maxZ);
+			// Add a new weighting based on whether it's insider or outside
+			newSelectionSet->weights.Emplace(vertexInVolume ? 1.0f : 0.0f);
 		}
 	}
 

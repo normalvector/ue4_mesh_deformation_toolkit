@@ -99,11 +99,20 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 * Load From Procedural Mesh Component- Use an existing PCM as a source of geometry.
 * Save To Static Mesh- It should be possible to copy PCM's functionality and allow the plugin to actually write static meshes, at least inside the editor.
 * Save To File- Write mesh geometry out as a .obj (.fbx possible?).
-* Select By Volume- Specify two XYZ positions and perform an AABB check on vertices.
 * Select By Mesh Section- Specify which section of mesh geometry to select
 * Follow Spline- A transform node which makes the geometry follow the shape of a provided SplineComponent.
 * Spline Lerp- A Lerp where all vertices follow a spline based on the position/normal of the start/end positions to allow smooth curve interpolation.  Very heavy CPU use but will make for a very nice animation trick.
 * Conform- Make the geometry conform to guide geometry by projecting all vertices along a vector until they hit a collision.  This was the original "Floor Waffles" demo.
+
+## Change Log
+13<sup>th</sup> July 2017:
+* Added the controls to SelectByNoise to pass in a transform and allow tiled terrain.
+* Added the SelectByVolume node, and a demo for it.
+
+12<sup>th</th> July 2017:
+* Finished rename from Procedural Toolkit.
+* Created new Github repo.
+* Created structure for new demo scenes, and did a lot of initial demos.
 
 ## LICENSE ([MIT License](https://en.wikipedia.org/wiki/MIT_License))
 

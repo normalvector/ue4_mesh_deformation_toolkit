@@ -127,10 +127,18 @@ USelectionSet * UMeshDeformationComponent::SelectByTexture(UTexture2D *Texture2D
 USelectionSet * UMeshDeformationComponent::SelectLinear(FVector LineStart, FVector LineEnd, bool Reverse /*= false*/, bool LimitToLine /*= false*/)
 {
 	if (!MeshGeometry) {
-		UE_LOG(LogTemp, Warning, TEXT("Jitter: No meshGeometry loaded"));
+		UE_LOG(LogTemp, Warning, TEXT("SelectLinear: No meshGeometry loaded"));
 		return nullptr;
 	}
 	return MeshGeometry->SelectLinear(LineStart, LineEnd, Reverse, LimitToLine);
+}
+
+USelectionSet * UMeshDeformationComponent::SelectInVolume(FVector CornerA, FVector CornerB) {
+	if (!MeshGeometry) {
+		UE_LOG(LogTemp, Warning, TEXT("SelectByVolume: No meshGeometry loaded"));
+		return nullptr;
+	}
+	return MeshGeometry->SelectInVolume(CornerA, CornerB);
 }
 
 void UMeshDeformationComponent::Jitter(UMeshDeformationComponent *&MeshDeformationComponent, FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection)
