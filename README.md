@@ -90,7 +90,6 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 * A transform node to allow the production of face-weighted normals.
 * Check SelectionSet size matches that of the geometry provided.
 * Check SelectionSet sizes in operations which take multiple sets.
-* Rename "Update Procedural Mesh Component" to "Save To Procedural Mesh Component" to start a new standard name system for nodes which output.
 * Can I move to [FastNoiseSIMD](https://github.com/Auburns/FastNoiseSIMD) to speed up noise creation, or at least have a #define to control whether it should be enabled on a particular platform and fallback to FastNoise where it's not available.
 * Investigate whether FTransforms can be passed in from BP.
 
@@ -113,6 +112,7 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 * Finished rename from Procedural Toolkit.
 * Created new Github repo.
 * Created structure for new demo scenes, and did a lot of initial demos.
+* Renamed UpdateProcedcuralMeshComponent to SaveToProceduralMeshComponent to allow all 'output' node to start with Save.
 
 ## LICENSE ([MIT License](https://en.wikipedia.org/wiki/MIT_License))
 
