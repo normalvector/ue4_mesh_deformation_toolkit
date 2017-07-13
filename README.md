@@ -92,6 +92,7 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 * Check SelectionSet sizes in operations which take multiple sets.
 * Rename "Update Procedural Mesh Component" to "Save To Procedural Mesh Component" to start a new standard name system for nodes which output.
 * Can I move to [FastNoiseSIMD](https://github.com/Auburns/FastNoiseSIMD) to speed up noise creation, or at least have a #define to control whether it should be enabled on a particular platform and fallback to FastNoise where it's not available.
+* Investigate whether FTransforms can be passed in from BP.
 
 ### New Nodes to write
 * Load From File- Load a mesh from a .obj (.fbx possible?) and use it as a base.

@@ -229,6 +229,9 @@ public:
 	/// \param FractalGain					The strength of the fractal
 	/// \param FractalType					The type of fractal being used
 	/// \param CellularDistanceFunction		The function used to calculate the value for a given point.
+	/// \param NoiseTransform				An optional transformation which will be applied to each vertex's position
+	///										before it is used for noise generation, if not supplied an identity transform
+	///										will be used which does not modify the vertex position.  Useful for making tiling terrain
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
 		USelectionSet *SelectByNoise(
 			int32 Seed = 1337,
@@ -239,7 +242,10 @@ public:
 			float FractalLacunarity = 2.0,
 			float FractalGain = 0.5,
 			EFractalType FractalType = EFractalType::FBM,
-			ECellularDistanceFunction CellularDistanceFunction = ECellularDistanceFunction::Euclidian
+			ECellularDistanceFunction CellularDistanceFunction = ECellularDistanceFunction::Euclidian,
+			FVector NoiseTranslation = FVector::ZeroVector,
+			FRotator NoiseRotation = FRotator::ZeroRotator,
+			FVector NoiseScale3D = FVector(1,1,1)
 		);
 
 	/// Select vertices from a texture.

@@ -98,7 +98,10 @@ USelectionSet * UMeshDeformationComponent::SelectByNoise(
 	float FractalLacunarity /*= 2.0*/,
 	float FractalGain /*= 0.5*/,
 	EFractalType FractalType /*= EFractalType::FBM*/,
-	ECellularDistanceFunction CellularDistanceFunction /*= ECellularDistanceFunction::Euclidian*/
+	ECellularDistanceFunction CellularDistanceFunction /*= ECellularDistanceFunction::Euclidian*/,
+	FVector NoiseTranslation /*= FVector::ZeroVector */,
+	FRotator NoiseRotation /*= FRotator::ZeroRotator */,
+	FVector NoiseScale3D /*= FVector(1, 1, 1) */
 ) {
 	if (!MeshGeometry) {
 		UE_LOG(LogTemp, Warning, TEXT("SelectByNoise: No meshGeometry loaded"));
@@ -107,7 +110,8 @@ USelectionSet * UMeshDeformationComponent::SelectByNoise(
 	return MeshGeometry->SelectByNoise(
 		Seed, Frequency, NoiseInterpolation, NoiseType,
 		FractalOctaves, FractalLacunarity, FractalGain, FractalType,
-		CellularDistanceFunction
+		CellularDistanceFunction,
+		NoiseTranslation, NoiseRotation, NoiseScale3D
 	);
 }
 
