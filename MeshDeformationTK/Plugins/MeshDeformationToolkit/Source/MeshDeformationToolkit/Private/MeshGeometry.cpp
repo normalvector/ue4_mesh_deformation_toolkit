@@ -654,3 +654,83 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 		}
 	}
 }
+
+// TODO: This needs finishing!
+void UMeshGeometry::FitToSpline(USplineComponent *SplineComponent, float meshScale /*=1.0f*/)
+{
+	if (!SplineComponent) {
+		UE_LOG(LogTemp, Error, TEXT("FitToSpline: No SplineComponent"));
+		return;
+	}
+	
+	// Get the length of the spline
+	const float splineLength = SplineComponent->GetSplineLength();
+
+	// Get the minimum X, and the range of X, for the mesh, we'll need them to build the spline.
+	const FBox meshBounds = this->GetBoundingBox();
+	const float minX = meshBounds.Min.X;
+	const float rangeX = meshBounds.Max.X - minX;
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section : this->sections) {
+		for (auto &vertex : section.vertices) {
+			// Convert X into a distance along the spline (Range 0 to splineLength)
+			const float distanceAlongSpline = (vertex.X - minX) * splineLength / rangeX;
+
+			// Get all of the splines's details at the distance we've converted X to- stick to local space
+			const FVector location = SplineComponent->GetLocationAtDistanceAlongSpline(
+				distanceAlongSpline, ESplineCoordinateSpace::Local
+			);
+			const FVector rightVector = SplineComponent->GetRightVectorAtDistanceAlongSpline(
+				distanceAlongSpline, ESplineCoordinateSpace::Local
+			);
+			const FVector upVector = SplineComponent->GetUpVectorAtDistanceAlongSpline(
+				distanceAlongSpline, ESplineCoordinateSpace::Local
+			);
+
+			// Now we have the details we can use them to compute the final location that we need to use
+			vertex = location + (rightVector * vertex.Y * meshScale) + (upVector * vertex.Z * meshScale);
+			// X is what we've been using so far, Y is based on rightVector, and Z on upVector.
+			//vertex.X = location.X;
+			//vertex.Y = location.Y + (rightVector * vertex.Y * meshScale);
+			//vertex.Z = location.Y + (vertex.Z * meshScale * upVector);
+		}
+	}
+}
+
+FBox UMeshGeometry::GetBoundingBox() {
+	// Track the two corners of the bounding box
+	FVector min = FVector::ZeroVector;
+	FVector max = FVector::ZeroVector;
+
+	// When we hit the first vertex we'll need to set both Min and Max
+	//  to it as we'll have no comparison
+	bool haveProcessedFirstVector = false;
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section : this->sections) {
+		for (auto &vertex : section.vertices) {
+			if (haveProcessedFirstVector) {
+				// Do the comparison of both min/max.
+				min.X = FMath::Min(min.X, vertex.X);
+				min.Y = FMath::Min(min.Y, vertex.Y);
+				min.Z = FMath::Min(min.Z, vertex.Z);
+
+				max.X = FMath::Max(max.X, vertex.X);
+				max.Y = FMath::Max(max.Y, vertex.Y);
+				max.Z = FMath::Max(max.Z, vertex.Z);
+			}
+			else {
+				// Set min/max to the first vertex
+				min = vertex;
+				max = vertex;
+				haveProcessedFirstVector = true;
+			}
+		}
+	}
+
+	// Build a bounding box from the result
+	return FBox(min, max);
+}

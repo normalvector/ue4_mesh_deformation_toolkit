@@ -400,4 +400,11 @@ public:
 	/// \param Selection					The SelectionSet which controls the blend between the two MeshGeometry items
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
 		void Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha = 0.0, USelectionSet *Selection = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+		void FitToSpline(USplineComponent *SplineComponent, float MeshScale = 1.0f);
+
+	/// Return the bounding box for all of the vertices in the mesh.
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+		FBox GetBoundingBox();
 };

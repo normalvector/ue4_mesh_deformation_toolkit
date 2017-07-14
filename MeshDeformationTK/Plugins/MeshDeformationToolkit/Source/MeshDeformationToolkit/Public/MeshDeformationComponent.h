@@ -420,4 +420,8 @@ public:
 			float Alpha = 0.0,
 			USelectionSet *Selection = nullptr
 		);
+
+	/// Return the bounding box for all of the vertices in the mesh.
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+		FBox GetBoundingBox();
 };

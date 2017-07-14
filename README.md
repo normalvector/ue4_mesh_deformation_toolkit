@@ -76,6 +76,7 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 
 ## ToDo List
 ### General Work
+* Check that functions are Pure when needed...
 * Move content over from the ProceduralToolkit repo
 * Build a demo scene for each node
 * Write a better intro doc...
@@ -91,22 +92,23 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 * Check SelectionSet size matches that of the geometry provided.
 * Check SelectionSet sizes in operations which take multiple sets.
 * Can I move to [FastNoiseSIMD](https://github.com/Auburns/FastNoiseSIMD) to speed up noise creation, or at least have a #define to control whether it should be enabled on a particular platform and fallback to FastNoise where it's not available.
-* Investigate whether FTransforms can be passed in from BP.
+* Investigate whether FTransforms can be passed in from BP with an identity default (The SelectByNoise node would appreciate it...)
 
 ### New Nodes to write
 * Load From File- Load a mesh from a .obj (.fbx possible?) and use it as a base.
 * Load From Procedural Mesh Component- Use an existing PCM as a source of geometry.
 * Save To Static Mesh- It should be possible to copy PCM's functionality and allow the plugin to actually write static meshes, at least inside the editor.
 * Save To File- Write mesh geometry out as a .obj (.fbx possible?).
-* Select By Mesh Section- Specify which section of mesh geometry to select
 * Follow Spline- A transform node which makes the geometry follow the shape of a provided SplineComponent.
 * Spline Lerp- A Lerp where all vertices follow a spline based on the position/normal of the start/end positions to allow smooth curve interpolation.  Very heavy CPU use but will make for a very nice animation trick.
 * Conform- Make the geometry conform to guide geometry by projecting all vertices along a vector until they hit a collision.  This was the original "Floor Waffles" demo.
+* A 'three-way blend' with blends two SelectionSets based on the weights of a third.
 
 ## Change Log
 13<sup>th</sup> July 2017:
 * Added the controls to SelectByNoise to pass in a transform and allow tiled terrain.
 * Added the SelectByVolume node, and a demo for it.
+* Added the SelectBySection node, and a demo for it.
 
 12<sup>th</th> July 2017:
 * Finished rename from Procedural Toolkit.

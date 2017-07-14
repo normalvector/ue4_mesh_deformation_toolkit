@@ -269,3 +269,12 @@ void UMeshDeformationComponent::Lerp(
 		Alpha, Selection
 	);
 }
+
+FBox UMeshDeformationComponent::GetBoundingBox()
+{
+	if (!MeshGeometry) {
+		UE_LOG(LogTemp, Warning, TEXT("GetBoundingBox: No meshGeometry loaded"));
+		return FBox();
+	}
+	return MeshGeometry->GetBoundingBox();
+}
