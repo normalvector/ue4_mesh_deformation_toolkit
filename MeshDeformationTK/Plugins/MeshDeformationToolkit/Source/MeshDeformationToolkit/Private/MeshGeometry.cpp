@@ -3,7 +3,7 @@
 #include "MeshDeformationToolkit.h"
 #include "Engine/StaticMesh.h"
 #include "KismetProceduralMeshLibrary.h"
-#include "Runtime/Core/Public/Math/UnrealMathUtility.h" // ClosestPointOnLine/ClosestPointOnInfiniteLine
+#include "Runtime/Core/Public/Math/UnrealMathUtility.h" // ClosestPointOnLine/ClosestPointOnInfiniteLine, GetMappedRangeValue
 #include "SelectionSet.h"
 #include "FastNoise.h"
 #include "MeshGeometry.h"
@@ -675,18 +675,26 @@ void UMeshGeometry::FitToSpline(
 	// Get the minimum X, and the range of X, for the mesh, we'll need them to build the spline.
 	const FBox meshBounds = this->GetBoundingBox();
 	const float minX = meshBounds.Min.X;
-	const float rangeX = meshBounds.Max.X - minX;
+	//const float rangeX = meshBounds.Max.X - minX
+
+	// Build the two ranges we'll be using for the remapping, we'll be going rangeX -> rangePosition
+	const FVector2D rangeX = FVector2D(meshBounds.Min.X, meshBounds.Max.X);
+	const FVector2D rangePosition = FVector2D(StartPosition, EndPosition);
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
 	for (auto &section : this->sections) {
 		for (auto &vertex : section.vertices) {
 			// Convert X into a distance along the spline (Range 0 to 1)
-			const float distanceAlongSplinePortion = (vertex.X - minX) / rangeX;
-
+			//const float distanceAlongSplinePortion = (vertex.X - minX) / rangeX;
 			// Now convert to a position on the spline, using StartPosition and EndPosition.
 			//const float distanceAlongSpline = (StartPosition + (distanceAlongSplinePortion * (EndPosition - StartPosition))) * splineLength;
-			const float distanceAlongSpline = distanceAlongSplinePortion * splineLength;
+			//const float distanceAlongSpline = distanceAlongSplinePortion * splineLength;
+
+			// Remap the X position into the StartPosition/EndPosition range, then multiply by SplineLength to get a value we
+			// can use for lookup.
+			const float distanceAlongSpline = FMath::GetMappedRangeValueClamped(rangeX, rangePosition, vertex.X) * splineLength;
+			
 			// Get all of the splines's details at the distance we've converted X to- stick to local space
 			const FVector location = SplineComponent->GetLocationAtDistanceAlongSpline(
 				distanceAlongSpline, ESplineCoordinateSpace::Local

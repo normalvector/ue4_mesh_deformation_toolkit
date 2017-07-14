@@ -75,35 +75,7 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 [Jordan Peck](https://github.com/Auburns) for his splendid [FastNoise](https://github.com/Auburns/FastNoise) C++ library, which is used for all of the noise generation in the plugin.
 
 ## ToDo List
-### General Work
-* Check that functions are Pure when needed...
-* Move content over from the ProceduralToolkit repo
-* Build a demo scene for each node
-* Write a better intro doc...
-* ...write a short doc for each node building on the intro doc and referring to the demo scene.
-* Write a 'How it works' doc, also documenting how to write new selections and transformations.
-* Make Doxygen API docs available on either Github or Normalvector.
-* Put variable declarations inside loops- let the C++ optimizer deal with those.
-* Enforce UE4-style naming (UpperCamelCase for variables)
-* Check the passing of FRandomStream, should it be reference?
-* Support for [Runtime Mesh Component](https://forums.unrealengine.com/showthread.php?113432-Runtime-Mesh-Component-Rendering-high-performance-runtime-generated-meshes!).
-* Sort nodes and docs in a sensible order
-* A transform node to allow the production of face-weighted normals.
-* Check SelectionSet size matches that of the geometry provided.
-* Check SelectionSet sizes in operations which take multiple sets.
-* Can I move to [FastNoiseSIMD](https://github.com/Auburns/FastNoiseSIMD) to speed up noise creation, or at least have a #define to control whether it should be enabled on a particular platform and fallback to FastNoise where it's not available.
-* Investigate whether FTransforms can be passed in from BP with an identity default (The SelectByNoise node would appreciate it...)
-* Give FitToSpline limits on which portion of the spline it should fit to- defaulting to 0-1 for the full range.
-
-### New Nodes to write
-* Load From File- Load a mesh from a .obj (.fbx possible?) and use it as a base.
-* Load From Procedural Mesh Component- Use an existing PCM as a source of geometry.
-* Save To Static Mesh- It should be possible to copy PCM's functionality and allow the plugin to actually write static meshes, at least inside the editor.
-* Save To File- Write mesh geometry out as a .obj (.fbx possible?).
-* Follow Spline- A transform node which makes the geometry follow the shape of a provided SplineComponent.
-* Spline Lerp- A Lerp where all vertices follow a spline based on the position/normal of the start/end positions to allow smooth curve interpolation.  Very heavy CPU use but will make for a very nice animation trick.
-* Conform- Make the geometry conform to guide geometry by projecting all vertices along a vector until they hit a collision.  This was the original "Floor Waffles" demo.
-* A 'three-way blend' with blends two SelectionSets based on the weights of a third.
+The ToDo list for this project is on [Trello](https://trello.com/b/eWCcepmW/mesh-deformation-component).
 
 ## Change Log
 13<sup>th</sup> July 2017:
