@@ -408,6 +408,7 @@ public:
 			float EndPosition = 1.0f,
 			float MeshScale = 1.0f,
 			UCurveFloat *ProfileCurve = nullptr,
+			bool ApplyProfileOnSectionOnly = true,
 			USelectionSet *Selection = nullptr
 		);
 

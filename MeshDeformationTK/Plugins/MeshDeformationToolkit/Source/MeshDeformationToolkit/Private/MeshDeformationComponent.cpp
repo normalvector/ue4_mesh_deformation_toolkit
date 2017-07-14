@@ -285,6 +285,7 @@ void UMeshDeformationComponent::FitToSpline(
 	float EndPosition /*= 1.0f*/,
 	float MeshScale /*= 1.0f*/,
 	UCurveFloat *ProfileCurve /*= nullptr*/,
+	bool ApplyProfileOnSectionOnly /* = true */,
 	USelectionSet *Selection /*= nullptr */
 ) {
 	if (!MeshGeometry) {
@@ -292,6 +293,6 @@ void UMeshDeformationComponent::FitToSpline(
 		return;
 	}
 	MeshGeometry->FitToSpline(
-		SplineComponent, StartPosition, EndPosition, MeshScale, ProfileCurve, Selection
+		SplineComponent, StartPosition, EndPosition, MeshScale, ProfileCurve, ApplyProfileOnSectionOnly, Selection
 	);
 }
