@@ -656,8 +656,14 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 }
 
 // TODO: This needs finishing!
-void UMeshGeometry::FitToSpline(USplineComponent *SplineComponent, float meshScale /*=1.0f*/)
-{
+void UMeshGeometry::FitToSpline(
+	USplineComponent *SplineComponent,
+	float StartPosition /*= 0.0f*/,
+	float EndPosition /*= 1.0f*/,
+	float MeshScale /*= 1.0f*/,
+	UCurveFloat *ProfileCurve /*= nullptr*/,
+	USelectionSet *Selection /*= nullptr*/
+) {
 	if (!SplineComponent) {
 		UE_LOG(LogTemp, Error, TEXT("FitToSpline: No SplineComponent"));
 		return;
@@ -675,9 +681,12 @@ void UMeshGeometry::FitToSpline(USplineComponent *SplineComponent, float meshSca
 	int32 nextSelectionIndex = 0;
 	for (auto &section : this->sections) {
 		for (auto &vertex : section.vertices) {
-			// Convert X into a distance along the spline (Range 0 to splineLength)
-			const float distanceAlongSpline = (vertex.X - minX) * splineLength / rangeX;
+			// Convert X into a distance along the spline (Range 0 to 1)
+			const float distanceAlongSplinePortion = (vertex.X - minX) / rangeX;
 
+			// Now convert to a position on the spline, using StartPosition and EndPosition.
+			//const float distanceAlongSpline = (StartPosition + (distanceAlongSplinePortion * (EndPosition - StartPosition))) * splineLength;
+			const float distanceAlongSpline = distanceAlongSplinePortion * splineLength;
 			// Get all of the splines's details at the distance we've converted X to- stick to local space
 			const FVector location = SplineComponent->GetLocationAtDistanceAlongSpline(
 				distanceAlongSpline, ESplineCoordinateSpace::Local
@@ -690,7 +699,7 @@ void UMeshGeometry::FitToSpline(USplineComponent *SplineComponent, float meshSca
 			);
 
 			// Now we have the details we can use them to compute the final location that we need to use
-			vertex = location + (rightVector * vertex.Y * meshScale) + (upVector * vertex.Z * meshScale);
+			vertex = location + (rightVector * vertex.Y * MeshScale) + (upVector * vertex.Z * MeshScale);
 			// X is what we've been using so far, Y is based on rightVector, and Z on upVector.
 			//vertex.X = location.X;
 			//vertex.Y = location.Y + (rightVector * vertex.Y * meshScale);

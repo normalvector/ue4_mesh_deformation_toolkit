@@ -402,7 +402,14 @@ public:
 		void Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha = 0.0, USelectionSet *Selection = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
-		void FitToSpline(USplineComponent *SplineComponent, float MeshScale = 1.0f);
+		void FitToSpline(
+			USplineComponent *SplineComponent,
+			float StartPosition = 0.0f,
+			float EndPosition = 1.0f,
+			float MeshScale = 1.0f,
+			UCurveFloat *ProfileCurve = nullptr,
+			USelectionSet *Selection = nullptr
+		);
 
 	/// Return the bounding box for all of the vertices in the mesh.
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)

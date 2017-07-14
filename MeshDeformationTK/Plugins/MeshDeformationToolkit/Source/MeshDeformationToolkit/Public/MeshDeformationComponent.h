@@ -4,6 +4,7 @@
 
 #include "Components/ActorComponent.h"
 #include "MeshGeometry.h"
+#include "Runtime/Engine/Classes/Curves/CurveFloat.h"
 #include "MeshDeformationComponent.generated.h"
 
 /// \todo Select by vertex color - Both baked into the mesh and painted onto a StaticMeshActor.  Choose channel.  This may need extra work since VertexColor isn't there when we get the data from the mesh.
@@ -424,4 +425,14 @@ public:
 	/// Return the bounding box for all of the vertices in the mesh.
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
 		FBox GetBoundingBox();
+
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+		void FitToSpline(
+			USplineComponent *SplineComponent,
+			float StartPosition = 0.0f,
+			float EndPosition = 1.0f,
+			float MeshScale = 1.0f,
+			UCurveFloat *ProfileCurve = nullptr,
+			USelectionSet *Selection = nullptr
+		);
 };

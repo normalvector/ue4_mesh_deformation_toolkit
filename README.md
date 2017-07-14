@@ -93,6 +93,7 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 * Check SelectionSet sizes in operations which take multiple sets.
 * Can I move to [FastNoiseSIMD](https://github.com/Auburns/FastNoiseSIMD) to speed up noise creation, or at least have a #define to control whether it should be enabled on a particular platform and fallback to FastNoise where it's not available.
 * Investigate whether FTransforms can be passed in from BP with an identity default (The SelectByNoise node would appreciate it...)
+* Give FitToSpline limits on which portion of the spline it should fit to- defaulting to 0-1 for the full range.
 
 ### New Nodes to write
 * Load From File- Load a mesh from a .obj (.fbx possible?) and use it as a base.

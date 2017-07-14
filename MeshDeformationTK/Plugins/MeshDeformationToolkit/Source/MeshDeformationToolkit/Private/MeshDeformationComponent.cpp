@@ -278,3 +278,20 @@ FBox UMeshDeformationComponent::GetBoundingBox()
 	}
 	return MeshGeometry->GetBoundingBox();
 }
+
+void UMeshDeformationComponent::FitToSpline(
+	USplineComponent *SplineComponent,
+	float StartPosition /*= 0.0f*/,
+	float EndPosition /*= 1.0f*/,
+	float MeshScale /*= 1.0f*/,
+	UCurveFloat *ProfileCurve /*= nullptr*/,
+	USelectionSet *Selection /*= nullptr */
+) {
+	if (!MeshGeometry) {
+		UE_LOG(LogTemp, Warning, TEXT("GetBoundingBox: No meshGeometry loaded"));
+		return;
+	}
+	MeshGeometry->FitToSpline(
+		SplineComponent, StartPosition, EndPosition, MeshScale, ProfileCurve, Selection
+	);
+}
