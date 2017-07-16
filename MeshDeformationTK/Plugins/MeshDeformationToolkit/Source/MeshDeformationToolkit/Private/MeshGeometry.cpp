@@ -781,7 +781,7 @@ void UMeshGeometry::Conform(
 	traceQueryParams.TraceTag = traceTag;
 	traceQueryParams.bTraceComplex = TraceComplex;
 	// TODO: Ignored actors..
-
+	World->DebugDrawTraceTag = traceTag;
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -809,10 +809,8 @@ void UMeshGeometry::Conform(
 			// If the collision happened then use that as the new vertex value,
 			// otherwise use the trace end
 			vertex = hitResult.bBlockingHit ?
-				Transform.InverseTransformPosition(hitResult.ImpactPoint) :
-				Transform.InverseTransformPosition(traceEnd);
-			
-			//vertex = Transform.InverseTransformPosition(traceEnd);
+				Transform.InverseTransformPosition(hitResult.ImpactPoint + vertex.Z) :
+				Transform.InverseTransformPosition(traceEnd + vertex.Z);
 		}
 	}
 }
