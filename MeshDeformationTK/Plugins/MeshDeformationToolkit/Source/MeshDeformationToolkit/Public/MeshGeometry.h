@@ -401,14 +401,42 @@ public:
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
 		void Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha = 0.0, USelectionSet *Selection = nullptr);
 
+	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
+	///
+	/// \param StartPosition				The position (0 to 1) on the spline that the mesh should start, 
+	///										defaults to 0 which is the start of the spline.  Changing
+	///										this allows a mesh to be mapped to different parts of the
+	///										spline allowing the mesh to appear to be moving or growing
+	///										along the spline, or allowing multiple meshes to be mapped
+	///										to different portions of the spline.
+	/// \param EndPosition   				The position (0 to 1) on the spline that the mesh should end, 
+	///										defaults to 1 which is the end of the spline.  Changing
+	///										this allows a mesh to be mapped to different parts of the
+	///										spline allowing the mesh to appear to be moving or growing
+	///										along the spline, or allowing multiple meshes to be mapped
+	///										to different portions of the spline.
+	/// \param MeshScale					Global setting to control the size of the deformed mesh, allowing
+	///										a 'thicker or thinner' mesh to be produced.
+	/// \param ProfileCurve					This optional curve will be applied along the entire length of the
+	///										spline and allows control of the profile of the mesh so you can
+	///										make sure parts thicker/thinner than others.  As this is applied
+	///										to the entire spline if you set StartPosition/EndPosition only part
+	///										of this curve will be used.
+	/// \param SectionProfileCurve			This optional curve will be applied between StartPosition and EndPosition
+	///										and allows control of the profile of the mesh so you can
+	///										make sure parts thicker/thinner than others.  As this is applied
+	///										only within StartPosition and EndPosition it can be used to shape the
+	///										mesh regardless of the overall spline's length.
+	///	\param Selection					The SelectionSet controlling how strongly the spline applies to each vertex.
+	///										At present this is a simple position-based lerp and may not be too useful.
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
 		void FitToSpline(
 			USplineComponent *SplineComponent,
 			float StartPosition = 0.0f,
 			float EndPosition = 1.0f,
 			float MeshScale = 1.0f,
-			UCurveFloat *ProfileCurve = nullptr,
-			bool ApplyProfileOnSectionOnly = true,
+			UCurveFloat *SplineProfileCurve = nullptr,
+			UCurveFloat *SectionProfileCurve = nullptr,
 			USelectionSet *Selection = nullptr
 		);
 

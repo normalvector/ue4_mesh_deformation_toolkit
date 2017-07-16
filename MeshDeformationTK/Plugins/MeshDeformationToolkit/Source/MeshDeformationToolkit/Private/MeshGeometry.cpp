@@ -662,7 +662,7 @@ void UMeshGeometry::FitToSpline(
 	float EndPosition /*= 1.0f*/,
 	float MeshScale /*= 1.0f*/,
 	UCurveFloat *ProfileCurve /*= nullptr*/,
-	bool ApplyProfileOnSectionOnly /*= true*/,
+	UCurveFloat *SectionProfileCurve /*= nullptr*/,
 	USelectionSet *Selection /*= nullptr*/
 ) {
 	if (!SplineComponent) {
@@ -682,15 +682,6 @@ void UMeshGeometry::FitToSpline(
 	// and if we have a profile curve we'll need a range for that too, along with a '0-SplineLength' fixed range.
 	const FVector2D rangeX = FVector2D(meshBounds.Min.X, meshBounds.Max.X);
 	const FVector2D rangePosition = FVector2D(StartPosition, EndPosition);
-	FVector2D profileCurveRange = FVector2D();
-	if (ProfileCurve) {
-		float profileMin;
-		float profileMax;
-		ProfileCurve->GetTimeRange(profileMin, profileMax);
-		profileCurveRange = FVector2D(profileMin, profileMax);
-
-		UE_LOG(LogTemp, Error, TEXT("FitToSpline: Profile curve %f - %f"), profileMin, profileMax);
-	};
 	const FVector2D fullSplineRange = FVector2D(0.0f, splineLength);
 	
 	// Iterate over the sections, and the vertices in the sections.
@@ -707,17 +698,31 @@ void UMeshGeometry::FitToSpline(
 			// can use for lookup.
 			const float distanceAlongSpline = FMath::GetMappedRangeValueClamped(rangeX, rangePosition, vertex.X) * splineLength;
 			
-			// If we have a profile curve we now need to find the position at a given point.  For efficiency
+			// If we have either profile curve we now need to find the position at a given point.  For efficiency
 			//   we can combine this with MeshScale.
 			float combinedMeshScale = MeshScale;
 			if (ProfileCurve) {
-				const float positionAlongCurve =
-					ApplyProfileOnSectionOnly ?
-					FMath::GetMappedRangeValueClamped(rangeX, profileCurveRange, vertex.X) :
-					FMath::GetMappedRangeValueClamped(fullSplineRange, profileCurveRange, distanceAlongSpline);
-				combinedMeshScale = MeshScale * ProfileCurve->GetFloatValue(positionAlongCurve);
-			}
+				// Get the range of the curve
+				float profileCurveMin;
+				float profileCurveMax;
+				ProfileCurve->GetTimeRange(profileCurveMin, profileCurveMax);
+				FVector2D profileCurveRange = FVector2D(profileCurveMin, profileCurveMax);
 
+				const float positionAlongCurve =
+					FMath::GetMappedRangeValueClamped(fullSplineRange, profileCurveRange, distanceAlongSpline);
+				combinedMeshScale = combinedMeshScale * ProfileCurve->GetFloatValue(positionAlongCurve);
+			}
+			if (SectionProfileCurve) {
+				// Get the range of the curve
+				float sectionCurveMin;
+				float sectionCurveMax;
+				SectionProfileCurve->GetTimeRange(sectionCurveMin, sectionCurveMax);
+				FVector2D sectionProfileCurveRange = FVector2D(sectionCurveMin, sectionCurveMax);
+
+				const float positionAlongCurve =
+					FMath::GetMappedRangeValueClamped(rangeX, sectionProfileCurveRange, vertex.X);
+				combinedMeshScale = combinedMeshScale * SectionProfileCurve->GetFloatValue(positionAlongCurve);
+			}
 			// Get all of the splines's details at the distance we've converted X to- stick to local space
 			const FVector location = SplineComponent->GetLocationAtDistanceAlongSpline(
 				distanceAlongSpline, ESplineCoordinateSpace::Local
@@ -730,7 +735,11 @@ void UMeshGeometry::FitToSpline(
 			);
 
 			// Now we have the details we can use them to compute the final location that we need to use
-			vertex = location + (rightVector * vertex.Y * combinedMeshScale) + (upVector * vertex.Z * combinedMeshScale);
+			FVector splineVertexPosition = location + (rightVector * vertex.Y * combinedMeshScale) + (upVector * vertex.Z * combinedMeshScale);
+			vertex = FMath::Lerp(
+				vertex, splineVertexPosition,
+				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
+			);
 		}
 	}
 }

@@ -285,14 +285,14 @@ void UMeshDeformationComponent::FitToSpline(
 	float EndPosition /*= 1.0f*/,
 	float MeshScale /*= 1.0f*/,
 	UCurveFloat *ProfileCurve /*= nullptr*/,
-	bool ApplyProfileOnSectionOnly /* = true */,
-	USelectionSet *Selection /*= nullptr */
+	UCurveFloat *SectionProfileCurve /*= nullptr*/,
+	USelectionSet *Selection /*= nullptr*/
 ) {
 	if (!MeshGeometry) {
 		UE_LOG(LogTemp, Warning, TEXT("GetBoundingBox: No meshGeometry loaded"));
 		return;
 	}
 	MeshGeometry->FitToSpline(
-		SplineComponent, StartPosition, EndPosition, MeshScale, ProfileCurve, ApplyProfileOnSectionOnly, Selection
+		SplineComponent, StartPosition, EndPosition, MeshScale, ProfileCurve, SectionProfileCurve, Selection
 	);
 }
