@@ -440,7 +440,26 @@ public:
 			USelectionSet *Selection = nullptr
 		);
 
+	// there was a hit, false otherwise	*/
+	//		UFUNCTION(BlueprintCallable, Category = "Collision", meta = (bIgnoreSelf = "true", WorldContext = "WorldContextObject", AutoCreateRefTerm = "ActorsToIgnore", DisplayName = "LineTraceByChannel", AdvancedDisplay = "TraceColor,TraceHitColor,DrawTime", Keywords = "raycast"))
+	//		static bool LineTraceSingle(UObject* WorldContextObject, const FVector Start, const FVector End, ETraceTypeQuery TraceChannel, bool bTraceComplex, const TArray<AActor*>& ActorsToIgnore, EDrawDebugTrace::Type DrawDebugType, FHitResult& OutHit, bool bIgnoreSelf, FLinearColor TraceColor = FLinearColor::Red, FLinearColor TraceHitColor = FLinearColor::Green, float DrawTime = 5.0f);
+
+	UFUNCTION(
+		BlueprintCallable, Category = MeshGeometry,
+		meta = (AutoCreateRefTerm = "IgnoredActors", WorldContext = "WorldContextObject")
+	)
+		void Conform(
+			UObject* WorldContextObject,
+			FTransform Transform,
+			TArray <AActor *> IgnoredActors,
+			FVector Projection = FVector(0, 0, -100),
+			bool TraceComplex = true,
+			ECollisionChannel CollisionChannel = ECC_WorldStatic,
+			USelectionSet *Selection = nullptr
+		);
+
 	/// Return the bounding box for all of the vertices in the mesh.
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
 		FBox GetBoundingBox();
+
 };

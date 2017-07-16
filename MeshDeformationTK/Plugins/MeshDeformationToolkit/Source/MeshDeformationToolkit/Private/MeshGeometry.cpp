@@ -655,7 +655,6 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 	}
 }
 
-// TODO: This needs finishing!
 void UMeshGeometry::FitToSpline(
 	USplineComponent *SplineComponent,
 	float StartPosition /*= 0.0f*/,
@@ -688,12 +687,6 @@ void UMeshGeometry::FitToSpline(
 	int32 nextSelectionIndex = 0;
 	for (auto &section : this->sections) {
 		for (auto &vertex : section.vertices) {
-			// Convert X into a distance along the spline (Range 0 to 1)
-			//const float distanceAlongSplinePortion = (vertex.X - minX) / rangeX;
-			// Now convert to a position on the spline, using StartPosition and EndPosition.
-			//const float distanceAlongSpline = (StartPosition + (distanceAlongSplinePortion * (EndPosition - StartPosition))) * splineLength;
-			//const float distanceAlongSpline = distanceAlongSplinePortion * splineLength;
-
 			// Remap the X position into the StartPosition/EndPosition range, then multiply by SplineLength to get a value we
 			// can use for lookup.
 			const float distanceAlongSpline = FMath::GetMappedRangeValueClamped(rangeX, rangePosition, vertex.X) * splineLength;
@@ -723,6 +716,7 @@ void UMeshGeometry::FitToSpline(
 					FMath::GetMappedRangeValueClamped(rangeX, sectionProfileCurveRange, vertex.X);
 				combinedMeshScale = combinedMeshScale * SectionProfileCurve->GetFloatValue(positionAlongCurve);
 			}
+
 			// Get all of the splines's details at the distance we've converted X to- stick to local space
 			const FVector location = SplineComponent->GetLocationAtDistanceAlongSpline(
 				distanceAlongSpline, ESplineCoordinateSpace::Local
@@ -743,6 +737,86 @@ void UMeshGeometry::FitToSpline(
 		}
 	}
 }
+
+/*
+
+bool UKismetSystemLibrary::LineTraceSingle(UObject* WorldContextObject, const FVector Start, const FVector End, ETraceTypeQuery TraceChannel, bool bTraceComplex, const TArray<AActor*>& ActorsToIgnore, EDrawDebugTrace::Type DrawDebugType, FHitResult& OutHit, bool bIgnoreSelf, FLinearColor TraceColor, FLinearColor TraceHitColor, float DrawTime)
+{
+ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
+
+static const FName LineTraceSingleName(TEXT("LineTraceSingle"));
+FCollisionQueryParams Params = ConfigureCollisionParams(LineTraceSingleName, bTraceComplex, ActorsToIgnore, bIgnoreSelf, WorldContextObject);
+
+UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
+bool const bHit = World->LineTraceSingleByChannel(OutHit, Start, End, CollisionChannel, Params);
+
+#if ENABLE_DRAW_DEBUG
+DrawDebugLineTraceSingle(World, Start, End, DrawDebugType, bHit, OutHit, TraceColor, TraceHitColor, DrawTime);
+#endif
+
+return bHit;
+}
+
+*/
+void UMeshGeometry::Conform(
+	UObject* WorldContextObject,
+	FTransform Transform,
+	TArray <AActor *> IgnoredActors,
+	FVector Projection /*= FVector(0, 0, -100)*/,
+	bool TraceComplex /*=true*/,
+	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
+	USelectionSet *Selection /*= nullptr */
+) {
+	// Get the world content we're operating in
+	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
+	if (!World) {
+		UE_LOG(LogTemp, Error, TEXT("Conform: Cannot access game world"));
+		return;
+	}
+
+	// Prepare the trace query parameters
+	const FName traceTag("ConformTraceTag");
+	//FCollisionQueryParams traceQueryParams = ConfigureCollisionParams(traceTag, TraceComplex, IgnoredActors, false, WorldContextObject);
+	FCollisionQueryParams traceQueryParams = FCollisionQueryParams(); //  traceTag, TraceComplex, IgnoredActors);
+	traceQueryParams.TraceTag = traceTag;
+	traceQueryParams.bTraceComplex = TraceComplex;
+	// TODO: Ignored actors..
+
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section : this->sections) {
+		for (auto &vertex : section.vertices) {
+			// Apply the transform to the vertex to obtain the start of the vector.
+			FVector traceStart= Transform.TransformPosition(vertex);
+
+			// Calculate the projection end by applying the SelectionSet to filter it
+			float weight = Selection ? Selection->weights[nextSelectionIndex++] : 1.0f;
+			FVector scaledProjection = Projection * weight;
+			FVector traceEnd = Transform.TransformPosition(vertex + Projection);
+
+			// Do the projection
+			FHitResult hitResult;
+			// TODO: Check world validity.
+			bool hitSuccess = World->LineTraceSingleByChannel(
+				hitResult,
+				traceStart, traceEnd,
+				CollisionChannel, traceQueryParams, FCollisionResponseParams()
+			);
+
+			UE_LOG(LogTemp, Log, TEXT("Projecting %s : %s to %s"), *vertex.ToString(), *traceStart.ToString(), *traceEnd.ToString());
+			UE_LOG(LogTemp, Log, TEXT("Hit result: %s"), *hitResult.ToString());
+			// If the collision happened then use that as the new vertex value,
+			// otherwise use the trace end
+			vertex = hitResult.bBlockingHit ?
+				Transform.InverseTransformPosition(hitResult.ImpactPoint) :
+				Transform.InverseTransformPosition(traceEnd);
+			
+			//vertex = Transform.InverseTransformPosition(traceEnd);
+		}
+	}
+}
+ 
 
 FBox UMeshGeometry::GetBoundingBox() {
 	// Track the two corners of the bounding box

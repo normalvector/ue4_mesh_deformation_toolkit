@@ -423,7 +423,7 @@ public:
 		);
 
 	/// Return the bounding box for all of the vertices in the mesh.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent)
 		FBox GetBoundingBox();
 
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
@@ -454,7 +454,7 @@ public:
 	///										mesh regardless of the overall spline's length.
 	///	\param Selection					The SelectionSet controlling how strongly the spline applies to each vertex.
 	///										At present this is a simple position-based lerp and may not be too useful.
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent)
 		void FitToSpline(
 			USplineComponent *SplineComponent,
 			float StartPosition = 0.0f,
