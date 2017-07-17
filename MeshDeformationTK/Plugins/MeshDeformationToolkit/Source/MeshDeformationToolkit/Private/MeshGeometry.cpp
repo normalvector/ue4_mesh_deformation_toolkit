@@ -763,19 +763,24 @@ void UMeshGeometry::Conform(
 	traceQueryParams.AddIgnoredActors(IgnoredActors);
 	
 	// Calculate the height adjustment vector
-	FVector heightAdjustVector = -HeightAdjust * Projection.GetSafeNormal();
+	//UE_LOG(LogTemp, Log, TEXT("HAV: %f x %s.Normalize"), HeightAdjust, *Projection.ToString());
+	//FVector heightAdjustVector = Projection.GetSafeNormal() * -HeightAdjust;
+	//UE_LOG(LogTemp, Log, TEXT("HAV: %s (%f x %s / %s)"), *heightAdjustVector.ToString(), -HeightAdjust, *Projection.ToString(), *(Projection.GetSafeNormal()).ToString());
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
 	for (auto &section : this->sections) {
 		for (auto &vertex : section.vertices) {
+			// Calculate the height offset- that is the value of vertex projected along the projection vector. 
+			const FVector heightOffset = vertex.ProjectOnTo(-Projection);
+
 			// Apply the transform to the vertex to obtain the start of the vector.
-			FVector traceStart= Transform.TransformPosition(vertex);
+			FVector traceStart= Transform.TransformPosition(vertex + heightOffset);
 
 			// Calculate the projection end by applying the SelectionSet to filter it
 			float weight = Selection ? Selection->weights[nextSelectionIndex++] : 1.0f;
 			FVector scaledProjection = Projection * weight;
-			FVector traceEnd = Transform.TransformPosition(vertex + Projection);
+			FVector traceEnd = Transform.TransformPosition(vertex + heightOffset + Projection);
 
 			// Do the projection
 			FHitResult hitResult;
@@ -786,17 +791,10 @@ void UMeshGeometry::Conform(
 				CollisionChannel, traceQueryParams, FCollisionResponseParams()
 			);
 
-			// Calculate the height offset- that is the value of vertex projected along the projection vector
-			//const FVector heightOffset = FVector(0, 0, vertex.Z);
-			const FVector heightOffset = vertex.ProjectOnTo(-Projection);
-
-			//vertex = hitResult.bBlockingHit ?
-			//	Transform.InverseTransformPosition(hitResult.ImpactPoint) + heightOffset :
-			//	Transform.InverseTransformPosition(traceEnd) + heightOffset;
-			//vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) + heightOffset + heightAdjustVector;
+			//vertex =Transform.InverseTransformPosition(hitResult.ImpactPoint) + (heightOffset * 1.0f) + (heightAdjustVector * 1.0f) :
 			vertex = hitResult.bBlockingHit ?
-				Transform.InverseTransformPosition(hitResult.ImpactPoint) + heightOffset + heightAdjustVector :
-				Transform.InverseTransformPosition(traceEnd) + heightOffset + heightAdjustVector;
+				Transform.InverseTransformPosition(hitResult.ImpactPoint - heightOffset) :
+				Transform.InverseTransformPosition(traceEnd);
 		}
 	}
 }
