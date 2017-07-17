@@ -763,6 +763,7 @@ void UMeshGeometry::Conform(
 	FTransform Transform,
 	TArray <AActor *> IgnoredActors,
 	FVector Projection /*= FVector(0, 0, -100)*/,
+	float HeightAdjust /*= 0*/,
 	bool TraceComplex /*=true*/,
 	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
 	USelectionSet *Selection /*= nullptr */
@@ -781,7 +782,10 @@ void UMeshGeometry::Conform(
 	traceQueryParams.TraceTag = traceTag;
 	traceQueryParams.bTraceComplex = TraceComplex;
 	// TODO: Ignored actors..
-	World->DebugDrawTraceTag = traceTag;
+	//World->DebugDrawTraceTag = traceTag;
+	
+	// Calculate the height adjustment vector
+	FVector heightAdjustVector = -HeightAdjust * Projection.GetSafeNormal();
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -804,13 +808,18 @@ void UMeshGeometry::Conform(
 				CollisionChannel, traceQueryParams, FCollisionResponseParams()
 			);
 
-			UE_LOG(LogTemp, Log, TEXT("Projecting %s : %s to %s"), *vertex.ToString(), *traceStart.ToString(), *traceEnd.ToString());
-			UE_LOG(LogTemp, Log, TEXT("Hit result: %s"), *hitResult.ToString());
+			//UE_LOG(LogTemp, Log, TEXT("Projecting %s : %s to %s"), *vertex.ToString(), *traceStart.ToString(), *traceEnd.ToString());
+			//UE_LOG(LogTemp, Log, TEXT("Hit result: %s"), *hitResult.ToString());
 			// If the collision happened then use that as the new vertex value,
 			// otherwise use the trace end
+			const FVector heightOffset = FVector(0, 0, vertex.Z);
+			//vertex = hitResult.bBlockingHit ?
+			//	Transform.InverseTransformPosition(hitResult.ImpactPoint) + heightOffset :
+			//	Transform.InverseTransformPosition(traceEnd) + heightOffset;
+			//vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) + heightOffset + heightAdjustVector;
 			vertex = hitResult.bBlockingHit ?
-				Transform.InverseTransformPosition(hitResult.ImpactPoint + vertex.Z) :
-				Transform.InverseTransformPosition(traceEnd + vertex.Z);
+				Transform.InverseTransformPosition(hitResult.ImpactPoint) + heightOffset + heightAdjustVector :
+				Transform.InverseTransformPosition(traceEnd) + heightOffset + heightAdjustVector;
 		}
 	}
 }

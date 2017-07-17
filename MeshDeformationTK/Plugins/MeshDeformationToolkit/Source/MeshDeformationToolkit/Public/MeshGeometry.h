@@ -453,6 +453,7 @@ public:
 			FTransform Transform,
 			TArray <AActor *> IgnoredActors,
 			FVector Projection = FVector(0, 0, -100),
+			float HeightAdjust = 0,
 			bool TraceComplex = true,
 			ECollisionChannel CollisionChannel = ECC_WorldStatic,
 			USelectionSet *Selection = nullptr
