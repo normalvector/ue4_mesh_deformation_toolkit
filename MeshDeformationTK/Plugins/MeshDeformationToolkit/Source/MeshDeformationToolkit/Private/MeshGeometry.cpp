@@ -738,26 +738,6 @@ void UMeshGeometry::FitToSpline(
 	}
 }
 
-/*
-
-bool UKismetSystemLibrary::LineTraceSingle(UObject* WorldContextObject, const FVector Start, const FVector End, ETraceTypeQuery TraceChannel, bool bTraceComplex, const TArray<AActor*>& ActorsToIgnore, EDrawDebugTrace::Type DrawDebugType, FHitResult& OutHit, bool bIgnoreSelf, FLinearColor TraceColor, FLinearColor TraceHitColor, float DrawTime)
-{
-ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
-
-static const FName LineTraceSingleName(TEXT("LineTraceSingle"));
-FCollisionQueryParams Params = ConfigureCollisionParams(LineTraceSingleName, bTraceComplex, ActorsToIgnore, bIgnoreSelf, WorldContextObject);
-
-UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
-bool const bHit = World->LineTraceSingleByChannel(OutHit, Start, End, CollisionChannel, Params);
-
-#if ENABLE_DRAW_DEBUG
-DrawDebugLineTraceSingle(World, Start, End, DrawDebugType, bHit, OutHit, TraceColor, TraceHitColor, DrawTime);
-#endif
-
-return bHit;
-}
-
-*/
 void UMeshGeometry::Conform(
 	UObject* WorldContextObject,
 	FTransform Transform,
@@ -777,12 +757,10 @@ void UMeshGeometry::Conform(
 
 	// Prepare the trace query parameters
 	const FName traceTag("ConformTraceTag");
-	//FCollisionQueryParams traceQueryParams = ConfigureCollisionParams(traceTag, TraceComplex, IgnoredActors, false, WorldContextObject);
-	FCollisionQueryParams traceQueryParams = FCollisionQueryParams(); //  traceTag, TraceComplex, IgnoredActors);
+	FCollisionQueryParams traceQueryParams = FCollisionQueryParams();
 	traceQueryParams.TraceTag = traceTag;
 	traceQueryParams.bTraceComplex = TraceComplex;
-	// TODO: Ignored actors..
-	//World->DebugDrawTraceTag = traceTag;
+	traceQueryParams.AddIgnoredActors(IgnoredActors);
 	
 	// Calculate the height adjustment vector
 	FVector heightAdjustVector = -HeightAdjust * Projection.GetSafeNormal();
@@ -808,11 +786,10 @@ void UMeshGeometry::Conform(
 				CollisionChannel, traceQueryParams, FCollisionResponseParams()
 			);
 
-			//UE_LOG(LogTemp, Log, TEXT("Projecting %s : %s to %s"), *vertex.ToString(), *traceStart.ToString(), *traceEnd.ToString());
-			//UE_LOG(LogTemp, Log, TEXT("Hit result: %s"), *hitResult.ToString());
-			// If the collision happened then use that as the new vertex value,
-			// otherwise use the trace end
-			const FVector heightOffset = FVector(0, 0, vertex.Z);
+			// Calculate the height offset- that is the value of vertex projected along the projection vector
+			//const FVector heightOffset = FVector(0, 0, vertex.Z);
+			const FVector heightOffset = vertex.ProjectOnTo(-Projection);
+
 			//vertex = hitResult.bBlockingHit ?
 			//	Transform.InverseTransformPosition(hitResult.ImpactPoint) + heightOffset :
 			//	Transform.InverseTransformPosition(traceEnd) + heightOffset;
