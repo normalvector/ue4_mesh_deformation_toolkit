@@ -762,7 +762,7 @@ void UMeshGeometry::Conform(
 	traceQueryParams.bTraceComplex = TraceComplex;
 	traceQueryParams.AddIgnoredActors(IgnoredActors);
 	
-	// Calculate the height adjustment vector- this is a constant vector scaled by HeightAdjust which we can use to control
+	// Calculate the height adjustment vector- this is a constant World Space vector scaled by HeightAdjust which we can use to control
 	//  where we're treating as the base.
 	FVector heightAdjustVector = Projection.GetSafeNormal() * HeightAdjust;
 
@@ -770,16 +770,18 @@ void UMeshGeometry::Conform(
 	int32 nextSelectionIndex = 0;
 	for (auto &section : this->sections) {
 		for (auto &vertex : section.vertices) {
-			// Project the vertex along the projection axis so we'll be able to work on the final position for impact
-			const FVector vertexAlongProjection = vertex.ProjectOnTo(Projection);
-
 			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
 			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
 
-			// Calculate the start and end locations of the collision trace, both in World Space.  Handle vertexAlongProjection
-			// in traceEnd so that it'll handle collisions where the base collides but not this vertex.
+			// Project the vertex along the projection axis so we'll be able to work on the final position for impact.
+			// This is in Local Space.
+			const FVector vertexAlongProjection = vertex.ProjectOnTo(Transform.InverseTransformVector(Projection));
+
+			// Calculate the start and end locations of the collision trace, both in World Space.
+			// Handle vertexAlongProjection in traceEnd so that it'll handle collisions where the base collides but not this vertex.
 			FVector traceStart = Transform.TransformPosition(vertex);
 			FVector traceEnd = Transform.TransformPosition(vertex - vertexAlongProjection) + scaledProjection;
+			const float traceLength = (traceEnd - traceStart).Size();
 
 			// Do the actual trace
 			FHitResult hitResult;
@@ -793,12 +795,28 @@ void UMeshGeometry::Conform(
 			if (hitResult.bBlockingHit) {
 				// We have a hit- move the vertex to the location of the hit converted to local space, restoring the vertex's height by using
 				//  VertexAlongPosition
-				vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint + vertexAlongProjection);
+				//vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) - vertexAlongProjection;
+
+				vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint - Projection.GetSafeNormal() * FMath::Min(traceLength - hitResult.Distance, HeightAdjust-vertexAlongProjection.Size()));
 			}
 			else {
 				// No hit, move the original vertex down by the projection
 				vertex += Transform.InverseTransformVector(scaledProjection);
 			}
+
+			// Debug: Show traceStart- This seems good
+			//vertex = Transform.InverseTransformPosition(traceStart);
+
+			// Debug: Show the traceEnd- This seems good
+			//vertex = Transform.InverseTransformPosition(traceEnd);
+
+			// Debug: Show the collision point if there's a collision- This seems good
+			//if (hitResult.bBlockingHit) {
+			//	vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint);
+			//}
+
+			// Debug: Show the projected position
+			//vertex += Transform.InverseTransformVector(scaledProjection);
 		}
 	}
 
