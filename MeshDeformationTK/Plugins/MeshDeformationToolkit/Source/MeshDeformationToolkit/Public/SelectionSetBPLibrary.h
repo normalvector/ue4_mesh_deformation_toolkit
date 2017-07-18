@@ -27,7 +27,7 @@ public:
 	/// \param Max		The maximum value to clamp to
 	/// \return			The clamped SelectionSet.
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Clamp (SelectionSet)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Clamp (SelectionSet)", Category = "Math|SelectionSet", Keywords="limit mix max range")
 	)
 		static USelectionSet *Clamp(USelectionSet *Value, float Min=0, float Max=1);
 
@@ -39,7 +39,7 @@ public:
 	/// \param BlendExp		Controls the blending of the ease function, only applies for *Ease*, *EaseIn* and *EaseInOut* types
 	/// \return				The eased SelectionSet
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Ease (SelectionSet)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Ease (SelectionSet)", Category = "Math|SelectionSet", Keywords="easing smooth in out falloff gradient")
 	)
 		static USelectionSet *Ease(USelectionSet *Value, EEasingFunc::Type EaseFunction = EEasingFunc::Linear, int32 Steps = 2, float BlendExp = 2.0f);
 	
@@ -105,7 +105,7 @@ public:
 	/// \return				The result of the two SelectionSets multiplied by each other
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "SelectionSet * SelectionSet", CompactNodeTitle = "*",
-			Keywords = "* multiply", CommutativeAssociativeBinaryOperator = "true", Category = "Math|SelectionSet")
+			Keywords = "* multiply times", CommutativeAssociativeBinaryOperator = "true", Category = "Math|SelectionSet")
 	)
 		static USelectionSet *Multiply_SelectionSets(USelectionSet *A, USelectionSet *B);
 
@@ -116,7 +116,7 @@ public:
 	/// \return The result of Value \* Float
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "SelectionSet * Float", CompactNodeTitle = "*",
-			Keywords = "* multiply", CommutativeAssociativeBinaryOperator = "true", Category = "Math|SelectionSet")
+			Keywords = "* multiply times", CommutativeAssociativeBinaryOperator = "true", Category = "Math|SelectionSet")
 	)
 		static USelectionSet *Multiply_SelctionSetByFloat(USelectionSet *Value, float Float=1);
 
@@ -150,21 +150,21 @@ public:
 	/// \param Value		The SelectionSet to apply OneMinus to
 	/// \return				The result of 1-Value
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "OneMinus (SelectionSet)", Category = "Math|SelectionSet", Keywords="oneminus minus - negate")
+		meta = (DisplayName = "OneMinus (SelectionSet)", Category = "Math|SelectionSet", Keywords="oneminus minus - negate invert reverse")
 	)
 		static USelectionSet *OneMinus(USelectionSet *Value);
 
 	/// **Math|SelectionSet|Set**: Set all values of a SelectionSet to the same Float
 	///
 	/// This can be used to create new SelectionSets to be combined with the original, and will
-	/// return a SelectionSet with the same number of weightings and type fas Value but where each
+	/// return a SelectionSet with the same number of weightings and type as Value but where each
 	/// value is set to Float.
 	///
 	/// \param Value		The source SelectionSet
 	/// \param Float		The Float which all weights will be set to
 	/// \return				The new SelectionSet
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Set (SelectionSet)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Set (SelectionSet)", Category = "Math|SelectionSet", Keywords="constant all")
 	)
 		static USelectionSet *Set(USelectionSet *Value, float Float=0);
 
@@ -188,7 +188,7 @@ public:
 	/// \param B			The second SelectionSet to obtain maximum values from
 	/// \return The SelectionSet with the maximum values from A and B
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Max (SelectionSet, SelectionSet)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Max (SelectionSet, SelectionSet)", Category = "Math|SelectionSet", Keywords="limit")
 	)
 		static USelectionSet *Max_SelectionSets(USelectionSet *A, USelectionSet *B);
 
@@ -200,7 +200,7 @@ public:
 	/// \param B			The second SelectionSet to obtain minumum values from
 	/// \return The SelectionSet with the minimum values from A and B
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Min (SelectionSet, SelectionSet)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Min (SelectionSet, SelectionSet)", Category = "Math|SelectionSet", Keywords="limit")
 	)
 		static USelectionSet *Min_SelectionSets(USelectionSet *A, USelectionSet *B);
 
@@ -213,7 +213,7 @@ public:
 	/// \param Float		The Float to compare the SelectionSet values with
 	/// \return The result of the maximum of the SelectionSet and the Float
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Max (SelectionSet, Float)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Max (SelectionSet, Float)", Category = "Math|SelectionSet", Keywords="limit")
 	)
 		static USelectionSet *Max_SelectionSetAgainstFloat(USelectionSet *Value, float Float);
 
@@ -227,7 +227,7 @@ public:
 	/// \param Float		The Float to compare the SelectionSet values with
 	/// \return The result of the minimum of the SelectionSet and the Float
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Min (SelectionSet, Float)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Min (SelectionSet, Float)", Category = "Math|SelectionSet", Keywords="limit")
 	)
 		static USelectionSet *Min_SelectionSetAgainstFloat(USelectionSet *Value, float Float);
 
@@ -237,7 +237,7 @@ public:
 	/// \param B		The second SelectionSet to apply the lerp to
 	/// \param Alpha	The blend factor between the two SelectionSets, 0=A, 1=B
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Lerp (SelectionSet)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Lerp (SelectionSet)", Category = "Math|SelectionSet", Keywords="blend linear interpolate alpha")
 	)
 		static USelectionSet *Lerp_SelectionSets(USelectionSet *A, USelectionSet *B, float Alpha=0);
 
@@ -248,7 +248,7 @@ public:
 	/// \param Alpha	The blend factor between the two SelectionSets, 0=Original Value, 1=Replaced with Float
 	/// \return The lerped SelectionSet
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Lerp (SelectionSet, Float)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "Lerp (SelectionSet, Float)", Category = "Math|SelectionSet", Keywords="blend linear interpolate alpha")
 	)
 		static USelectionSet *Lerp_SelectionSetWithFloat(USelectionSet *Value, float Float, float Alpha = 0);
 
@@ -278,7 +278,7 @@ public:
 	/// \param Max		The maximum value to remap to
 	/// \return The SelectionSet remapped to Min-Max
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "RemapToRange (SelectionSet, float, float)", Category = "Math|SelectionSet")
+		meta = (DisplayName = "RemapToRange (SelectionSet, float, float)", Category = "Math|SelectionSet", Keywords="clamp limit min max")
 	)
 		static USelectionSet *Remap_Range(USelectionSet *Value, float Min = 0.0f, float Max = 1.0f);
 };

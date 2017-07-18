@@ -34,7 +34,7 @@ struct FSectionGeometry {
 	UPROPERTY(BlueprintReadWrite, meta=(Keywords="texture map"))
 		TArray<FVector2D> uvs;
 
-	/// These are the tanges for each vertex
+	/// These are the tangents for each vertex
 	UPROPERTY(BlueprintReadWrite)
 		TArray<FProcMeshTangent> tangents;
 

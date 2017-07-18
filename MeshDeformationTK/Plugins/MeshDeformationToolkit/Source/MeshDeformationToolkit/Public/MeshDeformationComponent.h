@@ -433,7 +433,7 @@ public:
 	/// \param Alpha							The alpha of the blend, 0=Return this Mesh
 	/// \param Selection						The SelectionSet which controls the blend between the two MeshGeometry items
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
-		meta=(Keywords="blend linear interpolate"))
+		meta=(Keywords="blend linear interpolate alpha"))
 		void Lerp(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			UMeshDeformationComponent *TargetMeshDeformationComponent,

@@ -421,7 +421,7 @@ public:
 	/// \param Alpha						The alpha of the blend, 0=Return this Mesh
 	/// \param Selection					The SelectionSet which controls the blend between the two MeshGeometry items
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
-		meta = (Keywords = "blend linear interpolate"))
+		meta = (Keywords = "blend linear interpolate alpha"))
 		void Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha = 0.0, USelectionSet *Selection = nullptr);
 
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
