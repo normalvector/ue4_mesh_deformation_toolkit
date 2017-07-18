@@ -148,7 +148,7 @@ public:
 	///
 	/// \return The total triangle count
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
-		meta=(Keywords="tris polys faces"))
+		meta=(Keywords="tris polys polygons faces"))
 		int32 TotalTriangleCount() const;
 
 	/// Get a brief description of this geometry in the form *"4 sections, 1000 vertices, 500 triangles"*
