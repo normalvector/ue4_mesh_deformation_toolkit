@@ -269,7 +269,7 @@ public:
 	/// \param Selection						The selection weights, if not specified
 	///											then all points will be moved by the
 	///											full delta translation
-	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent)
+	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent, Keywords="move")
 		void Translate(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			FVector Delta,
@@ -428,13 +428,13 @@ public:
 
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
 	///
-	/// \param StartPosition				The position (0 to 1) on the spline that the mesh should start, 
+	/// \param StartPosition				The position (0 to 1) on the spline that the mesh should start,
 	///										defaults to 0 which is the start of the spline.  Changing
 	///										this allows a mesh to be mapped to different parts of the
 	///										spline allowing the mesh to appear to be moving or growing
 	///										along the spline, or allowing multiple meshes to be mapped
 	///										to different portions of the spline.
-	/// \param EndPosition   				The position (0 to 1) on the spline that the mesh should end, 
+	/// \param EndPosition   				The position (0 to 1) on the spline that the mesh should end,
 	///										defaults to 1 which is the end of the spline.  Changing
 	///										this allows a mesh to be mapped to different parts of the
 	///										spline allowing the mesh to appear to be moving or growing
