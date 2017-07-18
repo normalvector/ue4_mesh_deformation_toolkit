@@ -770,12 +770,16 @@ void UMeshGeometry::Conform(
 	int32 nextSelectionIndex = 0;
 	for (auto &section : this->sections) {
 		for (auto &vertex : section.vertices) {
+			// Project the vertex along the projection axis so we'll be able to work on the final position for impact
+			const FVector vertexAlongProjection = vertex.ProjectOnTo(Projection);
+
 			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
 			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
 
-			// Calculate the start and end locations of the collision trace, both in World Space.
+			// Calculate the start and end locations of the collision trace, both in World Space.  Handle vertexAlongProjection
+			// in traceEnd so that it'll handle collisions where the base collides but not this vertex.
 			FVector traceStart = Transform.TransformPosition(vertex);
-			FVector traceEnd = Transform.TransformPosition(vertex) + scaledProjection;
+			FVector traceEnd = Transform.TransformPosition(vertex - vertexAlongProjection) + scaledProjection;
 
 			// Do the actual trace
 			FHitResult hitResult;
@@ -787,11 +791,12 @@ void UMeshGeometry::Conform(
 
 			// Update vertex based on whether there was a hit or not.
 			if (hitResult.bBlockingHit) {
-				// We have a hit- move the vertex to the location of the hit converted to local space.
-				vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint);
+				// We have a hit- move the vertex to the location of the hit converted to local space, restoring the vertex's height by using
+				//  VertexAlongPosition
+				vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint + vertexAlongProjection);
 			}
 			else {
-				// No hit, move the original vertex down by the projection.
+				// No hit, move the original vertex down by the projection
 				vertex += Transform.InverseTransformVector(scaledProjection);
 			}
 		}
