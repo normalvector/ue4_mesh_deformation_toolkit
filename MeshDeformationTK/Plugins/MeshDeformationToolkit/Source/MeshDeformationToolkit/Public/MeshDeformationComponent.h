@@ -492,7 +492,6 @@ public:
 			USelectionSet *Selection
 		);
 
-
 	/*
 	##################################################
 	Save Geometry Data
