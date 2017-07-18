@@ -796,8 +796,9 @@ void UMeshGeometry::Conform(
 				// We have a hit- move the vertex to the location of the hit converted to local space, restoring the vertex's height by using
 				//  VertexAlongPosition
 				//vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) - vertexAlongProjection;
-
-				vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint - Projection.GetSafeNormal() * FMath::Min(traceLength - hitResult.Distance, HeightAdjust-vertexAlongProjection.Size()));
+				const float intersectionDepth = traceLength - hitResult.Distance;
+				vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) +
+					Projection.GetSafeNormal() * FMath::Min(intersectionDepth, HeightAdjust-vertexAlongProjection.Size());
 			}
 			else {
 				// No hit, move the original vertex down by the projection
