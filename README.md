@@ -163,17 +163,7 @@ All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/do
 # ToDo List
 The ToDo list for this project is on [Trello](https://trello.com/b/eWCcepmW/mesh-deformation-component).
 
-# Change Log
-13<sup>th</sup> July 2017:
-* Added the controls to SelectByNoise to pass in a transform and allow tiled terrain.
-* Added the SelectByVolume node, and a demo for it.
-* Added the SelectBySection node, and a demo for it.
-
-12<sup>th</th> July 2017:
-* Finished rename from Procedural Toolkit.
-* Created new Github repo.
-* Created structure for new demo scenes, and did a lot of initial demos.
-* Renamed UpdateProcedcuralMeshComponent to SaveToProceduralMeshComponent to allow all 'output' node to start with Save.
+This also doubles as a changelog with the 'Done' list.
 
 # LICENSE ([MIT License](https://en.wikipedia.org/wiki/MIT_License))
 
