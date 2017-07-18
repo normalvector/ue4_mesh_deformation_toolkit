@@ -762,25 +762,75 @@ void UMeshGeometry::Conform(
 	traceQueryParams.bTraceComplex = TraceComplex;
 	traceQueryParams.AddIgnoredActors(IgnoredActors);
 	
-	// Calculate the height adjustment vector
-	//UE_LOG(LogTemp, Log, TEXT("HAV: %f x %s.Normalize"), HeightAdjust, *Projection.ToString());
-	//FVector heightAdjustVector = Projection.GetSafeNormal() * -HeightAdjust;
-	//UE_LOG(LogTemp, Log, TEXT("HAV: %s (%f x %s / %s)"), *heightAdjustVector.ToString(), -HeightAdjust, *Projection.ToString(), *(Projection.GetSafeNormal()).ToString());
+	// Calculate the height adjustment vector- this is a constant vector scaled by HeightAdjust which we can use to control
+	//  where we're treating as the base.
+	FVector heightAdjustVector = Projection.GetSafeNormal() * HeightAdjust;
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
 	for (auto &section : this->sections) {
 		for (auto &vertex : section.vertices) {
+			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
+			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
+
+			// Calculate the start and end locations of the collision trace, both in World Space.
+			FVector traceStart = Transform.TransformPosition(vertex);
+			FVector traceEnd = Transform.TransformPosition(vertex) + scaledProjection;
+
+			// Do the actual trace
+			FHitResult hitResult;
+			bool hitSuccess = World->LineTraceSingleByChannel(
+				hitResult,
+				traceStart, traceEnd,
+				CollisionChannel, traceQueryParams, FCollisionResponseParams()
+			);
+
+			// Update vertex based on whether there was a hit or not.
+			if (hitResult.bBlockingHit) {
+				// We have a hit- move the vertex to the location of the hit converted to local space.
+				vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint);
+			}
+			else {
+				// No hit, move the original vertex down by the projection.
+				vertex += Transform.InverseTransformVector(scaledProjection);
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
+	for (auto &section : this->sections) {
+		for (auto &vertex : section.vertices) {
 			// Calculate the height offset- that is the value of vertex projected along the projection vector. 
-			const FVector heightOffset = vertex.ProjectOnTo(-Projection);
+			const FVector heightOffset = vertex.ProjectOnTo(Projection);
 
 			// Apply the transform to the vertex to obtain the start of the vector.
-			FVector traceStart= Transform.TransformPosition(vertex + heightOffset);
+			FVector traceStart= Transform.TransformPosition(vertex - heightOffset);
 
 			// Calculate the projection end by applying the SelectionSet to filter it
 			float weight = Selection ? Selection->weights[nextSelectionIndex++] : 1.0f;
 			FVector scaledProjection = Projection * weight;
-			FVector traceEnd = Transform.TransformPosition(vertex + heightOffset + Projection);
+			FVector traceEnd = Transform.TransformPosition(vertex + heightOffset) + scaledProjection;
 
 			// Do the projection
 			FHitResult hitResult;
@@ -793,10 +843,10 @@ void UMeshGeometry::Conform(
 
 			//vertex =Transform.InverseTransformPosition(hitResult.ImpactPoint) + (heightOffset * 1.0f) + (heightAdjustVector * 1.0f) :
 			vertex = hitResult.bBlockingHit ?
-				Transform.InverseTransformPosition(hitResult.ImpactPoint - heightOffset) :
-				Transform.InverseTransformPosition(traceEnd);
+				Transform.InverseTransformPosition(hitResult.ImpactPoint + heightOffset) :
+				vertex - Transform.InverseTransformVector(scaledProjection);
 		}
-	}
+	}*/
 }
  
 
