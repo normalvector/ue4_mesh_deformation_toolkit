@@ -7,8 +7,6 @@
 #include "Runtime/Engine/Classes/Curves/CurveFloat.h"
 #include "MeshDeformationComponent.generated.h"
 
-/// \todo Select by vertex color - Both baked into the mesh and painted onto a StaticMeshActor.  Choose channel.  This may need extra work since VertexColor isn't there when we get the data from the mesh.
-
 /// *ActorComponent* for easy geometry deformation.
 ///
 /// This is the main class for the *Mesh Deformation Component*, and
