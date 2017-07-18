@@ -71,72 +71,72 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 ## Load Geometry Data
 All of these nodes are provided on the Mesh Deformation Component, and also their stored geometry.
 
-* [Load From Static Mesh](): Use a StaticMesh as the source of the original geometry.
+* *Load From Static Mesh*: Use a StaticMesh as the source of the original geometry.
 
 ## Select Vertices
 Each of these functions returns a Selection which can then be either be either modified further, or passed into any of the nodes for transforming vertices to control their behavior.
 
-* [Select All](): Select all vertices at full strength
-* [Select By Noise](): Select vertices based on a noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range, if this causes problems use a 'Remap By Range' node to remap between zero and one.*
-* [Select By Section](): Selection based on the sections which make up a mesh.
-* [Select By Texture](): Use a channel from an RGB texture to select vertices.
-* [Select Facing](): Selection based on a vertex's normal direction.
-* [Select In Volume](): Simple selection based on whether a vertex is within an axis-aligned volume.
-* [Select Linear](): Selection based on a gradient between two provided points.
-* [Select Near](): Select all vertices near a provided point.
-* [Select Near Line](): Select all vertices near a provided line, which can be an infinite line.
-* [Select Near Spline](): Select all vertices near a [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/).
+* *Select All*: Select all vertices at full strength
+* *Select By Noise*: Select vertices based on a noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range, if this causes problems use a 'Remap By Range' node to remap between zero and one.*
+* *Select By Section*: Selection based on the sections which make up a mesh.
+* *Select By Texture*: Use a channel from an RGB texture to select vertices.
+* *Select Facing*: Selection based on a vertex's normal direction.
+* *Select In Volume*: Simple selection based on whether a vertex is within an axis-aligned volume.
+* *Select Linear*: Selection based on a gradient between two provided points.
+* *Select Near*: Select all vertices near a provided point.
+* *Select Near Line*: Select all vertices near a provided line, which can be an infinite line.
+* *Select Near Spline*: Select all vertices near a [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/).
 
 ## Modifying And Combining Selections
 These aren't actually on the Mesh Deformation Component and instead are provided in a Blueprint Function Library.
 
 All of these return a new Selection and don't modify the ones provided to them.  The short descriptions below are often phrased as though they do but this is because writing 'Return a Selection which is the provided Selection' in each one would make them a lot harder to read.
 
-* [Clamp (Selection, Float, Float)](): Clamps the range of a Selection between the minimum and maximum provided.
-* [Float - Selection](): Subtract all value in a selection from a constant value, providing a simple reverse and remap.
-* [Float / Selection](): Divide a constant value by all values in a selection.
-* [Lerp (Selection, Float, Float)](): Blends a Selection between its original value and a constant value with a set strength.
-* [Lerp (Selection, Float, Selection)](): Blends a Selection between its original value and a constant value with a strength controlled by a second Selection.
-* [Lerp (Selection, Selection, Float)](): Blend two Selections together with a given strength.
-* [Lerp (Selection, Selection, Selection)](): Blend two Selections together with a strength controlled by a third Selection.
-* [Max (Selection, Float)](): Make sure all values in a Selection are at least equal to a given value.
-* [Max (Selection, Selection)](): Combine two Selections together by taking the maximum value from each one of them.
-* [Min (Selection, Float)](): Make sure all values in a Selection are at most equal to a given value.
-* [Min (Selection, Selection)](): Combined two Selections together by taking the mium value from each of them.
-* [Randomize (Selection, Float, Float)](): Randomize the values in a Selection between the minimum and maximum values provided.
-* [Remap To Curve (Selection, Curve)]():
-* [Remap By Easing (Selection)](): Remaps a selection by applying a configurable easing function to each value.  Useful for taking the linear fall-off from a selection and turning it into something smoother and more natural. **NOTE: This is a rename of the Ease function**
-* [Remap To Range (Selection, Float, Float)](): Remaps a selection between the minimum and maximum values provided.
-* [SelectionSet + Float](): Adds the given value to all values in a Selection.
-* [Selection + Selection](): Combine two Selections together by adding their values.
-* [Selection - Float](): Subtract a given value from all values in a Selection.
-* [Selection - Selection](): Combine two Selections by subtracting all values in the second Selection from the values in the first Selection.
-* [Selection * Float](): Multiply all values in a Selection by a given value.
-* [Selection * Selection](): Combine two Selections by multiplying their values.
-* [Selection / Float](): Divide all of the values in a Selection by the given value.
-* [Selection / Selection](): Combine two Selections by dividing all the values from the first Selection by those of the second Selection.
-* [Set (Selection, Float)](): Sets all values in a Selection to the given value.
+* *Clamp (Selection, Float, Float)*: Clamps the range of a Selection between the minimum and maximum provided.
+* *Float - Selection*: Subtract all value in a selection from a constant value, providing a simple reverse and remap.
+* *Float / Selection*: Divide a constant value by all values in a selection.
+* *Lerp (Selection, Float, Float)*: Blends a Selection between its original value and a constant value with a set strength.
+* *Lerp (Selection, Float, Selection)*: Blends a Selection between its original value and a constant value with a strength controlled by a second Selection.
+* *Lerp (Selection, Selection, Float)*: Blend two Selections together with a given strength.
+* *Lerp (Selection, Selection, Selection)*: Blend two Selections together with a strength controlled by a third Selection.
+* *Max (Selection, Float)*: Make sure all values in a Selection are at least equal to a given value.
+* *Max (Selection, Selection)*: Combine two Selections together by taking the maximum value from each one of them.
+* *Min (Selection, Float)*: Make sure all values in a Selection are at most equal to a given value.
+* *Min (Selection, Selection)*: Combined two Selections together by taking the mium value from each of them.
+* *Randomize (Selection, Float, Float)*: Randomize the values in a Selection between the minimum and maximum values provided.
+* *Remap To Curve (Selection, Curve)*:
+* *Remap By Easing (Selection)*: Remaps a selection by applying a configurable easing function to each value.  Useful for taking the linear fall-off from a selection and turning it into something smoother and more natural. **NOTE: This is a rename of the Ease function**
+* *Remap To Range (Selection, Float, Float)*: Remaps a selection between the minimum and maximum values provided.
+* *SelectionSet + Float*: Adds the given value to all values in a Selection.
+* *Selection + Selection*: Combine two Selections together by adding their values.
+* *Selection - Float*: Subtract a given value from all values in a Selection.
+* *Selection - Selection*: Combine two Selections by subtracting all values in the second Selection from the values in the first Selection.
+* *Selection * Float*: Multiply all values in a Selection by a given value.
+* *Selection * Selection*: Combine two Selections by multiplying their values.
+* *Selection / Float*: Divide all of the values in a Selection by the given value.
+* *Selection / Selection*: Combine two Selections by dividing all the values from the first Selection by those of the second Selection.
+* *Set (Selection, Float)*: Sets all values in a Selection to the given value.
 
 ## Transforming Vertices
 All of these transform operations can be controlled by providing an optional Selection.  While the actual use of the Selection can vary method nodes it's intended that each one uses it in the most obvious and flexible way for that node's own purpose.
 
-* [Conform](): Project all of the vertices in a provided direction as though it were being draped over other geometry in the level.  This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
-* [Fit To Spline](): Bend the geometry to follow a provided [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/), with controls for the profile of the geometry for more useful effects.  This is more powerful than UE4's own [Spline Mesh Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/) in that it follows an entire curve rather than just having the two control points at the ends.
-* [Inflate](): Move all of the vertices in or out along their own normals.
-* [Jitter](): Applies random position jitter to the vertices.  This is a fairly crude effect and generally you're better off using Select By Noise and Translate for greater control.
-* [Lerp (MeshDeformationComponent, Float)](): Blend this with the geometry stored in another MeshDeformationComponent with a given strength.
-* [Lerp (MeshGeometry, Float)](): Blend this mesh with another with a given strength.  *NOTE: This should be exposed on MeshDeformationComponent too*.
-* [Lerp (Vector)](): Blend all vertices towards a single given point.
-* [Rotate](): Rotate vertices using a standard UE4 [Rotator](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Rotator/index.html).
-* [Rotate Around Axis](): Rotate all of the points around a given axis and center of rotation.  This is more difficult to use than Rotate, but is also more flexible.
-* [Scale](): Scale vertices by the vector provided.
-* [Scale Along Axis](): Scale vertices along a provided axis and center of scale
-* [Spherize](): Blend all vertices towards a position on a sphere with the provided center and radius.
-* [Transform](): Apply the provided transform matrix to all vertices.
-* [Translate](): Add a provided vector to all vertices.  This is the basic Move operation.
+* *Conform*: Project all of the vertices in a provided direction as though it were being draped over other geometry in the level.  This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
+* *Fit To Spline*: Bend the geometry to follow a provided [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/), with controls for the profile of the geometry for more useful effects.  This is more powerful than UE4's own [Spline Mesh Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/) in that it follows an entire curve rather than just having the two control points at the ends.
+* *Inflate*: Move all of the vertices in or out along their own normals.
+* *Jitter*: Applies random position jitter to the vertices.  This is a fairly crude effect and generally you're better off using Select By Noise and Translate for greater control.
+* *Lerp (MeshDeformationComponent, Float)*: Blend this with the geometry stored in another MeshDeformationComponent with a given strength.
+* *Lerp (MeshGeometry, Float)*: Blend this mesh with another with a given strength.  *NOTE: This should be exposed on MeshDeformationComponent too*.
+* *Lerp (Vector)*: Blend all vertices towards a single given point.
+* *Rotate*: Rotate vertices using a standard UE4 [Rotator](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Rotator/index.html).
+* *Rotate Around Axis*: Rotate all of the points around a given axis and center of rotation.  This is more difficult to use than Rotate, but is also more flexible.
+* *Scale*: Scale vertices by the vector provided.
+* *Scale Along Axis*: Scale vertices along a provided axis and center of scale
+* *Spherize*: Blend all vertices towards a position on a sphere with the provided center and radius.
+* *Transform*: Apply the provided transform matrix to all vertices.
+* *Translate*: Add a provided vector to all vertices.  This is the basic Move operation.
 
 ## Output Data
-* [Save To Procedural Mesh Component](): Write the geometry data to a standard UE4 [Procedural Mesh Component](https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started).
+* *Save To Procedural Mesh Component*: Write the geometry data to a standard UE4 [Procedural Mesh Component](https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started).
 
 ## Utility
 
