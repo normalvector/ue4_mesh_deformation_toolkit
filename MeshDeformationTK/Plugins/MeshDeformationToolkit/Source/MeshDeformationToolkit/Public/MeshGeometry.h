@@ -118,7 +118,8 @@ public:
 	/// \param staticMesh					The mesh to copy the geometry from
 	/// \param LOD							A StaticMesh can have multiple meshes for different levels of detail, this specifies which LOD we're taking the information fromaram>
 	/// \return *True* if we could read the geometry, *False* if not
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta=(Keywords="create sm"))
 		bool LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD = 0);
 
 	/// Save the current geometry to a *ProceduralMeshComponent*.
@@ -128,7 +129,8 @@ public:
 	/// \param proceduralMeshComponent		The target *ProceduralMeshComponent
 	/// \param createCollision				Whether to create a collision shape for it
 	/// \return *True* if the update was successful, *False* if not
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "pmc output write"))
 		bool SaveToProceduralMeshComponent(UProceduralMeshComponent *proceduralMeshComponent, bool createCollision);
 
 	/// Return the number of total vertices in the geometry.
@@ -136,7 +138,8 @@ public:
 	/// This is the combined sum of the vertices in each of the sections which make up this mesh.
 	///
 	/// \return The total vertex count
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta=(Keywords="verts points"))
 		int32 TotalVertexCount() const;
 
 	/// Return the number of total triangles in the geometry.
@@ -144,7 +147,8 @@ public:
 	/// This is the combined sum of the triangles in each of the sections which make up this mesh.
 	///
 	/// \return The total triangle count
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta=(Keywords="tris polys faces"))
 		int32 TotalTriangleCount() const;
 
 	/// Get a brief description of this geometry in the form *"4 sections, 1000 vertices, 500 triangles"*
@@ -152,7 +156,8 @@ public:
 	/// This is mainly for debug purposes and making sure things have not broken.
 	///
 	/// \return A text summary
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta=(Keywords="info string verts points tris polys faces sections mesh"))
 		FString GetSummary() const;
 
 	/// Selects all of the vertices at full strength.
@@ -170,7 +175,8 @@ public:
 	///								maximum strength
 	/// \param outerRadius	The outer radius, all points outside this will not be selected
 	/// \return A *SelectionSet* for the selected vertices
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "close soft"))
 		USelectionSet *SelectNear(FVector center =FVector::ZeroVector, float innerRadius=0, float outerRadius=100);
 
 	/// Selects the vertices near a Spline, allowing curves to easily guide deformation.
@@ -183,7 +189,8 @@ public:
 	///						will be selected at maximum strength.
 	/// \param outerRadius	The outer radius, all points further from the spline than this distance
 	///						will not be selected
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "curve"))
 		USelectionSet *SelectNearSpline(USplineComponent *spline, FTransform transform, float innerRadius = 0, float outerRadius = 100);
 
 	/// Selects vertices near a line segment with the provided start/end points.
@@ -198,7 +205,8 @@ public:
 	///							will not be selected
 	/// \param lineIsInfinite	If this is checked then lineStart/lineEnd will treated as two points on an
 	///							infinite line instead of being the start/end of a line segment
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "infinite"))
 		USelectionSet *SelectNearLine(FVector lineStart, FVector lineEnd, float innerRadius = 0, float outerRadius = 100, bool lineIsInfinite = false);
 
 	/// Selects vertices with a given normal facing
@@ -210,7 +218,8 @@ public:
 	/// \param OuterRadiusInDegrees	The outer radius in degrees, all vertices with a normal greater
 	///								than this deviation from Facing will not be selected.
 	/// \return A *SelectionSet* for the selected vertices
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "normal vector"))
 		USelectionSet *SelectFacing(FVector Facing = FVector::UpVector, float InnerRadiusInDegrees = 0, float OuterRadiusInDegrees = 30.0f);
 
 	/// Selects vertices based on a noise function.
@@ -232,7 +241,8 @@ public:
 	/// \param NoiseTransform				An optional transformation which will be applied to each vertex's position
 	///										before it is used for noise generation, if not supplied an identity transform
 	///										will be used which does not modify the vertex position.  Useful for making tiling terrain
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "random fastnoise perlin fractal terrain"))
 		USelectionSet *SelectByNoise(
 			int32 Seed = 1337,
 			float Frequency = 0.01,
@@ -256,19 +266,22 @@ public:
 	/// \param Texture2D					The texture object to sample
 	/// \param TextureChannel				Which channel (RGBA) of the texture to use
 	/// \return The SelectionSet for the texture channel
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "image picture rgb uv"))
 		USelectionSet *SelectByTexture(UTexture2D *Texture2D, ETextureChannel TextureChannel = ETextureChannel::Red);
 
 	/// Select vertices linearly between two points.
 	///
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "gradient between"))
 		USelectionSet *SelectLinear(FVector LineStart, FVector LineEnd, bool Reverse = false, bool LimitToLine = false);
 
 	/// Select vertices inside a volume defined by two opposite corner points.
 	/// \param CornerA						The first corner to define the volume
 	/// \param CornerB						The second corner to define the volume
 	///
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "aabb bounds bounding space"))
 		USelectionSet *SelectInVolume(FVector CornerA, FVector CornerB);
 
 	/// Select all of the vertices which go to make up one of the Sections that a mesh
@@ -276,7 +289,8 @@ public:
 	/// uses.
 	///
 	/// \param SectionIndex
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "material geometry"))
 		USelectionSet *SelectBySection(int32 SectionIndex);
 
 	/// Adds random jitter to the position of the points.
@@ -291,7 +305,8 @@ public:
 	/// \param selection					The selection weights, if not specified
 	///										then all points will be jittered at
 	///										maximum strength
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "random position"))
 		void Jitter(FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection=nullptr);
 
 	/// Move all selected by the provided delta vector.
@@ -303,7 +318,8 @@ public:
 	/// \param selection						The selection weights, if not specified
 	///											then all points will be moved by the
 	///											full delta translation
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "move delta"))
 		void Translate(FVector delta, USelectionSet *selection);
 
 	/// Rotates the vertices of the mesh a specified amount round the specified position.
@@ -325,7 +341,8 @@ public:
 	/// \param CenterOfScale					The center of the scaling operation in local space
 	/// \param Selection						The selection weights, if not specified then all
 	///											vertices will be scaled fully by the specified scale
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "size"))
 		void Scale(FVector Scale3d = FVector(1, 1, 1), FVector CenterOfScale = FVector::ZeroVector, USelectionSet *Selection = nullptr);
 
 	/// Applies Scale/Rotate/Translate as a single operation using a combined transform.
@@ -337,7 +354,8 @@ public:
 	/// \param CenterOfTransform			The center of the transformation, in local space
 	/// \param Selection					The SelectionSet, if not specified then all vertices
 	///										will be transformed at full strength
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "move scale size rotate"))
 		void Transform(FTransform Transform, FVector CenterOfTransform = FVector::ZeroVector, USelectionSet *Selection = nullptr);
 
 	/// Morph a mesh into a sphere by moving points along their normal
@@ -349,7 +367,8 @@ public:
 	///										by FilterStrength to allow each vertex's morph to be
 	///										individually controlled.
 	/// \todo Should group the sphere parameters together
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "ball"))
 		void Spherize(float SphereRadius = 100.0f, float FilterStrength = 1.0f, FVector SphereCenter = FVector::ZeroVector, USelectionSet *Selection = nullptr);
 
 	/// Moves vertices a specified offset along their own normals
@@ -357,7 +376,8 @@ public:
 	/// \param Offset							The distance to offset
 	/// \param Selection						The SelectionSet, with the offset being scaled for
 	///											each vertex
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "normal"))
 		void Inflate(float Offset = 0.0f, USelectionSet *Selection = nullptr);
 
 	/// Scale an object along an arbitrary axis
@@ -371,7 +391,8 @@ public:
 	/// \param Selection						The SelectionSet which controls the weighting of the
 	///											scale for each vertex.  If not provided then the scale
 	///											will apply at full strength to all vertices.
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "size"))
 		void ScaleAlongAxis(FVector CenterOfScale = FVector::ZeroVector, FVector Axis = FVector::UpVector, float Scale = 1.0f, USelectionSet *Selection = nullptr);
 
 	/// Rotate vertices about an arbitrary axis
@@ -384,7 +405,8 @@ public:
 	/// \param AngleInDegrees				The angle to rotate the vertices about
 	/// \param Selection					The SelectionSet which controls the amount of rotation
 	///										applied to each vertex.
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "twist screw"))
 		void RotateAroundAxis(FVector CenterOfRotation = FVector::ZeroVector, FVector Axis = FVector::UpVector, float AngleInDegrees = 0.0f, USelectionSet *Selection = nullptr);
 
 	/// Does a linear interpolate with another MeshGeometry object, storing the result in this MeshGeometry.
@@ -398,7 +420,8 @@ public:
 	/// \param TargetMeshGeometry			The geometry to blend with
 	/// \param Alpha						The alpha of the blend, 0=Return this Mesh
 	/// \param Selection					The SelectionSet which controls the blend between the two MeshGeometry items
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "blend linear interpolate"))
 		void Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha = 0.0, USelectionSet *Selection = nullptr);
 
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
@@ -429,7 +452,8 @@ public:
 	///										mesh regardless of the overall spline's length.
 	///	\param Selection					The SelectionSet controlling how strongly the spline applies to each vertex.
 	///										At present this is a simple position-based lerp and may not be too useful.
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "curve bend"))
 		void FitToSpline(
 			USplineComponent *SplineComponent,
 			float StartPosition = 0.0f,
@@ -446,7 +470,7 @@ public:
 
 	UFUNCTION(
 		BlueprintCallable, Category = MeshGeometry,
-		meta = (AutoCreateRefTerm = "IgnoredActors", WorldContext = "WorldContextObject")
+		meta = (AutoCreateRefTerm = "IgnoredActors", WorldContext = "WorldContextObject", Keywords="drop drape cloth collision soft trace")
 	)
 		void Conform(
 			UObject* WorldContextObject,
@@ -460,7 +484,8 @@ public:
 		);
 
 	/// Return the bounding box for all of the vertices in the mesh.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "size limits bounds min max"))
 		FBox GetBoundingBox();
 
 };

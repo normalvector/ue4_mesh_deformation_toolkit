@@ -411,7 +411,7 @@ public:
 	/// \param Selection					The SelectionSet which controls the amount of rotation
 	///										applied to each vertex.
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
-		meta=(Keywords="twist"))
+		meta=(Keywords="twist screw"))
 		void RotateAroundAxis(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			FVector CenterOfRotation = FVector::ZeroVector,

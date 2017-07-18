@@ -1,4 +1,4 @@
-// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// (c)2017 Paul Golds, released under MIT License.
 
 #pragma once
 
