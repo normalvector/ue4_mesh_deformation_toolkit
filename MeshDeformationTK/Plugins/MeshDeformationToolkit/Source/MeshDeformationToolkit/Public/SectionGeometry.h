@@ -10,11 +10,12 @@
 /// or passed into *ProceduralMeshComponent::CreateMeshSection_LinearColor*,
 /// packaged into a single entity.
 USTRUCT(BlueprintType)
-struct FSectionGeometry {
+struct FSectionGeometry
+{
 	GENERATED_USTRUCT_BODY()
 
 	/// The vertex data
-	UPROPERTY(BlueprintReadWrite, meta=(Keywords="points"))
+		UPROPERTY(BlueprintReadWrite, meta=(Keywords="points"))
 		TArray<FVector> vertices;
 
 	/// The triangles
@@ -43,12 +44,13 @@ struct FSectionGeometry {
 		TArray<FLinearColor> vertexColors;
 
 	/// Simple constructor of empty section
-	FSectionGeometry() {
-		vertices = TArray<FVector>();
-		triangles = TArray<int32>();
-		normals = TArray<FVector>();
-		uvs = TArray<FVector2D>();
-		tangents = TArray<FProcMeshTangent>();
-		vertexColors = TArray<FLinearColor>();
+	FSectionGeometry()
+	{
+		vertices=TArray<FVector>();
+		triangles=TArray<int32>();
+		normals=TArray<FVector>();
+		uvs=TArray<FVector2D>();
+		tangents=TArray<FProcMeshTangent>();
+		vertexColors=TArray<FLinearColor>();
 	}
 };

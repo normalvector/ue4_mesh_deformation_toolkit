@@ -8,7 +8,7 @@
 DECLARE_LOG_CATEGORY_EXTERN(MDTLog, Log, All);
 
 /// The interface for loading and unloading the toolkit
-class FMeshDeformationToolkitModule : public IModuleInterface
+class FMeshDeformationToolkitModule: public IModuleInterface
 {
 public:
 

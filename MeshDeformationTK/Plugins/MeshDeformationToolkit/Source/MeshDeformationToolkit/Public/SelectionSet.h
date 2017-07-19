@@ -21,15 +21,15 @@
 ///       can be used
 
 UCLASS(BlueprintType)
-class MESHDEFORMATIONTOOLKIT_API USelectionSet : public UObject
+class MESHDEFORMATIONTOOLKIT_API USelectionSet: public UObject
 {
 	GENERATED_BODY()
-	
+
 public:
 	/// The weights this set contains.
-	UPROPERTY(BlueprintReadWrite, Category = SelectionSet)
+	UPROPERTY(BlueprintReadWrite, Category=SelectionSet)
 		TArray<float> weights;
-	
+
 	/// Creates a selection set of the size provided with zero weights.
 	/// \param size			The number of items in the selection set
 	void CreateSelectionSet(int32 size);
@@ -51,7 +51,7 @@ public:
 	/// \param randomStream			The RandomStream to use for the source
 	/// \param minWeight			The minimum value of the random weightings
 	/// \param maxWeight			The maximum value of the random weightings
-	USelectionSet *RandomizeWeights(FRandomStream randomStream, float minWeight = 0, float maxWeight = 1);
+	USelectionSet *RandomizeWeights(FRandomStream randomStream, float minWeight=0, float maxWeight=1);
 
 	/// Return the number of weights in the selection set.
 	UFUNCTION(BlueprintPure, meta=(Keywords="length count maximum num"))
