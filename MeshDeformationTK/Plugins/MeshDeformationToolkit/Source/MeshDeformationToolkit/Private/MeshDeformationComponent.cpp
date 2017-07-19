@@ -20,7 +20,8 @@ bool UMeshDeformationComponent::LoadFromStaticMesh(UMeshDeformationComponent *&M
 	MeshDeformationComponent = this;
 	MeshGeometry = NewObject<UMeshGeometry>(this);
 	bool success = MeshGeometry->LoadFromStaticMesh(staticMesh);
-	if (!success) {
+	if (!success)
+	{
 		MeshGeometry = nullptr;
 	}
 	return success;
@@ -30,7 +31,8 @@ bool UMeshDeformationComponent::LoadFromStaticMesh(UMeshDeformationComponent *&M
 bool UMeshDeformationComponent::SaveToProceduralMeshComponent(UMeshDeformationComponent *&MeshDeformationComponent, UProceduralMeshComponent *proceduralMeshComponent, bool createCollision)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SaveToProceduralMeshComponent: No meshGeometry loaded"));
 		return false;
 	}
@@ -40,7 +42,8 @@ bool UMeshDeformationComponent::SaveToProceduralMeshComponent(UMeshDeformationCo
 
 USelectionSet * UMeshDeformationComponent::SelectAll() const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectAll: No meshGeometry loaded"));
 		return nullptr;
 	}
@@ -53,7 +56,8 @@ USelectionSet * UMeshDeformationComponent::SelectNear(
 	float innerRadius /*= 0*/, float outerRadius /*= 100*/
 ) const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectNear: No meshGeometry loaded"));
 		return nullptr;
 	}
@@ -65,12 +69,13 @@ USelectionSet * UMeshDeformationComponent::SelectNearSpline(
 	USplineComponent *spline, float innerRadius /*= 0*/, float outerRadius /*= 100*/
 ) const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectNearSpline: No meshGeometry loaded"));
 		return nullptr;
 	}
 	// Get the actor's local->world transform- we're going to need it for the spline.
-	FTransform actorTransform  = this->GetOwner()->GetTransform();
+	FTransform actorTransform = this->GetOwner()->GetTransform();
 
 	return MeshGeometry->SelectNearSpline(spline, actorTransform, innerRadius, outerRadius);
 }
@@ -80,11 +85,12 @@ void UMeshDeformationComponent::Conform(
 	FVector Projection /*= FVector(0, 0, -100)*/, float HeightAdjust /*= 0*/, bool TraceComplex /*= true*/,
 	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/, USelectionSet *Selection /*= nullptr */)
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Conform: No meshGeometry loaded"));
 		return;
 	}
-	
+
 	MeshGeometry->Conform(
 		WorldContextObject, Transform, IgnoredActors, Projection, HeightAdjust, TraceComplex,
 		CollisionChannel, Selection
@@ -96,7 +102,8 @@ USelectionSet * UMeshDeformationComponent::SelectNearLine(
 	bool lineIsInfinite/* = false */
 ) const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectNearLine: No meshGeometry loaded"));
 		return nullptr;
 	}
@@ -108,14 +115,15 @@ USelectionSet * UMeshDeformationComponent::SelectFacing(
 	FVector Facing /*= FVector::UpVector*/, float InnerRadiusInDegrees /*= 0*/,
 	float OuterRadiusInDegrees /*= 30.0f*/) const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectFacing: No meshGeometry loaded"));
 		return nullptr;
 	}
 	return MeshGeometry->SelectFacing(Facing, InnerRadiusInDegrees, OuterRadiusInDegrees);
 }
 
-USelectionSet * UMeshDeformationComponent::SelectByNoise (
+USelectionSet * UMeshDeformationComponent::SelectByNoise(
 	int32 Seed /*= 1337*/,
 	float Frequency /*= 0.01*/,
 	ENoiseInterpolation NoiseInterpolation /*= ENoiseInterpolation::Quintic*/,
@@ -128,8 +136,10 @@ USelectionSet * UMeshDeformationComponent::SelectByNoise (
 	FVector NoiseTranslation /*= FVector::ZeroVector */,
 	FRotator NoiseRotation /*= FRotator::ZeroRotator */,
 	FVector NoiseScale3D /*= FVector(1, 1, 1) */
-) const {
-	if (!MeshGeometry) {
+) const
+{
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectByNoise: No meshGeometry loaded"));
 		return nullptr;
 	}
@@ -145,7 +155,8 @@ USelectionSet * UMeshDeformationComponent::SelectByTexture(
 	UTexture2D *Texture2D, ETextureChannel TextureChannel /*= ETextureChannel::Red*/
 ) const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectByTexture: No meshGeometry loaded"));
 		return nullptr;
 	}
@@ -153,10 +164,11 @@ USelectionSet * UMeshDeformationComponent::SelectByTexture(
 }
 
 USelectionSet * UMeshDeformationComponent::SelectLinear(
-	FVector LineStart, FVector LineEnd, bool Reverse /*= false*/, 
+	FVector LineStart, FVector LineEnd, bool Reverse /*= false*/,
 	bool LimitToLine /*= false*/) const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectLinear: No meshGeometry loaded"));
 		return nullptr;
 	}
@@ -167,15 +179,18 @@ USelectionSet * UMeshDeformationComponent::SelectInVolume(
 	FVector CornerA, FVector CornerB
 ) const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectByVolume: No meshGeometry loaded"));
 		return nullptr;
 	}
 	return MeshGeometry->SelectInVolume(CornerA, CornerB);
 }
 
-USelectionSet * UMeshDeformationComponent::SelectBySection(int32 SectionIndex) const {
-	if (!MeshGeometry) {
+USelectionSet * UMeshDeformationComponent::SelectBySection(int32 SectionIndex) const
+{
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("SelectBySection: No meshGeometry loaded"));
 		return nullptr;
 	}
@@ -185,7 +200,8 @@ USelectionSet * UMeshDeformationComponent::SelectBySection(int32 SectionIndex) c
 void UMeshDeformationComponent::Jitter(UMeshDeformationComponent *&MeshDeformationComponent, FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Jitter: No meshGeometry loaded"));
 		return;
 	}
@@ -195,7 +211,8 @@ void UMeshDeformationComponent::Jitter(UMeshDeformationComponent *&MeshDeformati
 void UMeshDeformationComponent::Translate(UMeshDeformationComponent *&MeshDeformationComponent, FVector delta, USelectionSet *selection)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Translate: No meshGeometry loaded"));
 		return;
 	}
@@ -205,7 +222,8 @@ void UMeshDeformationComponent::Translate(UMeshDeformationComponent *&MeshDeform
 void UMeshDeformationComponent::Rotate(UMeshDeformationComponent *&MeshDeformationComponent, FRotator Rotation/*= FRotator::ZeroRotator*/, FVector CenterOfRotation /*= FVector::ZeroVector*/, USelectionSet *Selection /*=nullptr*/)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Rotate: No meshGeometry loaded"));
 		return;
 	}
@@ -216,7 +234,8 @@ void UMeshDeformationComponent::Rotate(UMeshDeformationComponent *&MeshDeformati
 void UMeshDeformationComponent::Scale(UMeshDeformationComponent *&MeshDeformationComponent, FVector Scale3d /*= FVector(1, 1, 1)*/, FVector CenterOfScale /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Scale: No meshGeometry loaded"));
 		return;
 	}
@@ -226,7 +245,8 @@ void UMeshDeformationComponent::Scale(UMeshDeformationComponent *&MeshDeformatio
 void UMeshDeformationComponent::Transform(UMeshDeformationComponent *&MeshDeformationComponent, FTransform Transform, FVector CenterOfTransform /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Transform: No meshGeometry loaded"));
 		return;
 	}
@@ -236,7 +256,8 @@ void UMeshDeformationComponent::Transform(UMeshDeformationComponent *&MeshDeform
 void UMeshDeformationComponent::Spherize(UMeshDeformationComponent *&MeshDeformationComponent, float SphereRadius /*= 100.0f*/, float FilterStrength /*= 1.0f*/, FVector SphereCenter /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Spherize: No meshGeometry loaded"));
 		return;
 	}
@@ -246,7 +267,8 @@ void UMeshDeformationComponent::Spherize(UMeshDeformationComponent *&MeshDeforma
 void UMeshDeformationComponent::Inflate(UMeshDeformationComponent *&MeshDeformationComponent, float Offset /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Spherize: No meshGeometry loaded"));
 		return;
 	}
@@ -256,7 +278,8 @@ void UMeshDeformationComponent::Inflate(UMeshDeformationComponent *&MeshDeformat
 void UMeshDeformationComponent::ScaleAlongAxis(UMeshDeformationComponent *&MeshDeformationComponent, FVector CenterOfScale /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float Scale /*= 1.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Spherize: No meshGeometry loaded"));
 		return;
 	}
@@ -267,7 +290,8 @@ void UMeshDeformationComponent::RotateAroundAxis(UMeshDeformationComponent *&Mes
 {
 
 	MeshDeformationComponent = this;
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Spherize: No meshGeometry loaded"));
 		return;
 	}
@@ -275,24 +299,27 @@ void UMeshDeformationComponent::RotateAroundAxis(UMeshDeformationComponent *&Mes
 }
 
 void UMeshDeformationComponent::Lerp(
-	UMeshDeformationComponent *&MeshDeformationComponent, 
+	UMeshDeformationComponent *&MeshDeformationComponent,
 	UMeshDeformationComponent *TargetMeshDeformationComponent,
 	float Alpha /*= 0.0*/,
 	USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
 
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Lerp: No meshGeometry loaded"));
 		return;
 	}
 
-	if (!TargetMeshDeformationComponent) {
+	if (!TargetMeshDeformationComponent)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Lerp: No TargetMeshDeformationComponent"));
 		return;
 	}
 
-	if (!TargetMeshDeformationComponent->MeshGeometry) {
+	if (!TargetMeshDeformationComponent->MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("Lerp: TargetMeshDeformationComponent has no geometry"));
 		return;
 	}
@@ -305,7 +332,8 @@ void UMeshDeformationComponent::Lerp(
 
 FBox UMeshDeformationComponent::GetBoundingBox() const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("GetBoundingBox: No meshGeometry loaded"));
 		return FBox();
 	}
@@ -314,7 +342,8 @@ FBox UMeshDeformationComponent::GetBoundingBox() const
 
 FString UMeshDeformationComponent::GetSummary() const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("GetSummary: No meshGeometry loaded"));
 		return FString("No MeshGeometry loaded");
 	}
@@ -324,17 +353,19 @@ FString UMeshDeformationComponent::GetSummary() const
 
 int32 UMeshDeformationComponent::GetTotalTriangleCount() const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("GetTotalTriangleCount: No meshGeometry loaded"));
 		return 0;
 	}
-	
+
 	return MeshGeometry->TotalTriangleCount();
 }
 
 int32 UMeshDeformationComponent::GetTotalVertexCount() const
 {
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("GetTotalVertexCount: No meshGeometry loaded"));
 		return 0;
 	}
@@ -351,10 +382,12 @@ void UMeshDeformationComponent::FitToSpline(
 	UCurveFloat *ProfileCurve /*= nullptr*/,
 	UCurveFloat *SectionProfileCurve /*= nullptr*/,
 	USelectionSet *Selection /*= nullptr*/
-) {
+)
+{
 	MeshDeformationComponent = this;
 
-	if (!MeshGeometry) {
+	if (!MeshGeometry)
+	{
 		UE_LOG(MDTLog, Warning, TEXT("FitToSpline: No meshGeometry loaded"));
 		return;
 	}

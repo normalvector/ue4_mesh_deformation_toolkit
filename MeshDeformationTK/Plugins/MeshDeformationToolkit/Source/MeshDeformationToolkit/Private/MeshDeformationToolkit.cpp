@@ -19,5 +19,5 @@ void FMeshDeformationToolkitModule::ShutdownModule()
 }
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FMeshDeformationToolkitModule, MeshDeformationToolkit)
