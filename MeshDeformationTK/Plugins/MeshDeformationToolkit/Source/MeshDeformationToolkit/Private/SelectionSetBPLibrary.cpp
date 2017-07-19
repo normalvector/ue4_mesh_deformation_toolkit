@@ -428,7 +428,6 @@ USelectionSet * USelectionSetBPLibrary::RemapToCurve(USelectionSet *Value, UCurv
 	// Get the time limits of the curve- we'll scale by the end
 	float CurveTimeStart, CurveTimeEnd;
 	Curve->GetTimeRange(CurveTimeStart, CurveTimeEnd);
-	UE_LOG(LogTemp, Log, TEXT("Curve: %f - %f"), CurveTimeStart, CurveTimeEnd);
 
 	// Create the results at the correct size and zero it.
 	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());

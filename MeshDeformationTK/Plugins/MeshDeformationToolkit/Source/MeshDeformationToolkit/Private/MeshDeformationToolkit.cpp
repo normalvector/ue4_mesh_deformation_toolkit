@@ -4,6 +4,9 @@
 
 #define LOCTEXT_NAMESPACE "FMeshDeformationToolkitModule"
 
+// The logger for all messages
+DEFINE_LOG_CATEGORY(MDTLog);
+
 void FMeshDeformationToolkitModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module

@@ -18,17 +18,14 @@ bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD /*= 0*
 {
 	// If there's no static mesh we have nothing to do..
 	if (!staticMesh) {
-		UE_LOG(LogTemp, Warning, TEXT("LoadFromStaticMesh: No StaticMesh provided"));
+		UE_LOG(MDTLog, Warning, TEXT("LoadFromStaticMesh: No StaticMesh provided"));
 		return false;
 	}
-
-	UE_LOG(LogTemp, Log, TEXT("Reading mesh geometry from static mesh '%s'"), *staticMesh->GetName());
 
 	// Clear any existing geometry.
 	this->sections.Empty();
 
 	const int32 numSections = staticMesh->GetNumSections(LOD);
-	UE_LOG(LogTemp, Log, TEXT("Found %d sections for LOD %d"), numSections, LOD);
 
 	// Iterate over the sections
 	for (int meshSectionIndex = 0; meshSectionIndex < numSections; ++meshSectionIndex) {
@@ -41,7 +38,6 @@ bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD /*= 0*
 			sectionGeometry.vertices, sectionGeometry.triangles,
 			sectionGeometry.normals, sectionGeometry.uvs, sectionGeometry.tangents
 		);
-		UE_LOG(LogTemp, Log, TEXT("Section %d: Found %d verts and %d triangles"), meshSectionIndex, sectionGeometry.vertices.Num(), sectionGeometry.triangles.Num() / 3);
 
 		// Load vertex colors with default values for as many vertices as needed
 		sectionGeometry.vertexColors.InsertDefaulted(0, sectionGeometry.vertices.Num());
@@ -58,7 +54,7 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(UProceduralMeshComponent *proc
 {
 	// If there's no PMC we have nothing to do..
 	if (!proceduralMeshComponent) {
-		UE_LOG(LogTemp, Warning, TEXT("SaveToProceduralMeshComponent: No proceduralMeshComponent provided"));
+		UE_LOG(MDTLog, Warning, TEXT("SaveToProceduralMeshComponent: No proceduralMeshComponent provided"));
 		return false;
 	}
 
@@ -68,7 +64,6 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(UProceduralMeshComponent *proc
 	// Iterate over the mesh sections, creating a PMC MeshSection for each one.
 	int32 nextSectionIndex = 0;
 	for (auto section : this->sections) {
-		UE_LOG(LogTemp, Log, TEXT("Rebuilding section.."));
 		// Create the PMC section with the StaticMesh's data.
 		proceduralMeshComponent->CreateMeshSection_LinearColor(
 			nextSectionIndex++, section.vertices, section.triangles, section.normals, section.uvs,
@@ -101,8 +96,8 @@ bool UMeshGeometry::SelectionSetRightSize(USelectionSet *selection, FString Node
 	// Check them
 	if (selectionSetSize != geometrySize) {
 		UE_LOG(
-			LogTemp, Warning, TEXT("Jitter: Selection set is the wrong size, %d weights in set for %d vertices in mesh"),
-			selectionSetSize, geometrySize
+			MDTLog, Warning, TEXT("%s: Selection set is the wrong size, %d weights in set for %d vertices in mesh"),
+			*NodeNameForWarning, selectionSetSize, geometrySize
 		);
 		return false;
 	}
@@ -308,11 +303,10 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 	int32 textureWidth = MipMap0->SizeX;
 	int32 textureHeight = MipMap0->SizeY;
 	FByteBulkData *BulkData = &MipMap0->BulkData;
-	UE_LOG(LogTemp, Log, TEXT("Texture res: %d x %d"), textureWidth, textureHeight);
 
 	// Check we got the data and lock it
 	if (!BulkData) {
-		/// \todo Log an error..
+		UE_LOG(MDTLog, Warning, TEXT("SelectByTexture: Could not lock bulk data for texture"));
 		return nullptr;
 	}
 	FColor *colorArray = static_cast<FColor*>(BulkData->Lock(LOCK_READ_ONLY));
@@ -330,11 +324,8 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 
 			// Get the color and access the correct channel.
 			int32 index = (textureY * textureWidth) + textureX;
-			//UE_LOG(LogTemp, Log, TEXT("UV %f,%f = %d,%d (%d)"), uv.X, uv.Y, textureX, textureY, index);
-			
 			FLinearColor color = colorArray[index];
-			//UE_LOG(LogTemp, Log, TEXT("Color %f,%f,%f / %f"), color.R, color.G, color.B, color.A);
-			
+
 			switch (TextureChannel) {
 			case ETextureChannel::Red:
 				newSelectionSet->weights.Emplace(color.R);
@@ -633,7 +624,7 @@ void UMeshGeometry::RotateAroundAxis(FVector CenterOfRotation /*= FVector::ZeroV
 	// Normalize the axis direction.
 	auto normalizedAxis = Axis.GetSafeNormal();
 	if (normalizedAxis.IsNearlyZero(0.1f)) {
-		UE_LOG(LogTemp, Error, TEXT("RotateAroundAxis: Could not normalize Axis, zero vector?"));
+		UE_LOG(MDTLog, Warning, TEXT("RotateAroundAxis: Could not normalize Axis, zero vector?"));
 		return;
 	}
 
@@ -664,26 +655,21 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 	int32 nextSelectionIndex = 0;
 
 	if (!TargetMeshGeometry) {
-		UE_LOG(LogTemp, Error, TEXT("Lerp: No TargetMeshGeometry"));
+		UE_LOG(MDTLog, Warning, TEXT("Lerp: No TargetMeshGeometry"));
 		return;
 	}
 	if (this->sections.Num() != TargetMeshGeometry->sections.Num()) {
 		UE_LOG(
-			LogTemp, Error, TEXT("Lerp: Cannot lerp geometries with different numbers of sections, %d compared to %d"),
+			MDTLog, Warning, TEXT("Lerp: Cannot lerp geometries with different numbers of sections, %d compared to %d"),
 			this->sections.Num(), TargetMeshGeometry->sections.Num()
 		);
 		return;
 	}
 
 	for (int32 sectionIndex = 0; sectionIndex < this->sections.Num(); sectionIndex++) {
-		UE_LOG(
-			LogTemp, Error, TEXT("Lerp: SECTION INDEX %d"),
-			sectionIndex
-		);
-
 		if (this->sections[sectionIndex].vertices.Num() != TargetMeshGeometry->sections[sectionIndex].vertices.Num()) {
 			UE_LOG(
-				LogTemp, Error, TEXT("Lerp: Cannot lerp geometries with different numbers of vertices, %d compared to %d for section %d"),
+				MDTLog, Warning, TEXT("Lerp: Cannot lerp geometries with different numbers of vertices, %d compared to %d for section %d"),
 				this->sections[sectionIndex].vertices.Num(), TargetMeshGeometry->sections[sectionIndex].vertices.Num(), sectionIndex
 			);
 			return;
@@ -694,10 +680,6 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 			FVector vertexFromThis = this->sections[sectionIndex].vertices[vertexIndex];
 			FVector vertexFromTarget = TargetMeshGeometry->sections[sectionIndex].vertices[vertexIndex];
 
-			UE_LOG(
-				LogTemp, Error, TEXT("Lerp: Vertex index %d"),
-				vertexIndex
-			);
 			// TODO: World/local logic should live here.
 			this->sections[sectionIndex].vertices[vertexIndex] = FMath::Lerp(
 				vertexFromThis, vertexFromTarget,
@@ -722,7 +704,7 @@ void UMeshGeometry::FitToSpline(
 	}
 
 	if (!SplineComponent) {
-		UE_LOG(LogTemp, Error, TEXT("FitToSpline: No SplineComponent"));
+		UE_LOG(MDTLog, Warning, TEXT("FitToSpline: No SplineComponent"));
 		return;
 	}
 	
@@ -813,7 +795,7 @@ void UMeshGeometry::Conform(
 	// Get the world content we're operating in
 	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
 	if (!World) {
-		UE_LOG(LogTemp, Error, TEXT("Conform: Cannot access game world"));
+		UE_LOG(MDTLog, Warning, TEXT("Conform: Cannot access game world"));
 		return;
 	}
 

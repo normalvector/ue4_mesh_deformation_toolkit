@@ -4,12 +4,10 @@
 
 #include "ModuleManager.h"
 
-/// The interface for loading and unloading the toolkit
-/// \todo Think about renaming the whole thing to a smaller-scoped name
-/// \todo Think about putting all BP functions in a global category, "Mesh Deformer|Subcategory"
-/// \todo Go through code and check limits are enforced
-/// \todo Go through code and check error messages are presented where applicable
+// All log messages will be passed through this logger
+DECLARE_LOG_CATEGORY_EXTERN(MDTLog, Log, All);
 
+/// The interface for loading and unloading the toolkit
 class FMeshDeformationToolkitModule : public IModuleInterface
 {
 public:
