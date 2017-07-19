@@ -290,6 +290,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (Keywords = "curve bend"))
 		void FitToSpline(
+			UMeshDeformationComponent *&MeshDeformationComponent,
 			USplineComponent *SplineComponent,
 			float StartPosition = 0.0f,
 			float EndPosition = 1.0f,
