@@ -448,7 +448,7 @@ public:
 	/// Return the bounding box for all of the vertices in the mesh.
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 		meta = (Keywords = "size limits bounds min max"))
-		FBox GetBoundingBox();
+		FBox GetBoundingBox() const;
 
 	/// Get a brief description of this geometry in the form *"4 sections, 1000 vertices, 500 triangles"*
 	///

@@ -820,61 +820,10 @@ void UMeshGeometry::Conform(
 			//vertex += Transform.InverseTransformVector(scaledProjection);
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/*
-	for (auto &section : this->sections) {
-		for (auto &vertex : section.vertices) {
-			// Calculate the height offset- that is the value of vertex projected along the projection vector. 
-			const FVector heightOffset = vertex.ProjectOnTo(Projection);
-
-			// Apply the transform to the vertex to obtain the start of the vector.
-			FVector traceStart= Transform.TransformPosition(vertex - heightOffset);
-
-			// Calculate the projection end by applying the SelectionSet to filter it
-			float weight = Selection ? Selection->weights[nextSelectionIndex++] : 1.0f;
-			FVector scaledProjection = Projection * weight;
-			FVector traceEnd = Transform.TransformPosition(vertex + heightOffset) + scaledProjection;
-
-			// Do the projection
-			FHitResult hitResult;
-			// TODO: Check world validity.
-			bool hitSuccess = World->LineTraceSingleByChannel(
-				hitResult,
-				traceStart, traceEnd,
-				CollisionChannel, traceQueryParams, FCollisionResponseParams()
-			);
-
-			//vertex =Transform.InverseTransformPosition(hitResult.ImpactPoint) + (heightOffset * 1.0f) + (heightAdjustVector * 1.0f) :
-			vertex = hitResult.bBlockingHit ?
-				Transform.InverseTransformPosition(hitResult.ImpactPoint + heightOffset) :
-				vertex - Transform.InverseTransformVector(scaledProjection);
-		}
-	}*/
 }
  
 
-FBox UMeshGeometry::GetBoundingBox() {
+FBox UMeshGeometry::GetBoundingBox() const {
 	// Track the two corners of the bounding box
 	FVector min = FVector::ZeroVector;
 	FVector max = FVector::ZeroVector;
