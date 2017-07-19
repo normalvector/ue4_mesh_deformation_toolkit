@@ -156,9 +156,14 @@ void UMeshDeformationComponent::Lerp(
 
 bool UMeshDeformationComponent::LoadFromStaticMesh(UMeshDeformationComponent *&MeshDeformationComponent, UStaticMesh *staticMesh, int32 LOD /*= 0*/)
 {
-	/// \todo Err.. ?  Should this be here?  Have I broken the API?
 	MeshDeformationComponent = this;
 	MeshGeometry = NewObject<UMeshGeometry>(this);
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Error, TEXT("LoadFromStaticMesh: Could not create new MeshGeometry"));
+		return false;
+	}
+	// 
 	bool success = MeshGeometry->LoadFromStaticMesh(staticMesh);
 	if (!success)
 	{
@@ -323,6 +328,7 @@ USelectionSet * UMeshDeformationComponent::SelectNearSpline(
 		UE_LOG(MDTLog, Warning, TEXT("SelectNearSpline: No meshGeometry loaded"));
 		return nullptr;
 	}
+
 	// Get the actor's local->world transform- we're going to need it for the spline.
 	FTransform actorTransform = this->GetOwner()->GetTransform();
 
@@ -352,6 +358,7 @@ USelectionSet * UMeshDeformationComponent::SelectLinear(
 		UE_LOG(MDTLog, Warning, TEXT("SelectLinear: No meshGeometry loaded"));
 		return nullptr;
 	}
+
 	return MeshGeometry->SelectLinear(LineStart, LineEnd, Reverse, LimitToLine);
 }
 
@@ -363,6 +370,7 @@ void UMeshDeformationComponent::Spherize(UMeshDeformationComponent *&MeshDeforma
 		UE_LOG(MDTLog, Warning, TEXT("Spherize: No meshGeometry loaded"));
 		return;
 	}
+
 	MeshGeometry->Spherize(SphereRadius, FilterStrength, SphereCenter, Selection);
 }
 
@@ -374,6 +382,7 @@ void UMeshDeformationComponent::Transform(UMeshDeformationComponent *&MeshDeform
 		UE_LOG(MDTLog, Warning, TEXT("Transform: No meshGeometry loaded"));
 		return;
 	}
+
 	MeshGeometry->Transform(Transform, CenterOfTransform, Selection);
 }
 
@@ -385,6 +394,7 @@ void UMeshDeformationComponent::Translate(UMeshDeformationComponent *&MeshDeform
 		UE_LOG(MDTLog, Warning, TEXT("Translate: No meshGeometry loaded"));
 		return;
 	}
+
 	MeshGeometry->Translate(delta, selection);
 }
 
@@ -396,5 +406,6 @@ void UMeshDeformationComponent::ScaleAlongAxis(UMeshDeformationComponent *&MeshD
 		UE_LOG(MDTLog, Warning, TEXT("Spherize: No meshGeometry loaded"));
 		return;
 	}
+
 	MeshGeometry->ScaleAlongAxis(CenterOfScale, Axis, Scale, Selection);
 }
