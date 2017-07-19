@@ -51,7 +51,7 @@ public:
 	/// \param randomStream			The RandomStream to use for the source
 	/// \param minWeight			The minimum value of the random weightings
 	/// \param maxWeight			The maximum value of the random weightings
-	USelectionSet *RandomizeWeights(FRandomStream randomStream, float minWeight=0, float maxWeight=1);
+	USelectionSet *RandomizeWeights(FRandomStream &randomStream, float minWeight=0, float maxWeight=1);
 
 	/// Return the number of weights in the selection set.
 	UFUNCTION(BlueprintPure, meta=(Keywords="length count maximum num"))

@@ -108,7 +108,10 @@ void UMeshDeformationComponent::Inflate(UMeshDeformationComponent *&MeshDeformat
 	MeshGeometry->Inflate(Offset, Selection);
 }
 
-void UMeshDeformationComponent::Jitter(UMeshDeformationComponent *&MeshDeformationComponent, FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection)
+void UMeshDeformationComponent::Jitter(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	FRandomStream &randomStream,
+	FVector min, FVector max, USelectionSet *selection)
 {
 	MeshDeformationComponent = this;
 	if (!MeshGeometry)

@@ -16,7 +16,7 @@ void USelectionSet::Empty()
 	weights.Empty();
 }
 
-USelectionSet *USelectionSet::RandomizeWeights(FRandomStream randomStream, float min /*= 0*/, float max /*= 1*/)
+USelectionSet *USelectionSet::RandomizeWeights(FRandomStream &randomStream, float min /*= 0*/, float max /*= 1*/)
 {
 	for (auto &weight:weights)
 	{

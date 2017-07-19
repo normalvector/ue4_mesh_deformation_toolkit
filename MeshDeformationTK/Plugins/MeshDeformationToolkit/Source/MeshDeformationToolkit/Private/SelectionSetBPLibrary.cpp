@@ -383,7 +383,7 @@ USelectionSet * USelectionSetBPLibrary::OneMinus(USelectionSet *Value)
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomStream RandomStream, float Min/*=0*/, float Max/*=1*/)
+USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomStream &RandomStream, float Min/*=0*/, float Max/*=1*/)
 {
 	// Need a SelectionSet
 	if (!Value)

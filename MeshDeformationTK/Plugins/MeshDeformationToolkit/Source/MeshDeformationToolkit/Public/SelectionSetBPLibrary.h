@@ -201,7 +201,7 @@ public:
 	UFUNCTION(BlueprintPure,
 			  meta=(DisplayName="Randomize (SelectionSet)", CompactNodeTitle="Randomize", Category="Math|SelectionSet")
 	)
-		static USelectionSet *Randomize(USelectionSet *Value, FRandomStream RandomStream, float Min=0, float Max=1);
+		static USelectionSet *Randomize(USelectionSet *Value, FRandomStream &RandomStream, float Min=0, float Max=1);
 
 	/// **Math|SelectionSet|RemapToCurve(SelectionSet, Curve)**: Remap the values of a SelectionSet to a CurveFloat
 	///
