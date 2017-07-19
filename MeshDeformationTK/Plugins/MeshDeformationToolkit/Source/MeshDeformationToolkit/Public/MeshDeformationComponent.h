@@ -92,8 +92,8 @@ public:
 	/// Selects all of the vertices at full strength.
 	///
 	/// /return A *SelectionSet* with full strength
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent)
-		USelectionSet *SelectAll();
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent)
+		USelectionSet *SelectAll() const;
 
 	/// Selects vertices based on a noise function.
 	///
@@ -111,7 +111,7 @@ public:
 	/// \param FractalGain					The strength of the fractal
 	/// \param FractalType					The type of fractal being used
 	/// \param CellularDistanceFunction		The function used to calculate the value for a given point.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent,
 		meta = (Keywords = "random fastnoise perlin fractal terrain"))
 		USelectionSet *SelectByNoise(
 			int32 Seed = 1337,
@@ -126,16 +126,16 @@ public:
 			FVector NoiseTranslation = FVector::ZeroVector,
 			FRotator NoiseRotation = FRotator::ZeroRotator,
 			FVector NoiseScale3D = FVector(1, 1, 1)
-		);
+		) const;
 
 	/// Select all of the vertices which go to make up one of the Sections that a mesh
 	/// can consist of.  This can be thought of as the same as a Material slot for many
 	/// uses.
 	///
 	/// \param SectionIndex
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+	UFUNCTION(BlueprintPure, Category = MeshGeometry,
 		meta = (Keywords = "material geometry"))
-		USelectionSet *SelectBySection(int32 SectionIndex);
+		USelectionSet *SelectBySection(int32 SectionIndex) const;
 
 	/// Select vertices from a texture.
 	///
@@ -145,12 +145,12 @@ public:
 	/// \param Texture2D		The Texture to extract the selection channel from
 	/// \param TextureChannel	The channel to use for the selection
 	/// \return Return the SelectionSet corresponding to the texture channel
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent,
 		meta = (Keywords = "image picture rgb uv"))
 		USelectionSet *SelectByTexture(
 			UTexture2D *Texture2D,
 			ETextureChannel TextureChannel = ETextureChannel::Red
-		);
+		) const;
 
 	/// Selects vertices with a given normal facing
 	///
@@ -161,21 +161,21 @@ public:
 	/// \param OuterRadiusInDegrees	The outer radius in degrees, all vertices with a normal greater
 	///								than this deviation from Facing will not be selected.
 	/// \return A *SelectionSet* for the selected vertices
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent,
 		meta = (Keywords = "normal vector"))
 		USelectionSet *SelectFacing(
 			FVector Facing = FVector::UpVector,
 			float InnerRadiusInDegrees = 0,
 			float OuterRadiusInDegrees = 30.0f
-		);
+		) const;
 
 	/// Select vertices inside a volume defined by two opposite corner points.
 	/// \param CornerA						The first corner to define the volume
 	/// \param CornerB						The second corner to define the volume
 	///
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent,
 		meta = (Keywords = "aabb bounds bounding space"))
-		USelectionSet *SelectInVolume(FVector CornerA, FVector CornerB);
+		USelectionSet *SelectInVolume(FVector CornerA, FVector CornerB) const;
 
 	/// Select vertices linearly between two points.
 	///
@@ -184,14 +184,14 @@ public:
 	/// \param Reverse		Swaps LineStart/LineEnd to allow the linear effect to be reversed
 	/// \param LimitToLine	Whether the effect finishes at the end of the line or if weight=1 continues
 	/// \return The SelectionSet with all of the vertices selected according to the gradient
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent,
 		meta = (Keywords = "gradient between"))
 		USelectionSet *SelectLinear(
 			FVector LineStart,
 			FVector LineEnd,
 			bool Reverse = false,
 			bool LimitToLine = false
-		);
+		) const;
 
 	/// Selects the vertices near a point in space.
 	///
@@ -202,13 +202,13 @@ public:
 	///								maximum strength
 	/// \param OuterRadius	The outer radius, all points outside this will not be selected
 	/// \return A *SelectionSet* for the selected vertices
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent,
 		meta = (Keywords = "close soft"))
 		USelectionSet *SelectNear(
 			FVector Center = FVector::ZeroVector,
 			float InnerRadius = 0,
 			float OuterRadius = 100
-		);
+		) const;
 
 	/// Selects vertices near a line segment with the provided start/end points.
 	///
@@ -222,7 +222,7 @@ public:
 	///							will not be selected
 	/// \param LineIsInfinite	If this is checked then lineStart/lineEnd will treated as two points on an
 	///							infinite line instead of being the start/end of a line segment
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent,
 		meta = (Keywords = "infinite"))
 		USelectionSet *SelectNearLine(
 			FVector LineStart,
@@ -230,7 +230,7 @@ public:
 			float InnerRadius = 0,
 			float OuterRadius = 100,
 			bool LineIsInfinite = false
-		);
+		) const;
 
 	/// Selects the vertices near a Spline, allowing curves to easily guide deformation.
 	///
@@ -241,13 +241,13 @@ public:
 	///						will be selected at maximum strength.
 	/// \param OuterRadius	The outer radius, all points further from the spline than this distance
 	///						will not be selected
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent,
 		meta = (Keywords = "curve"))
 		USelectionSet *SelectNearSpline(
 			USplineComponent *Spline,
 			float InnerRadius = 0,
 			float OuterRadius = 100
-		);
+		) const;
 
 	/*
 	##################################################
@@ -548,7 +548,7 @@ public:
 	/// Return the bounding box for all of the vertices in the mesh.
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
 		meta=(Keywords="size limits bounds min max"))
-		FBox GetBoundingBox();
+		FBox GetBoundingBox() const;
 
 	/// Get a brief description of this geometry in the form *"4 sections, 1000 vertices, 500 triangles"*
 	///
