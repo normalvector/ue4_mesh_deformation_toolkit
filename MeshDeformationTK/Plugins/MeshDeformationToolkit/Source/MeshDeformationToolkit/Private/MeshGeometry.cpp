@@ -450,10 +450,10 @@ USelectionSet * UMeshGeometry::SelectBySection(int32 SectionIndex)
 	return newSelectionSet;
 }
 
-void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection /*=nullptr*/)
+void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max, USelectionSet *Selection /*=nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(selection, TEXT("Jitter"))) {
+	if (!SelectionSetRightSize(Selection, TEXT("Jitter"))) {
 		return;
 	}
 
@@ -471,15 +471,18 @@ void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max
 			vertex = FMath::Lerp(
 				vertex,
 				vertex + randomJitter,
-				selection ? selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
 			);
 		}
 	}
 }
 
-void UMeshGeometry::Translate(FVector delta, USelectionSet *selection)
+void UMeshGeometry::Translate(FVector delta, USelectionSet *Selection)
 {
-	// TODO: Check selectionSet size.
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Translate"))) {
+		return;
+	}
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -488,7 +491,7 @@ void UMeshGeometry::Translate(FVector delta, USelectionSet *selection)
 			vertex = FMath::Lerp(
 				vertex,
 				vertex + delta,
-				selection ? selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
 			);
 		}
 	}
@@ -496,7 +499,10 @@ void UMeshGeometry::Translate(FVector delta, USelectionSet *selection)
 
 void UMeshGeometry::Rotate(FRotator Rotation /*= FRotator::ZeroRotator*/, FVector CenterOfRotation /*= FVector::ZeroVector*/, USelectionSet *Selection)
 {
-	// TODO: Check SelectionSet size.
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Rotate"))) {
+		return;
+	}
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -513,7 +519,10 @@ void UMeshGeometry::Rotate(FRotator Rotation /*= FRotator::ZeroRotator*/, FVecto
 
 void UMeshGeometry::Scale(FVector Scale3d /*= FVector(1, 1, 1)*/, FVector CenterOfScale /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
-	// TODO: Check selectionSet size.
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Scale"))) {
+		return;
+	}
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -530,7 +539,10 @@ void UMeshGeometry::Scale(FVector Scale3d /*= FVector(1, 1, 1)*/, FVector Center
 
 void UMeshGeometry::Transform(FTransform Transform /*= FTransform::Identity*/, FVector CenterOfTransform /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
-	// TODO: Check selectionSet size.
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Transform"))) {
+		return;
+	}
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -547,7 +559,10 @@ void UMeshGeometry::Transform(FTransform Transform /*= FTransform::Identity*/, F
 
 void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStrength /*= 1.0f*/, FVector SphereCenter /*= FVector::ZeroVector*/, USelectionSet *Selection)
 {
-	// TODO: Check selectionSet size.
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Spherize"))) {
+		return;
+	}
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -568,7 +583,10 @@ void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStreng
 
 void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
-	// TODO: Check selectionSet size.
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Jitter"))) {
+		return;
+	}
 	// TODO: Check normals size.
 
 	// Iterate over the sections, and the the vertices in the sections.
@@ -586,7 +604,10 @@ void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*
 
 void UMeshGeometry::ScaleAlongAxis(FVector CenterOfScale /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float Scale /*= 1.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
-	// TODO Check SelectionSet size
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Jitter"))) {
+		return;
+	}
 	// TODO: Check non-zero vectors.
 
 	// Iterate over the sections, and the the vertices in the sections.
@@ -603,7 +624,10 @@ void UMeshGeometry::ScaleAlongAxis(FVector CenterOfScale /*= FVector::ZeroVector
 
 void UMeshGeometry::RotateAroundAxis(FVector CenterOfRotation /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float AngleInDegrees /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
-	// TODO Check SelectionSet size
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Jitter"))) {
+		return;
+	}
 	// TODO: Check non-zero vectors.
 
 	// Normalize the axis direction.
@@ -630,7 +654,10 @@ void UMeshGeometry::RotateAroundAxis(FVector CenterOfRotation /*= FVector::ZeroV
 }
 
 void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/) {
-	// TODO: Check SelectionSet size
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Lerp"))) {
+		return;
+	}
 
 	// Iterate over the sections, and the vertices in the sections.  Do it by index so we
 	// can access the same data from TargetMeshGeometry
@@ -689,6 +716,11 @@ void UMeshGeometry::FitToSpline(
 	UCurveFloat *SectionProfileCurve /*= nullptr*/,
 	USelectionSet *Selection /*= nullptr*/
 ) {
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("FitToSpline"))) {
+		return;
+	}
+
 	if (!SplineComponent) {
 		UE_LOG(LogTemp, Error, TEXT("FitToSpline: No SplineComponent"));
 		return;
@@ -773,6 +805,11 @@ void UMeshGeometry::Conform(
 	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
 	USelectionSet *Selection /*= nullptr */
 ) {
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(Selection, TEXT("Conform"))) {
+		return;
+	}
+
 	// Get the world content we're operating in
 	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
 	if (!World) {
