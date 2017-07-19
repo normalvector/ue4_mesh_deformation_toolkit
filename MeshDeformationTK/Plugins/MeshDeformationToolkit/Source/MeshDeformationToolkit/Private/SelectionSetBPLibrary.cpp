@@ -1,6 +1,7 @@
 // (c)2017 Paul Golds, released under MIT License.
 
 #include "MeshDeformationToolkit.h"
+#include "SelectionSet.h"
 #include "SelectionSetBPLibrary.h"
 
 USelectionSet * USelectionSetBPLibrary::AddFloatToSelectionSet(USelectionSet *Value, float Float/*=0*/)
@@ -12,13 +13,13 @@ USelectionSet * USelectionSetBPLibrary::AddFloatToSelectionSet(USelectionSet *Va
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		Value->Size(), Value->GetOuter(), TEXT("AddFloatToSelectionSet")
+	);
 	if (!result) {
-		UE_LOG(MDTLog, Error, TEXT("AddFloatToSelectionSet: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-	
-	result->weights.SetNumZeroed(Value->Size());
 
 	for (int32 i = 0; i<Value->Size(); i++)
 	{
@@ -36,15 +37,15 @@ USelectionSet *USelectionSetBPLibrary::AddSelectionSets(USelectionSet *A, USelec
 		return nullptr;
 	}
 
-	auto result = NewObject<USelectionSet>(A->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = A->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, A->GetOuter(), TEXT("AddSelectionSets")
+	);
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("AddSelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = A->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -63,15 +64,14 @@ USelectionSet * USelectionSetBPLibrary::Clamp(USelectionSet *Value, float Min/*=
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("Clamp"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("AddSelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -81,7 +81,7 @@ USelectionSet * USelectionSetBPLibrary::Clamp(USelectionSet *Value, float Min/*=
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::DivideSelctionSetByFloat(USelectionSet *Value, float Float /*= 1*/)
+USelectionSet * USelectionSetBPLibrary::DivideSelectionSetByFloat(USelectionSet *Value, float Float /*= 1*/)
 {
 	// Need a SelectionSet
 	if (!Value)
@@ -90,15 +90,14 @@ USelectionSet * USelectionSetBPLibrary::DivideSelctionSetByFloat(USelectionSet *
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("DivideSelectionSetByFloat"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("DivideSelctionSetByFloat: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -116,15 +115,14 @@ USelectionSet * USelectionSetBPLibrary::DivideSelectionSets(USelectionSet *A, US
 		return nullptr;
 	}
 
-	auto result = NewObject<USelectionSet>(A->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = A->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, A->GetOuter(), TEXT("DivideSelectionSets"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("DivideSelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = A->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -143,15 +141,14 @@ USelectionSet * USelectionSetBPLibrary::Ease(USelectionSet *Value, EEasingFunc::
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("Ease"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("Ease: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
-
 	// TODO: This can be more efficient with lambdas.
 	for (int32 i = 0; i<size; i++)
 	{
@@ -236,15 +233,14 @@ USelectionSet * USelectionSetBPLibrary::LerpSelectionSets(USelectionSet *A, USel
 		return nullptr;
 	}
 
-	auto result = NewObject<USelectionSet>(A->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = A->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, A->GetOuter(), TEXT("LerpSelectionSets"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("LerpSelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-	
-	const int32 size = A->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -264,15 +260,14 @@ USelectionSet * USelectionSetBPLibrary::LerpSelectionSetWithFloat(USelectionSet 
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("LerpSelectionSetWithFloat"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("LerpSelectionSetWithFloat: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -291,15 +286,14 @@ USelectionSet * USelectionSetBPLibrary::MaxSelectionSetAgainstFloat(USelectionSe
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("MaxSelectionSetAgainstFloat"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("MaxSelectionSetAgainstFloat: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->weights.Num();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -318,15 +312,14 @@ USelectionSet * USelectionSetBPLibrary::MaxSelectionSets(USelectionSet *A, USele
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(A->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = A->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, A->GetOuter(), TEXT("MaxSelectionSets"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("MaxSelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = A->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -345,15 +338,14 @@ USelectionSet * USelectionSetBPLibrary::MinSelectionSetAgainstFloat(USelectionSe
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("MinSelectionSetAgainstFloat"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("MaxSelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -371,15 +363,14 @@ USelectionSet * USelectionSetBPLibrary::MinSelectionSets(USelectionSet *A, USele
 		return nullptr;
 	}
 
-	auto result = NewObject<USelectionSet>(A->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = A->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, A->GetOuter(), TEXT("MinSelectionSets"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("MinSelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = A->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -398,15 +389,14 @@ USelectionSet * USelectionSetBPLibrary::MultiplySelctionSetByFloat(USelectionSet
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("MultiplySelectionSetByFloat"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("MultiplySelctionSetByFloat: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -424,15 +414,14 @@ USelectionSet * USelectionSetBPLibrary::MultiplySelectionSets(USelectionSet *A, 
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(A->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = A->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, A->GetOuter(), TEXT("MultiplySelectionSets"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("MultiplySelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = A->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -451,15 +440,14 @@ USelectionSet * USelectionSetBPLibrary::OneMinus(USelectionSet *Value)
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("OneMinus"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("OneMinus: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -478,15 +466,14 @@ USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomS
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("Randomize"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("Randomize: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -516,16 +503,14 @@ USelectionSet * USelectionSetBPLibrary::RemapToCurve(USelectionSet *Value, UCurv
 	float CurveTimeStart, CurveTimeEnd;
 	Curve->GetTimeRange(CurveTimeStart, CurveTimeEnd);
 
-	// Create the results at the correct size and zero it.
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("RemapToCurve"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("RemapToCurve: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	// Apply the curve mapping
 	for (int32 i = 0; i<size; i++)
@@ -559,16 +544,14 @@ USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float
 		CurrentMaximum = FMath::Max(CurrentMaximum, Value->weights[i]);
 	}
 
-	// Create the results at the correct size and zero it.
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("RemapToRange"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("RemapToRange: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	// Check if all values are the same- if so just return a flat result equal to Min.
 	if (CurrentMinimum==CurrentMaximum)
@@ -595,15 +578,14 @@ USelectionSet * USelectionSetBPLibrary::Set(USelectionSet *Value, float Float/*=
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("Set"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("Set: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -622,15 +604,14 @@ USelectionSet * USelectionSetBPLibrary::SubtractFloatFromSelectionSet(USelection
 		return nullptr;
 	}
 
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("SubtractFloatFromSelectionSet"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("SubtractFloatFromSelectionSet: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -649,16 +630,14 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSetFromFloat(float Floa
 		return nullptr;
 	}
 
-
-	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("SubtractSelectionSetFromFloat"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("SubtractSelectionSetFromFloat: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = Value->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -676,15 +655,14 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSets(USelectionSet *A, 
 		return nullptr;
 	}
 
-	auto result = NewObject<USelectionSet>(A->GetOuter());
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = A->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, A->GetOuter(), TEXT("SubtractSelectionSets"));
 	if (!result)
 	{
-		UE_LOG(MDTLog, Error, TEXT("SubtractSelectionSets: Cannot create new SelectionSet"));
 		return nullptr;
 	}
-
-	const int32 size = A->Size();
-	result->weights.SetNumZeroed(size);
 
 	for (int32 i = 0; i<size; i++)
 	{
@@ -693,4 +671,3 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSets(USelectionSet *A, 
 
 	return result;
 }
-

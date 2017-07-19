@@ -62,7 +62,7 @@ public:
 			  meta=(DisplayName="SelectionSet / Float", CompactNodeTitle="/",
 			  Keywords="/ divide division", Category="Math|SelectionSet")
 	)
-		static USelectionSet *DivideSelctionSetByFloat(USelectionSet *Value, float Float=1);
+		static USelectionSet *DivideSelectionSetByFloat(USelectionSet *Value, float Float=1);
 
 	/// **Math|SelectionSet|SelectionSet / SelectionSet**: Divides the values from one SelectionSet by those of another
 	///

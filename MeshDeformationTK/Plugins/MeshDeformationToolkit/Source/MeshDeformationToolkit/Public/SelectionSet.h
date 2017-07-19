@@ -30,6 +30,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category=SelectionSet)
 		TArray<float> weights;
 
+	/// Create an empty selection set with the provided outer item and
+	/// also log errors if there are any problems.
+	static USelectionSet *CreateAndCheckValid(
+		int32 RequiredSize, UObject *OuterObject, FString NodeNameForWarning);
+
 	/// Creates a selection set of the size provided with zero weights.
 	/// \param size			The number of items in the selection set
 	void CreateSelectionSet(int32 size);
