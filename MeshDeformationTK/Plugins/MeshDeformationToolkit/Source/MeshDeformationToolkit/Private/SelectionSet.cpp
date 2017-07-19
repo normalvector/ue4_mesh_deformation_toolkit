@@ -31,3 +31,8 @@ USelectionSet *USelectionSet::RandomizeWeights(FRandomStream randomStream, float
 	}
 	return this;
 }
+
+int32 USelectionSet::Size() const
+{
+	return weights.Num();
+}
