@@ -35,7 +35,7 @@ void UMeshGeometry::Conform(
 	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
 	if (!World)
 	{
-		UE_LOG(MDTLog, Warning, TEXT("Conform: Cannot access game world"));
+		UE_LOG(MDTLog, Error, TEXT("Conform: Cannot access game world"));
 		return;
 	}
 
@@ -121,7 +121,7 @@ void UMeshGeometry::FitToSpline(
 	USelectionSet *Selection /*= nullptr*/
 )
 {
- // Check selectionSet size- log and abort if there's a problem. 
+	// Check selectionSet size- log and abort if there's a problem. 
 	if (!SelectionSetIsRightSize(Selection, TEXT("FitToSpline")))
 	{
 		return;
@@ -153,8 +153,8 @@ void UMeshGeometry::FitToSpline(
 	{
 		for (auto &vertex:section.vertices)
 		{
-// Remap the X position into the StartPosition/EndPosition range, then multiply by SplineLength to get a value we
-// can use for lookup.
+			// Remap the X position into the StartPosition/EndPosition range, then multiply by SplineLength to get a value we
+			// can use for lookup.
 			const float distanceAlongSpline = FMath::GetMappedRangeValueClamped(rangeX, rangePosition, vertex.X) * splineLength;
 
 			// If we have either profile curve we now need to find the position at a given point.  For efficiency
@@ -162,7 +162,7 @@ void UMeshGeometry::FitToSpline(
 			float combinedMeshScale = MeshScale;
 			if (ProfileCurve)
 			{
-// Get the range of the curve
+				// Get the range of the curve
 				float profileCurveMin;
 				float profileCurveMax;
 				ProfileCurve->GetTimeRange(profileCurveMin, profileCurveMax);
@@ -174,7 +174,7 @@ void UMeshGeometry::FitToSpline(
 			}
 			if (SectionProfileCurve)
 			{
-// Get the range of the curve
+				// Get the range of the curve
 				float sectionCurveMin;
 				float sectionCurveMax;
 				SectionProfileCurve->GetTimeRange(sectionCurveMin, sectionCurveMax);
@@ -208,7 +208,7 @@ void UMeshGeometry::FitToSpline(
 
 FBox UMeshGeometry::GetBoundingBox() const
 {
-// Track the two corners of the bounding box
+	// Track the two corners of the bounding box
 	FVector min = FVector::ZeroVector;
 	FVector max = FVector::ZeroVector;
 
@@ -224,7 +224,7 @@ FBox UMeshGeometry::GetBoundingBox() const
 		{
 			if (haveProcessedFirstVector)
 			{
-// Do the comparison of both min/max.
+				// Do the comparison of both min/max.
 				min.X = FMath::Min(min.X, vertex.X);
 				min.Y = FMath::Min(min.Y, vertex.Y);
 				min.Z = FMath::Min(min.Z, vertex.Z);
@@ -235,7 +235,7 @@ FBox UMeshGeometry::GetBoundingBox() const
 			}
 			else
 			{
-		  // Set min/max to the first vertex
+				// Set min/max to the first vertex
 				min = vertex;
 				max = vertex;
 				haveProcessedFirstVector = true;
@@ -246,9 +246,13 @@ FBox UMeshGeometry::GetBoundingBox() const
 	// Build a bounding box from the result
 	return FBox(min, max);
 }
+
 FString UMeshGeometry::GetSummary() const
 {
-	return FString::Printf(TEXT("%d sections, %d vertices, %d triangles"), this->sections.Num(), this->TotalVertexCount(), this->TotalTriangleCount());
+	return FString::Printf(
+		TEXT("%d sections, %d vertices, %d triangles"),
+		this->sections.Num(), this->TotalVertexCount(), this->TotalTriangleCount()
+	);
 }
 
 void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
@@ -258,7 +262,8 @@ void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*
 	{
 		return;
 	}
-	// TODO: Check normals size.
+
+	// Shouldn't need to check normals- MeshGeometry shouldn't allow that the be different
 
 	// Iterate over the sections, and the the vertices in the sections.
 	// As we need normals to we'll use an index-based for loop here for verts.
@@ -285,13 +290,13 @@ void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	FVector randomJitter;
+
 	// Iterate over the sections, and the vertices in each section.
 	for (auto &section:this->sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
-			randomJitter = FVector(
+			const FVector randomJitter = FVector(
 				randomStream.FRandRange(min.X, max.X),
 				randomStream.FRandRange(min.Y, max.Y),
 				randomStream.FRandRange(min.Z, max.Z)
@@ -307,16 +312,11 @@ void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max
 
 void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
-// Check selectionSet size- log and abort if there's a problem. 
+	// Check selectionSet size- log and abort if there's a problem. 
 	if (!SelectionSetIsRightSize(Selection, TEXT("Lerp")))
 	{
 		return;
 	}
-
-	// Iterate over the sections, and the vertices in the sections.  Do it by index so we
-	// can access the same data from TargetMeshGeometry
-	int32 nextSelectionIndex = 0;
-
 	if (!TargetMeshGeometry)
 	{
 		UE_LOG(MDTLog, Warning, TEXT("Lerp: No TargetMeshGeometry"));
@@ -331,6 +331,9 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 		return;
 	}
 
+	// Iterate over the sections, and the vertices in the sections.  Do it by index so we
+	// can access the same data from TargetMeshGeometry
+	int32 nextSelectionIndex = 0;
 	for (int32 sectionIndex = 0; sectionIndex<this->sections.Num(); sectionIndex++)
 	{
 		if (this->sections[sectionIndex].vertices.Num()!=TargetMeshGeometry->sections[sectionIndex].vertices.Num())
@@ -344,7 +347,7 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 
 		for (int32 vertexIndex = 0; vertexIndex<this->sections[sectionIndex].vertices.Num(); ++vertexIndex)
 		{
-// Get the existing data from the two components.
+			// Get the existing data from the two components.
 			FVector vertexFromThis = this->sections[sectionIndex].vertices[vertexIndex];
 			FVector vertexFromTarget = TargetMeshGeometry->sections[sectionIndex].vertices[vertexIndex];
 
@@ -369,12 +372,11 @@ bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD /*= 0*
 	// Clear any existing geometry.
 	this->sections.Empty();
 
-	const int32 numSections = staticMesh->GetNumSections(LOD);
-
 	// Iterate over the sections
+	const int32 numSections = staticMesh->GetNumSections(LOD);
 	for (int meshSectionIndex = 0; meshSectionIndex<numSections; ++meshSectionIndex)
 	{
-// Create the geometry for the section
+		// Create the geometry for the section
 		FSectionGeometry sectionGeometry;
 
 		// Copy the static mesh's geometry for the section to the struct.
@@ -418,18 +420,20 @@ void UMeshGeometry::Rotate(FRotator Rotation /*= FRotator::ZeroRotator*/, FVecto
 	}
 }
 
-void UMeshGeometry::RotateAroundAxis(FVector CenterOfRotation /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float AngleInDegrees /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
+void UMeshGeometry::RotateAroundAxis(
+	FVector CenterOfRotation /*= FVector::ZeroVector*/,
+	FVector Axis /*= FVector::UpVector*/, float AngleInDegrees /*= 0.0f*/,
+	USelectionSet *Selection /*= nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
 	if (!SelectionSetIsRightSize(Selection, TEXT("Jitter")))
 	{
 		return;
 	}
-	// TODO: Check non-zero vectors.
 
 	// Normalize the axis direction.
 	auto normalizedAxis = Axis.GetSafeNormal();
-	if (normalizedAxis.IsNearlyZero(0.1f))
+	if (normalizedAxis.IsNearlyZero(0.01f))
 	{
 		UE_LOG(MDTLog, Warning, TEXT("RotateAroundAxis: Could not normalize Axis, zero vector?"));
 		return;
@@ -458,7 +462,7 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(UProceduralMeshComponent *proc
 	// If there's no PMC we have nothing to do..
 	if (!proceduralMeshComponent)
 	{
-		UE_LOG(MDTLog, Warning, TEXT("SaveToProceduralMeshComponent: No proceduralMeshComponent provided"));
+		UE_LOG(MDTLog, Warning, TEXT("SaveToProceduralMeshComponent: No ProceduralMeshComponent provided"));
 		return false;
 	}
 
@@ -469,7 +473,7 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(UProceduralMeshComponent *proc
 	int32 nextSectionIndex = 0;
 	for (auto section:this->sections)
 	{
-// Create the PMC section with the StaticMesh's data.
+		// Create the PMC section with the StaticMesh's data.
 		proceduralMeshComponent->CreateMeshSection_LinearColor(
 			nextSectionIndex++, section.vertices, section.triangles, section.normals, section.uvs,
 			section.vertexColors, section.tangents, createCollision
@@ -501,14 +505,21 @@ void UMeshGeometry::Scale(FVector Scale3d /*= FVector(1, 1, 1)*/, FVector Center
 	}
 }
 
-void UMeshGeometry::ScaleAlongAxis(FVector CenterOfScale /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float Scale /*= 1.0f*/, USelectionSet *Selection /*= nullptr*/)
+void UMeshGeometry::ScaleAlongAxis(
+	FVector CenterOfScale /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float Scale /*= 1.0f*/,
+	USelectionSet *Selection /*= nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
 	if (!SelectionSetIsRightSize(Selection, TEXT("Jitter")))
 	{
 		return;
 	}
-	// TODO: Check non-zero vectors.
+	// Check the axis 
+	if (Axis.IsNearlyZero(0.01f))
+	{
+		UE_LOG(MDTLog, Warning, TEXT("ScaleAlongAxis: Axis can not be zero"));
+		return;
+	}
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -527,6 +538,10 @@ void UMeshGeometry::ScaleAlongAxis(FVector CenterOfScale /*= FVector::ZeroVector
 USelectionSet *UMeshGeometry::SelectAll()
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectAll: Cannot create new SelectionSet"));
+	}
 	newSelectionSet->CreateSelectionSet(this->TotalVertexCount());
 	newSelectionSet->SetAllWeights(1.0f);
 	return newSelectionSet;
@@ -548,6 +563,10 @@ USelectionSet * UMeshGeometry::SelectByNoise(
 )
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectAll: Cannot create new SelectionSet"));
+	}
 
 	// TODO: Lots of work here!
 	FastNoise noise;
@@ -572,7 +591,7 @@ USelectionSet * UMeshGeometry::SelectByNoise(
 	{
 		for (auto &vertex:section.vertices)
 		{
-// Apply the noise transform to the vertex and use the transformed vertex for the noise generation
+			// Apply the noise transform to the vertex and use the transformed vertex for the noise generation
 			const FVector transformedVertex = NoiseTransform.TransformPosition(vertex);
 			float NoiseValue = noise.GetNoise(transformedVertex.X, transformedVertex.Y, transformedVertex.Z);
 			newSelectionSet->weights.Emplace(NoiseValue);
@@ -585,16 +604,18 @@ USelectionSet * UMeshGeometry::SelectByNoise(
 USelectionSet * UMeshGeometry::SelectBySection(int32 SectionIndex)
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
-
-	// Keep track of the current section index.
-	int32 currentSectionIndex = 0;
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectBySection: Cannot create new SelectionSet"));
+	}
 
 	// Iterate over the sections, and the vertices in each section
+	int32 currentSectionIndex = 0;
 	for (auto &section:this->sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
-// Add a new weight- 1.0 if section indices match, 0.0 otherwise.
+			// Add a new weight- 1.0 if section indices match, 0.0 otherwise.
 			newSelectionSet->weights.Emplace(SectionIndex==currentSectionIndex ? 1.0f : 0.0f);
 		}
 		// Increment the current section index, we've finished with this section
@@ -607,10 +628,15 @@ USelectionSet * UMeshGeometry::SelectBySection(int32 SectionIndex)
 USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureChannel TextureChannel /*=ETextureChannel::Red*/)
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectByTexture: Cannot create new SelectionSet"));
+	}
 
 	// Check we have a texture and that it's in the right format
 	if (!Texture2D)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("SelectByTexture: No Texture2D provided"));
 		return nullptr;
 	}
 
@@ -628,7 +654,7 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 	// Check we got the data and lock it
 	if (!BulkData)
 	{
-		UE_LOG(MDTLog, Warning, TEXT("SelectByTexture: Could not lock bulk data for texture"));
+		UE_LOG(MDTLog, Error, TEXT("SelectByTexture: Could not lock bulk data for texture"));
 		return nullptr;
 	}
 	FColor *colorArray = static_cast<FColor*>(BulkData->Lock(LOCK_READ_ONLY));
@@ -638,7 +664,7 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 	{
 		for (auto &uv:section.uvs)
 		{
-// Convert our UV to a texture index.
+			// Convert our UV to a texture index.
 			int32 textureX = (int32)FMath::RoundHalfFromZero(uv.X * textureWidth);
 			int32 textureY = (int32)FMath::RoundHalfFromZero(uv.Y * textureHeight);
 
@@ -665,7 +691,6 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 					newSelectionSet->weights.Emplace(color.A);
 					break;
 			}
-			//newSelectionSet->weights.Emplace(0);
 		}
 	}
 
@@ -677,38 +702,40 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 
 USelectionSet * UMeshGeometry::SelectFacing(FVector Facing /*= FVector::UpVector*/, float InnerRadiusInDegrees /*= 0*/, float OuterRadiusInDegrees /*= 30.0f*/)
 {
-	// TODO: Check geometry looks valid (normals.Num == vertices.Num)
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectFacing: Cannot create new SelectionSet"));
+	}
 
 	// Normalize the facing vector.
 	if (!Facing.Normalize())
 	{
-// TODO: Better error handling.
+		UE_LOG(MDTLog, Error, TEXT("SelectFacing: Cannot normalize Facing vector"));
 		return newSelectionSet;
 	}
 
-	// Iterate over the sections, and the the normals in the sections.
+	// Calculate the selection radius- we need it for falloff
 	float selectionRadius = OuterRadiusInDegrees-InnerRadiusInDegrees;
-	float angleBias;
-	float angleToNormal;
-	FVector normalizedNormal;
-	// As we need normals to we'll use an index-based for loop here for verts.
+
+	// Iterate over the sections, and the the normals in the sections.
 	for (auto &section:this->sections)
 	{
 		for (auto normal:section.normals)
 		{
-			normalizedNormal = normal;
+			const FVector normalizedNormal = normal.GetSafeNormal();
 
-			if (normalizedNormal.Normalize())
+			if (normalizedNormal.IsNearlyZero(0.01f))
 			{
-// Calculate the dot product between the normal and the Facing.
-				angleToNormal = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(normal, Facing)));
-				angleBias = 1.0f-FMath::Clamp((angleToNormal-InnerRadiusInDegrees)/selectionRadius, 0.0f, 1.0f);
-				newSelectionSet->weights.Emplace(angleBias);
+				UE_LOG(MDTLog, Warning, TEXT("SelectFacing: Cannot normalize normal vector"));
+				newSelectionSet->weights.Emplace(0);
 			}
 			else
 			{
-				newSelectionSet->weights.Emplace(0);
+				// Calculate the dot product between the normal and the Facing.
+				const float angleToNormal = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(normal, Facing)));
+				const float angleBias = 1.0f-FMath::Clamp((angleToNormal-InnerRadiusInDegrees)/selectionRadius, 0.0f, 1.0f);
+				newSelectionSet->weights.Emplace(angleBias);
 			}
 		}
 	}
@@ -719,21 +746,25 @@ USelectionSet * UMeshGeometry::SelectFacing(FVector Facing /*= FVector::UpVector
 USelectionSet *UMeshGeometry::SelectInVolume(FVector CornerA, FVector CornerB)
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectInVolume: Cannot create new SelectionSet"));
+	}
 
 	// Get the minimum/maximum of X, Y, and Z from the corner vectors so we can check
-	auto minX = FMath::Min(CornerA.X, CornerB.X);
-	auto maxX = FMath::Max(CornerA.X, CornerB.X);
-	auto minY = FMath::Min(CornerA.Y, CornerB.Y);
-	auto maxY = FMath::Max(CornerA.Y, CornerB.Y);
-	auto minZ = FMath::Min(CornerA.Z, CornerB.Z);
-	auto maxZ = FMath::Max(CornerA.Z, CornerB.Z);
+	const float minX = FMath::Min(CornerA.X, CornerB.X);
+	const float maxX = FMath::Max(CornerA.X, CornerB.X);
+	const float minY = FMath::Min(CornerA.Y, CornerB.Y);
+	const float maxY = FMath::Max(CornerA.Y, CornerB.Y);
+	const float minZ = FMath::Min(CornerA.Z, CornerB.Z);
+	const float maxZ = FMath::Max(CornerA.Z, CornerB.Z);
 
 	// Iterate over the sections, and the vertices in each section
 	for (auto &section:this->sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
-// We only need to know if the vertex is between min/max inclusive.
+			// We only need to know if the vertex is between min/max inclusive.
 			const bool vertexInVolume =
 				(vertex.X>=minX)&&(vertex.X<=maxX)&&
 				(vertex.Y>=minY)&&(vertex.Y<=maxY)&&
@@ -750,6 +781,10 @@ USelectionSet *UMeshGeometry::SelectInVolume(FVector CornerA, FVector CornerB)
 USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, bool Reverse /*= false*/, bool LimitToLine /*= false*/)
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectLinear: Cannot create new SelectionSet"));
+	}
 
 	// Do the reverse if needed..
 	if (Reverse)
@@ -761,10 +796,9 @@ USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, 
 
 	// Calculate the length of the line.
 	float LineLength = (LineEnd-LineStart).Size();
-	if (LineLength<0.1)
+	if (LineLength<0.01f)
 	{
-// Lines too close..
-/// \todo Log error message..
+		UE_LOG(MDTLog, Warning, TEXT("SelectLinear: LineStart and LineEnd too close"));
 		return nullptr;
 	}
 
@@ -773,8 +807,8 @@ USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, 
 	{
 		for (auto &vertex:section.vertices)
 		{
-// Get the nearest point on the line
-			FVector NearestPointOnLine = FMath::ClosestPointOnLine(LineStart, LineEnd, vertex);
+			// Get the nearest point on the line
+			const FVector NearestPointOnLine = FMath::ClosestPointOnLine(LineStart, LineEnd, vertex);
 
 			// If we've hit one of the end points then return the limits
 			if (NearestPointOnLine==LineEnd)
@@ -787,7 +821,7 @@ USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, 
 			}
 			else
 			{
-		  // Get the distance to the two start point- it's the ratio we're after.
+				// Get the distance to the two start point- it's the ratio we're after.
 				float DistanceToLineStart = (NearestPointOnLine-LineStart).Size();
 				newSelectionSet->weights.Emplace(DistanceToLineStart/LineLength);
 			}
@@ -800,19 +834,22 @@ USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, 
 USelectionSet * UMeshGeometry::SelectNear(FVector center /*=FVector::ZeroVector*/, float innerRadius/*=0*/, float outerRadius/*=100*/)
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectNear: Cannot create new SelectionSet"));
+	}
+
+	// Calculate the selection radius- we need it for falloff
+	const float selectionRadius = outerRadius-innerRadius;
 
 	// Iterate over the sections, and the vertices in each section.
-	float distanceFromCenter;
-	float distanceBias;
-	float selectionRadius = outerRadius-innerRadius;
-
 	for (auto &section:this->sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
-			distanceFromCenter = (vertex-center).Size();
+			const float distanceFromCenter = (vertex-center).Size();
 			// Apply bias to map distance to 0-1 based on innerRadius and outerRadius
-			distanceBias = 1.0f-FMath::Clamp((distanceFromCenter-innerRadius)/selectionRadius, 0.0f, 1.0f);
+			const float distanceBias = 1.0f-FMath::Clamp((distanceFromCenter-innerRadius)/selectionRadius, 0.0f, 1.0f);
 			newSelectionSet->weights.Emplace(distanceBias);
 		}
 	}
@@ -823,29 +860,27 @@ USelectionSet * UMeshGeometry::SelectNear(FVector center /*=FVector::ZeroVector*
 USelectionSet * UMeshGeometry::SelectNearLine(FVector lineStart, FVector lineEnd, float innerRadius /*=0*/, float outerRadius/*= 100*/, bool lineIsInfinite/* = false */)
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectNearLine: Cannot create new SelectionSet"));
+	}
+
+	// Calculate the selection radius- we need it for falloff
+	const float selectionRadius = outerRadius-innerRadius;
 
 	// Iterate over the sections, and the vertices in each section.
-	FVector nearestPointOnLine;
-	float distanceToLine;
-	float distanceBias;
-	float selectionRadius = outerRadius-innerRadius;
-
 	for (auto &section:this->sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
-// Get the distance from the line based on whether we're looking at an infinite line or not.
-			if (lineIsInfinite)
-			{
-				nearestPointOnLine = FMath::ClosestPointOnInfiniteLine(lineStart, lineEnd, vertex);
-			}
-			else
-			{
-				nearestPointOnLine = FMath::ClosestPointOnLine(lineStart, lineEnd, vertex);
-			}
+			// Get the distance from the line based on whether we're looking at an infinite line or not.
+			const FVector nearestPointOnLine = lineIsInfinite ?
+				FMath::ClosestPointOnInfiniteLine(lineStart, lineEnd, vertex) :
+				FMath::ClosestPointOnLine(lineStart, lineEnd, vertex);
+
 			// Apply bias to map distance to 0-1 based on innerRadius and outerRadius
-			distanceToLine = (vertex-nearestPointOnLine).Size();
-			distanceBias = 1.0f-FMath::Clamp((distanceToLine-innerRadius)/selectionRadius, 0.0f, 1.0f);
+			const float distanceToLine = (vertex-nearestPointOnLine).Size();
+			const float distanceBias = 1.0f-FMath::Clamp((distanceToLine-innerRadius)/selectionRadius, 0.0f, 1.0f);
 			newSelectionSet->weights.Emplace(distanceBias);
 		}
 	}
@@ -856,25 +891,27 @@ USelectionSet * UMeshGeometry::SelectNearLine(FVector lineStart, FVector lineEnd
 USelectionSet * UMeshGeometry::SelectNearSpline(USplineComponent *spline, FTransform transform, float innerRadius /*= 0*/, float outerRadius /*= 100*/)
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
+	if (!newSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectNearSpline: Cannot create new SelectionSet"));
+	}
+
+	// Calculate the selection radius- we need it for falloff
+	const float selectionRadius = outerRadius-innerRadius;
 
 	// Iterate over the sections, and the vertices in each section.
-	float distanceFromSpline;
-	float distanceBias;
-	FVector closestPointOnSpline;
-	float selectionRadius = outerRadius-innerRadius;
-
 	for (auto &section:this->sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
 // Convert the vertex location to local space- and then get the nearest point on the spline in local space.
-			closestPointOnSpline = spline->FindLocationClosestToWorldLocation(
+			const FVector closestPointOnSpline = spline->FindLocationClosestToWorldLocation(
 				transform.TransformPosition(vertex),
 				ESplineCoordinateSpace::Local
 			);
-			distanceFromSpline = (vertex-closestPointOnSpline).Size();
+			const float distanceFromSpline = (vertex-closestPointOnSpline).Size();
 			// Apply bias to map distance to 0-1 based on innerRadius and outerRadius
-			distanceBias = 1.0f-FMath::Clamp((distanceFromSpline-innerRadius)/selectionRadius, 0.0f, 1.0f);
+			const float distanceBias = 1.0f-FMath::Clamp((distanceFromSpline-innerRadius)/selectionRadius, 0.0f, 1.0f);
 			newSelectionSet->weights.Emplace(distanceBias);
 		}
 	}
@@ -916,20 +953,16 @@ void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStreng
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	FVector vertexRelativeToCenter;
-	float targetVectorLength;
 	for (auto &section:this->sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
-			vertexRelativeToCenter = vertex-SphereCenter;
+			const FVector vertexRelativeToCenter = vertex-SphereCenter;
+
 			// Calculate the required length- incorporating both the SphereRadius and Selection.
-			targetVectorLength = FMath::Lerp(vertexRelativeToCenter.Size(), SphereRadius, FilterStrength * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f));
-			// TODO: Think what happens when this fails?
-			if (vertexRelativeToCenter.Normalize())
-			{
-				vertex = SphereCenter+(vertexRelativeToCenter * targetVectorLength);
-			}
+			const float targetVectorLength = FMath::Lerp(vertexRelativeToCenter.Size(), SphereRadius, FilterStrength * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f));
+			
+			vertex = SphereCenter+(vertexRelativeToCenter * targetVectorLength);
 		}
 	}
 }
