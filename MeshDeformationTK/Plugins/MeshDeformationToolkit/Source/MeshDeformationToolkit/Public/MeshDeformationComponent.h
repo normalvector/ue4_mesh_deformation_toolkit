@@ -259,6 +259,22 @@ public:
 	##################################################
 	*/
 
+	UFUNCTION(
+		BlueprintCallable, Category = MeshDeformationComponent,
+		meta = (AutoCreateRefTerm = "IgnoredActors", WorldContext = "WorldContextObject", Keywords = "drop drape cloth collision soft trace")
+	)
+		void Conform(
+			UMeshDeformationComponent *&MeshDeformationComponent,
+			UObject* WorldContextObject,
+			FTransform Transform,
+			TArray <AActor *> IgnoredActors,
+			FVector Projection = FVector(0, 0, -100),
+			float HeightAdjust = 0,
+			bool TraceComplex = true,
+			ECollisionChannel CollisionChannel = ECC_WorldStatic,
+			USelectionSet *Selection = nullptr
+		);
+
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
 	///
 	/// \param StartPosition				The position (0 to 1) on the spline that the mesh should start,
@@ -533,4 +549,31 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
 		meta=(Keywords="size limits bounds min max"))
 		FBox GetBoundingBox();
+
+	/// Get a brief description of this geometry in the form *"4 sections, 1000 vertices, 500 triangles"*
+	///
+	/// This is mainly for debug purposes and making sure things have not broken.
+	///
+	/// \return A text summary
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "info string verts points tris polys faces sections mesh"))
+		FString GetSummary() const;
+
+	/// Return the number of total triangles in the geometry.
+	///
+	/// This is the combined sum of the triangles in each of the sections which make up this mesh.
+	///
+	/// \return The total triangle count
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "tris polys polygons faces"))
+		int32 GetTotalTriangleCount() const;
+
+	/// Return the number of total vertices in the geometry.
+	///
+	/// This is the combined sum of the vertices in each of the sections which make up this mesh.
+	///
+	/// \return The total vertex count
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "verts points"))
+		int32 GetTotalVertexCount() const;
 };

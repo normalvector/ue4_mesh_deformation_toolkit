@@ -70,6 +70,22 @@ USelectionSet * UMeshDeformationComponent::SelectNearSpline(USplineComponent *sp
 	return MeshGeometry->SelectNearSpline(spline, actorTransform, innerRadius, outerRadius);
 }
 
+void UMeshDeformationComponent::Conform(
+	UMeshDeformationComponent *&MeshDeformationComponent, UObject* WorldContextObject, FTransform Transform, TArray <AActor *> IgnoredActors,
+	FVector Projection /*= FVector(0, 0, -100)*/, float HeightAdjust /*= 0*/, bool TraceComplex /*= true*/,
+	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/, USelectionSet *Selection /*= nullptr */)
+{
+	if (!MeshGeometry) {
+		UE_LOG(LogTemp, Warning, TEXT("Conform: No meshGeometry loaded"));
+		return;
+	}
+	
+	MeshGeometry->Conform(
+		WorldContextObject, Transform, IgnoredActors, Projection, HeightAdjust, TraceComplex,
+		CollisionChannel, Selection
+	);
+}
+
 USelectionSet * UMeshDeformationComponent::SelectNearLine(FVector lineStart, FVector lineEnd, float innerRadius /*=0*/, float outerRadius/*= 100*/, bool lineIsInfinite/* = false */)
 {
 	if (!MeshGeometry) {
@@ -279,7 +295,38 @@ FBox UMeshDeformationComponent::GetBoundingBox()
 	return MeshGeometry->GetBoundingBox();
 }
 
+FString UMeshDeformationComponent::GetSummary() const
+{
+	if (!MeshGeometry) {
+		UE_LOG(LogTemp, Warning, TEXT("GetSummary: No meshGeometry loaded"));
+		return FString("No MeshGeometry loaded");
+	}
+
+	return MeshGeometry->GetSummary();
+}
+
+int32 UMeshDeformationComponent::GetTotalTriangleCount() const
+{
+	if (!MeshGeometry) {
+		UE_LOG(LogTemp, Warning, TEXT("GetTotalTriangleCount: No meshGeometry loaded"));
+		return 0;
+	}
+	
+	return MeshGeometry->TotalTriangleCount();
+}
+
+int32 UMeshDeformationComponent::GetTotalVertexCount() const
+{
+	if (!MeshGeometry) {
+		UE_LOG(LogTemp, Warning, TEXT("GetTotalVertexCount: No meshGeometry loaded"));
+		return 0;
+	}
+
+	return MeshGeometry->TotalVertexCount();
+}
+
 void UMeshDeformationComponent::FitToSpline(
+	UMeshDeformationComponent *&MeshDeformationComponent,
 	USplineComponent *SplineComponent,
 	float StartPosition /*= 0.0f*/,
 	float EndPosition /*= 1.0f*/,
@@ -288,6 +335,8 @@ void UMeshDeformationComponent::FitToSpline(
 	UCurveFloat *SectionProfileCurve /*= nullptr*/,
 	USelectionSet *Selection /*= nullptr*/
 ) {
+	MeshDeformationComponent = this;
+
 	if (!MeshGeometry) {
 		UE_LOG(LogTemp, Warning, TEXT("GetBoundingBox: No meshGeometry loaded"));
 		return;

@@ -12,7 +12,9 @@
 /// it should be possible to use this for other selection weightings in the future.
 ///
 /// The *SelectionSetBPLibrary* contains a lot of helper functions for this which allow
-/// selection sets to be modified.
+/// selection sets to be modified, as such these methods are not exposed to Blueprint as
+/// having versions which change values and those which return a new SelectionSet would
+/// just be confusing.
 ///
 /// \todo Add a Type enum to allow SelectionSets to be used for more than just vertices.
 /// \todo Add a method to check the type/weight count so that we can check if a SelectionSet
@@ -40,8 +42,7 @@ public:
 	/// This will preserve the number of elements in the set, only the values will change.
 	///
 	/// \param weight		The weight to assign to all values
-	UFUNCTION(BlueprintCallable, Category = SelectionSet)
-		USelectionSet *SetAllWeights(float weight);
+	USelectionSet *SetAllWeights(float weight);
 
 	/// Randomize the weights of the selection set
 	///
@@ -50,7 +51,5 @@ public:
 	/// \param randomStream			The RandomStream to use for the source
 	/// \param minWeight			The minimum value of the random weightings
 	/// \param maxWeight			The maximum value of the random weightings
-
-	UFUNCTION(BlueprintCallable, Category = SelectionSet)
-		USelectionSet *RandomizeWeights(FRandomStream randomStream, float minWeight = 0, float maxWeight = 1);
+	USelectionSet *RandomizeWeights(FRandomStream randomStream, float minWeight = 0, float maxWeight = 1);
 };

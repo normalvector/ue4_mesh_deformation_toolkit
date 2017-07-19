@@ -157,7 +157,6 @@ public:
 		meta = (Keywords = "normal vector"))
 		USelectionSet *SelectFacing(FVector Facing = FVector::UpVector, float InnerRadiusInDegrees = 0, float OuterRadiusInDegrees = 30.0f);
 
-
 	/// Select vertices inside a volume defined by two opposite corner points.
 	/// \param CornerA						The first corner to define the volume
 	/// \param CornerB						The second corner to define the volume
