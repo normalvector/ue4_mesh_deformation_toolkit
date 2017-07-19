@@ -29,7 +29,7 @@ public:
 		meta = (DisplayName = "SelectionSet + Float", CompactNodeTitle = "+",
 			Keywords = "+ add plus", CommutativeAssociativeBinaryOperator = "true", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Add_FloatToSelectionSet(USelectionSet *Value, float Float = 0);
+		static USelectionSet *AddFloatToSelectionSet(USelectionSet *Value, float Float = 0);
 
 	/// **Math|SelectionSet|SelectionSet + SelectionSet**: Add two SelectionSets together
 	///
@@ -40,7 +40,7 @@ public:
 		meta = (DisplayName = "SelectionSet + SelectionSet", CompactNodeTitle = "+",
 			Keywords = "+ add plus", CommutativeAssociativeBinaryOperator = "true", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Add_SelectionSets(USelectionSet *A, USelectionSet *B);
+		static USelectionSet *AddSelectionSets(USelectionSet *A, USelectionSet *B);
 
 	/// **Math|SelectionSet|Clamp (SelectionSet)**: Clamp all values i7n the set to the minimum and maximum provided.
 	///
@@ -62,7 +62,7 @@ public:
 		meta = (DisplayName = "SelectionSet / Float", CompactNodeTitle = "/",
 			Keywords = "/ divide division", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Divide_SelctionSetByFloat(USelectionSet *Value, float Float = 1);
+		static USelectionSet *DivideSelctionSetByFloat(USelectionSet *Value, float Float = 1);
 
 	/// **Math|SelectionSet|SelectionSet / SelectionSet**: Divides the values from one SelectionSet by those of another
 	///
@@ -73,7 +73,7 @@ public:
 		meta = (DisplayName = "SelectionSet / SelectionSet", CompactNodeTitle = "/",
 			Keywords = "/ divide division", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Divide_SelectionSets(USelectionSet *A, USelectionSet *B);
+		static USelectionSet *DivideSelectionSets(USelectionSet *A, USelectionSet *B);
 
 	/// **Math|SelectionSet|Ease (SelectionSet)**: Apply an easing function to all values in SelectionSet
 	///
@@ -83,7 +83,7 @@ public:
 	/// \param BlendExp		Controls the blending of the ease function, only applies for *Ease*, *EaseIn* and *EaseInOut* types
 	/// \return				The eased SelectionSet
 	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "Ease (SelectionSet)", Category = "Math|SelectionSet", Keywords="easing smooth in out falloff gradient")
+		meta = (DisplayName = "Ease (SelectionSet)", Category = "Math|SelectionSet", Keywords="remap easing smooth in out falloff gradient")
 	)
 		static USelectionSet *Ease(USelectionSet *Value, EEasingFunc::Type EaseFunction = EEasingFunc::Linear, int32 Steps = 2, float BlendExp = 2.0f);
 
@@ -96,7 +96,7 @@ public:
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "Lerp (SelectionSet, Float)", Category = "Math|SelectionSet", Keywords = "blend linear interpolate alpha")
 	)
-		static USelectionSet *Lerp_SelectionSetWithFloat(USelectionSet *Value, float Float, float Alpha = 0);
+		static USelectionSet *LerpSelectionSetWithFloat(USelectionSet *Value, float Float, float Alpha = 0);
 
 	/// **Math|SelectionSet|Lerp(SelectionSet)**: Apply a lerp to blend two SelectionSets together
 	///
@@ -106,7 +106,7 @@ public:
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "Lerp (SelectionSet)", Category = "Math|SelectionSet", Keywords = "blend linear interpolate alpha")
 	)
-		static USelectionSet *Lerp_SelectionSets(USelectionSet *A, USelectionSet *B, float Alpha = 0);
+		static USelectionSet *LerpSelectionSets(USelectionSet *A, USelectionSet *B, float Alpha = 0);
 
 	/// **Math|SelectionSet|Max (Float)**: Return the maximum of a SelectionSet and a Float
 	///
@@ -119,7 +119,7 @@ public:
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "Max (SelectionSet, Float)", Category = "Math|SelectionSet", Keywords = "limit")
 	)
-		static USelectionSet *Max_SelectionSetAgainstFloat(USelectionSet *Value, float Float);
+		static USelectionSet *MaxSelectionSetAgainstFloat(USelectionSet *Value, float Float);
 
 	/// **Math|SelectionSet|Max (SelectionSet, SelectionSet)**: Return the maximum value from two SelectionSets
 	///
@@ -131,7 +131,7 @@ public:
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "Max (SelectionSet, SelectionSet)", Category = "Math|SelectionSet", Keywords = "limit")
 	)
-		static USelectionSet *Max_SelectionSets(USelectionSet *A, USelectionSet *B);
+		static USelectionSet *MaxSelectionSets(USelectionSet *A, USelectionSet *B);
 
 	/// **Math|SelectionSet|Min (Float)**: Return the minimum of a SelectionSet and a Float
 	///
@@ -144,7 +144,7 @@ public:
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "Min (SelectionSet, Float)", Category = "Math|SelectionSet", Keywords = "limit")
 	)
-		static USelectionSet *Min_SelectionSetAgainstFloat(USelectionSet *Value, float Float);
+		static USelectionSet *MinSelectionSetAgainstFloat(USelectionSet *Value, float Float);
 
 	/// **Math|SelectionSet|Min (SelectionSet, SelectionSet)**: Return the minimum value from two SelectionSets
 	///
@@ -156,7 +156,7 @@ public:
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "Min (SelectionSet, SelectionSet)", Category = "Math|SelectionSet", Keywords = "limit")
 	)
-		static USelectionSet *Min_SelectionSets(USelectionSet *A, USelectionSet *B);
+		static USelectionSet *MinSelectionSets(USelectionSet *A, USelectionSet *B);
 
 	/// **Math|SelectionSet|SelectionSet * Float**: Multiplies the values of a SelectionSet by a Float
 	///
@@ -167,7 +167,7 @@ public:
 		meta = (DisplayName = "SelectionSet * Float", CompactNodeTitle = "*",
 			Keywords = "* multiply times", CommutativeAssociativeBinaryOperator = "true", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Multiply_SelctionSetByFloat(USelectionSet *Value, float Float = 1);
+		static USelectionSet *MultiplySelctionSetByFloat(USelectionSet *Value, float Float = 1);
 
 	/// **Math|SelectionSet|SelectionSet \* SelectionSet**: Multiplies the values of two SelectionSets
 	///
@@ -178,7 +178,7 @@ public:
 		meta = (DisplayName = "SelectionSet * SelectionSet", CompactNodeTitle = "*",
 			Keywords = "* multiply times", CommutativeAssociativeBinaryOperator = "true", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Multiply_SelectionSets(USelectionSet *A, USelectionSet *B);
+		static USelectionSet *MultiplySelectionSets(USelectionSet *A, USelectionSet *B);
 
 	/// **Math|SelectionSet|OneMinus**: Returns a SelectionSet with values 1- those of another SelectionSet
 	///
@@ -203,6 +203,19 @@ public:
 	)
 		static USelectionSet *Randomize(USelectionSet *Value, FRandomStream RandomStream, float Min = 0, float Max = 1);
 
+	/// **Math|SelectionSet|RemapToCurve(SelectionSet, Curve)**: Remap the values of a SelectionSet to a CurveFloat
+	///
+	/// The remap will return the T=0 value of the Curve for Weight=0, and the T=Max value of the Curve for Weight=1,
+	/// and values in between will be suitably scaled.
+	///
+	/// \param Value	The SelectionSet to apply the remap to
+	/// \param Curve	The CurveFloat to shape the remap
+	/// \return The result of the SelectionSet remapped to the Curve
+	UFUNCTION(BlueprintPure,
+		meta = (DisplayName = "RemapToCurve (SelectionSet, Curve)", Category = "Math|SelectionSet")
+	)
+		static USelectionSet *RemapToCurve(USelectionSet *Value, UCurveFloat *Curve);
+
 	/// **Math|SelectionSetRemapToRange(SelectionSet, float, float)**: Remaps all of the values between a new min/max
 	///
 	/// This goes through all of the weightings in the SelectionSet and remaps the lowest one to Min, the highest one
@@ -218,20 +231,8 @@ public:
 	UFUNCTION(BlueprintPure,
 		meta = (DisplayName = "RemapToRange (SelectionSet, float, float)", Category = "Math|SelectionSet", Keywords = "clamp limit min max")
 	)
-		static USelectionSet *Remap_Range(USelectionSet *Value, float Min = 0.0f, float Max = 1.0f);
+		static USelectionSet *RemapToRange(USelectionSet *Value, float Min = 0.0f, float Max = 1.0f);
 
-	/// **Math|SelectionSet|RemapToCurve(SelectionSet, Curve)**: Remap the values of a SelectionSet to a CurveFloat
-	///
-	/// The remap will return the T=0 value of the Curve for Weight=0, and the T=Max value of the Curve for Weight=1,
-	/// and values in between will be suitably scaled.
-	///
-	/// \param Value	The SelectionSet to apply the remap to
-	/// \param Curve	The CurveFloat to shape the remap
-	/// \return The result of the SelectionSet remapped to the Curve
-	UFUNCTION(BlueprintPure,
-		meta = (DisplayName = "RemapToCurve (SelectionSet, Curve)", Category = "Math|SelectionSet")
-	)
-		static USelectionSet *Remap_SelectionSetToCurve(USelectionSet *Value, UCurveFloat *Curve);
 
 	/// **Math|SelectionSet|Set**: Set all values of a SelectionSet to the same Float
 	///
@@ -256,7 +257,7 @@ public:
 		meta = (DisplayName = "SelectionSet - Float", CompactNodeTitle = "-",
 			Keywords = "- subtract minus", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Subtract_FloatFromSelectionSet(USelectionSet *Value, float Float = 0);
+		static USelectionSet *SubtractFloatFromSelectionSet(USelectionSet *Value, float Float = 0);
 
 	/// **Math|SelectionSet|Float - SelectionSet**: Subtract the values of a SelectionSet from a constant Float
 	///
@@ -267,7 +268,7 @@ public:
 		meta = (DisplayName = "Float - SelectionSet", CompactNodeTitle = "+",
 			Keywords = "+ add plus", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Subtract_SelectionSetFromFloat(float Float, USelectionSet *Value);
+		static USelectionSet *SubtractSelectionSetFromFloat(float Float, USelectionSet *Value);
 
 	/// **Math|SelectionSet|SelectionSet - SelectionSet**: Subtract one SelectionSet from another
 	///
@@ -278,5 +279,5 @@ public:
 		meta = (DisplayName = "SelectionSet - SelectionSet", CompactNodeTitle = "-",
 			Keywords = "+ add plus", Category = "Math|SelectionSet")
 	)
-		static USelectionSet *Subtract_SelectionSets(USelectionSet *A, USelectionSet *B);
+		static USelectionSet *SubtractSelectionSets(USelectionSet *A, USelectionSet *B);
 };

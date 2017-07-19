@@ -3,9 +3,6 @@
 #include "MeshDeformationToolkit.h"
 #include "SelectionSetBPLibrary.h"
 
-
-
-
 USelectionSet * USelectionSetBPLibrary::Clamp(USelectionSet *Value, float Min/*=0*/, float Max/*=1*/)
 {
 	// Need a SelectionSet
@@ -88,7 +85,7 @@ USelectionSet * USelectionSetBPLibrary::Ease(USelectionSet *Value, EEasingFunc::
 	return result;
 }
 
-USelectionSet *USelectionSetBPLibrary::Add_SelectionSets(USelectionSet *A, USelectionSet *B)
+USelectionSet *USelectionSetBPLibrary::AddSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided
 	if (!A || !B) {
@@ -106,7 +103,7 @@ USelectionSet *USelectionSetBPLibrary::Add_SelectionSets(USelectionSet *A, USele
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Subtract_SelectionSets(USelectionSet *A, USelectionSet *B)
+USelectionSet * USelectionSetBPLibrary::SubtractSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided
 	if (!A || !B) {
@@ -124,7 +121,7 @@ USelectionSet * USelectionSetBPLibrary::Subtract_SelectionSets(USelectionSet *A,
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Add_FloatToSelectionSet(USelectionSet *Value, float Float/*=0*/)
+USelectionSet * USelectionSetBPLibrary::AddFloatToSelectionSet(USelectionSet *Value, float Float/*=0*/)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -142,7 +139,7 @@ USelectionSet * USelectionSetBPLibrary::Add_FloatToSelectionSet(USelectionSet *V
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Subtract_FloatFromSelectionSet(USelectionSet *Value, float Float/*=0*/)
+USelectionSet * USelectionSetBPLibrary::SubtractFloatFromSelectionSet(USelectionSet *Value, float Float/*=0*/)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -160,7 +157,7 @@ USelectionSet * USelectionSetBPLibrary::Subtract_FloatFromSelectionSet(USelectio
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Subtract_SelectionSetFromFloat(float Float, USelectionSet *Value)
+USelectionSet * USelectionSetBPLibrary::SubtractSelectionSetFromFloat(float Float, USelectionSet *Value)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -178,7 +175,7 @@ USelectionSet * USelectionSetBPLibrary::Subtract_SelectionSetFromFloat(float Flo
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Multiply_SelectionSets(USelectionSet *A, USelectionSet *B)
+USelectionSet * USelectionSetBPLibrary::MultiplySelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided
 	if (!A || !B) {
@@ -195,7 +192,7 @@ USelectionSet * USelectionSetBPLibrary::Multiply_SelectionSets(USelectionSet *A,
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Multiply_SelctionSetByFloat(USelectionSet *Value, float Float/*=1*/)
+USelectionSet * USelectionSetBPLibrary::MultiplySelctionSetByFloat(USelectionSet *Value, float Float/*=1*/)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -213,7 +210,7 @@ USelectionSet * USelectionSetBPLibrary::Multiply_SelctionSetByFloat(USelectionSe
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Divide_SelectionSets(USelectionSet *A, USelectionSet *B)
+USelectionSet * USelectionSetBPLibrary::DivideSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided
 	if (!A || !B) {
@@ -231,7 +228,7 @@ USelectionSet * USelectionSetBPLibrary::Divide_SelectionSets(USelectionSet *A, U
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Divide_SelctionSetByFloat(USelectionSet *Value, float Float /*= 1*/)
+USelectionSet * USelectionSetBPLibrary::DivideSelctionSetByFloat(USelectionSet *Value, float Float /*= 1*/)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -303,7 +300,7 @@ USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomS
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Max_SelectionSets(USelectionSet *A, USelectionSet *B)
+USelectionSet * USelectionSetBPLibrary::MaxSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided
 	if (!A || !B) {
@@ -322,7 +319,7 @@ USelectionSet * USelectionSetBPLibrary::Max_SelectionSets(USelectionSet *A, USel
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Min_SelectionSets(USelectionSet *A, USelectionSet *B)
+USelectionSet * USelectionSetBPLibrary::MinSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided
 	if (!A || !B) {
@@ -341,7 +338,7 @@ USelectionSet * USelectionSetBPLibrary::Min_SelectionSets(USelectionSet *A, USel
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Max_SelectionSetAgainstFloat(USelectionSet *Value, float Float)
+USelectionSet * USelectionSetBPLibrary::MaxSelectionSetAgainstFloat(USelectionSet *Value, float Float)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -360,7 +357,7 @@ USelectionSet * USelectionSetBPLibrary::Max_SelectionSetAgainstFloat(USelectionS
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Min_SelectionSetAgainstFloat(USelectionSet *Value, float Float)
+USelectionSet * USelectionSetBPLibrary::MinSelectionSetAgainstFloat(USelectionSet *Value, float Float)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -379,7 +376,7 @@ USelectionSet * USelectionSetBPLibrary::Min_SelectionSetAgainstFloat(USelectionS
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Lerp_SelectionSets(USelectionSet *A, USelectionSet *B, float Alpha/*=0*/)
+USelectionSet * USelectionSetBPLibrary::LerpSelectionSets(USelectionSet *A, USelectionSet *B, float Alpha/*=0*/)
 {
 	// Need both provided
 	if (!A || !B) {
@@ -398,7 +395,7 @@ USelectionSet * USelectionSetBPLibrary::Lerp_SelectionSets(USelectionSet *A, USe
 
 }
 
-USelectionSet * USelectionSetBPLibrary::Lerp_SelectionSetWithFloat(USelectionSet *Value, float Float, float Alpha /*= 0*/)
+USelectionSet * USelectionSetBPLibrary::LerpSelectionSetWithFloat(USelectionSet *Value, float Float, float Alpha /*= 0*/)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -416,7 +413,7 @@ USelectionSet * USelectionSetBPLibrary::Lerp_SelectionSetWithFloat(USelectionSet
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Remap_SelectionSetToCurve(USelectionSet *Value, UCurveFloat *Curve)
+USelectionSet * USelectionSetBPLibrary::RemapToCurve(USelectionSet *Value, UCurveFloat *Curve)
 {
 	// Need a SelectionSet
 	if (!Value) {
@@ -446,7 +443,7 @@ USelectionSet * USelectionSetBPLibrary::Remap_SelectionSetToCurve(USelectionSet 
 	return result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Remap_Range(USelectionSet *Value, float Min /*= 0.0f*/, float Max /*= 1.0f*/)
+USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float Min /*= 0.0f*/, float Max /*= 1.0f*/)
 {
 	// Need a SelectionSet, and it needs at least one value.
 	if (!Value) {
