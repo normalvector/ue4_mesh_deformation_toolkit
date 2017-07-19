@@ -476,4 +476,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 		meta=(Keywords="verts points"))
 		int32 TotalVertexCount() const;
+	private:
+		/// Utility function which checks the size of an (optional) selection set against the
+		/// number of vertices in the mesh geometry.  If they match return true, if not then
+		/// log a warning and return false.
+		bool SelectionSetRightSize(USelectionSet *selection, FString NodeNameForWarning) const;
 };

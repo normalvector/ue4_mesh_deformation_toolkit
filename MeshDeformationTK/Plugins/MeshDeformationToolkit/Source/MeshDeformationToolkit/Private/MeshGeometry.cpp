@@ -87,6 +87,28 @@ int32 UMeshGeometry::TotalVertexCount() const
 	return totalVertexCount;
 }
 
+bool UMeshGeometry::SelectionSetRightSize(USelectionSet *selection, FString NodeNameForWarning) const
+{
+	// No selection set is fine...
+	if (!selection) {
+		return true;
+	}
+
+	// Get the sizes
+	const int32 selectionSetSize = selection->Size();
+	const int32 geometrySize = TotalVertexCount();
+
+	// Check them
+	if (selectionSetSize != geometrySize) {
+		UE_LOG(
+			LogTemp, Warning, TEXT("Jitter: Selection set is the wrong size, %d weights in set for %d vertices in mesh"),
+			selectionSetSize, geometrySize
+		);
+		return false;
+	}
+	return true;
+}
+
 int32 UMeshGeometry::TotalTriangleCount() const
 {
 	int32 totalTriangleCount = 0;
@@ -430,7 +452,10 @@ USelectionSet * UMeshGeometry::SelectBySection(int32 SectionIndex)
 
 void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection /*=nullptr*/)
 {
-	// TODO: Check selectionSet size.
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetRightSize(selection, TEXT("Jitter"))) {
+		return;
+	}
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
