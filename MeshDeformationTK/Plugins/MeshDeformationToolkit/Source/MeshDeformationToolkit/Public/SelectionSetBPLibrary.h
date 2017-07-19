@@ -280,4 +280,8 @@ public:
 			  Keywords="+ add plus", Category="Math|SelectionSet")
 	)
 		static USelectionSet *SubtractSelectionSets(USelectionSet *A, USelectionSet *B);
+	private:
+		/// Utility function which checks that two SelectionSets are provided, and are the same size
+		static bool HaveTwoSelectionSetsOfSameSize(
+			USelectionSet *SelectionA, USelectionSet *SelectionB, FString NodeNameForWarning);
 };

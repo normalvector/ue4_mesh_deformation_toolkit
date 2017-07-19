@@ -8,6 +8,7 @@ USelectionSet * USelectionSetBPLibrary::Clamp(USelectionSet *Value, float Min/*=
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("Clamp: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -28,6 +29,7 @@ USelectionSet * USelectionSetBPLibrary::Ease(USelectionSet *Value, EEasingFunc::
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("Ease: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -91,8 +93,8 @@ USelectionSet * USelectionSetBPLibrary::Ease(USelectionSet *Value, EEasingFunc::
 
 USelectionSet *USelectionSetBPLibrary::AddSelectionSets(USelectionSet *A, USelectionSet *B)
 {
-	// Need both provided
-	if (!A||!B)
+	// Need both provided and same size
+	if (!HaveTwoSelectionSetsOfSameSize(A, B, "AddSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -111,8 +113,8 @@ USelectionSet *USelectionSetBPLibrary::AddSelectionSets(USelectionSet *A, USelec
 
 USelectionSet * USelectionSetBPLibrary::SubtractSelectionSets(USelectionSet *A, USelectionSet *B)
 {
-	// Need both provided
-	if (!A||!B)
+	// Need both provided and same size
+	if (!HaveTwoSelectionSetsOfSameSize(A, B, "SubtractSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -129,11 +131,35 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSets(USelectionSet *A, 
 	return result;
 }
 
+
+bool USelectionSetBPLibrary::HaveTwoSelectionSetsOfSameSize(USelectionSet *SelectionA, USelectionSet *SelectionB, FString NodeNameForWarning)
+{
+	if (!SelectionA||!SelectionB)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("%s: Need two SelectionSets"), *NodeNameForWarning);
+		return false;
+	}
+
+	const int32 sizeA = SelectionA->Size();
+	const int32 sizeB = SelectionB->Size();
+	if (sizeA!=sizeB)
+	{
+		UE_LOG(
+			MDTLog, Warning,
+			TEXT("%s: SelectionSets are not the same size (%d and %d"),
+			*NodeNameForWarning, sizeA, sizeB
+		);
+		return false;
+	}
+	return true;
+}
+
 USelectionSet * USelectionSetBPLibrary::AddFloatToSelectionSet(USelectionSet *Value, float Float/*=0*/)
 {
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("AddFloatToSelectionSet: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -154,6 +180,7 @@ USelectionSet * USelectionSetBPLibrary::SubtractFloatFromSelectionSet(USelection
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("SubtractFloatFromSelectionSet: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -174,8 +201,10 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSetFromFloat(float Floa
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("SubtractSelectionSetFromFloat: Need a SelectionSet"));
 		return nullptr;
 	}
+
 
 	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
 	auto size = Value->weights.Num();
@@ -191,8 +220,8 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSetFromFloat(float Floa
 
 USelectionSet * USelectionSetBPLibrary::MultiplySelectionSets(USelectionSet *A, USelectionSet *B)
 {
-	// Need both provided
-	if (!A||!B)
+	// Need two selection sets of same size
+	if (!HaveTwoSelectionSetsOfSameSize(A, B, "MultiplySelectionSets"))
 	{
 		return nullptr;
 	}
@@ -213,6 +242,7 @@ USelectionSet * USelectionSetBPLibrary::MultiplySelctionSetByFloat(USelectionSet
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("MultiplySelectionSetByFloat: Need a SelectionSet"))
 		return nullptr;
 	}
 
@@ -230,8 +260,8 @@ USelectionSet * USelectionSetBPLibrary::MultiplySelctionSetByFloat(USelectionSet
 
 USelectionSet * USelectionSetBPLibrary::DivideSelectionSets(USelectionSet *A, USelectionSet *B)
 {
-	// Need both provided
-	if (!A||!B)
+	// Need two SelectionSets of same size
+	if (!HaveTwoSelectionSetsOfSameSize(A, B, "DivideSelectioSets"))
 	{
 		return nullptr;
 	}
@@ -253,6 +283,7 @@ USelectionSet * USelectionSetBPLibrary::DivideSelctionSetByFloat(USelectionSet *
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("DivideSelectionSetByFloat: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -273,6 +304,7 @@ USelectionSet * USelectionSetBPLibrary::OneMinus(USelectionSet *Value)
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("OneMinus: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -293,6 +325,7 @@ USelectionSet * USelectionSetBPLibrary::Set(USelectionSet *Value, float Float/*=
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("Set: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -313,6 +346,7 @@ USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomS
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("Randomize: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -331,7 +365,7 @@ USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomS
 USelectionSet * USelectionSetBPLibrary::MaxSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided
-	if (!A||!B)
+	if (!HaveTwoSelectionSetsOfSameSize(A, B, "MaxSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -342,7 +376,6 @@ USelectionSet * USelectionSetBPLibrary::MaxSelectionSets(USelectionSet *A, USele
 
 	for (int32 i = 0; i<smallestSize; i++)
 	{
-//result->weights[i] = A->weights[i] > B->weights[i] ? A->weights[i] : B->weights[i];
 		result->weights[i] = FMath::Max(A->weights[i], B->weights[i]);
 	}
 
@@ -351,8 +384,8 @@ USelectionSet * USelectionSetBPLibrary::MaxSelectionSets(USelectionSet *A, USele
 
 USelectionSet * USelectionSetBPLibrary::MinSelectionSets(USelectionSet *A, USelectionSet *B)
 {
-	// Need both provided
-	if (!A||!B)
+	// Need two selection sets of same size
+	if (!HaveTwoSelectionSetsOfSameSize(A, B, "MinSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -375,6 +408,7 @@ USelectionSet * USelectionSetBPLibrary::MaxSelectionSetAgainstFloat(USelectionSe
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("MaxSelectionSetAgainstFloat: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -396,6 +430,7 @@ USelectionSet * USelectionSetBPLibrary::MinSelectionSetAgainstFloat(USelectionSe
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("MinSelectionSetAgainstFloat: Need a SelectionSet"));
 		return nullptr;
 	}
 
@@ -414,8 +449,8 @@ USelectionSet * USelectionSetBPLibrary::MinSelectionSetAgainstFloat(USelectionSe
 
 USelectionSet * USelectionSetBPLibrary::LerpSelectionSets(USelectionSet *A, USelectionSet *B, float Alpha/*=0*/)
 {
-	// Need both provided
-	if (!A||!B)
+	// Need two SelectionSets of same size
+	if (!HaveTwoSelectionSetsOfSameSize(A, B, "LerpSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -438,6 +473,7 @@ USelectionSet * USelectionSetBPLibrary::LerpSelectionSetWithFloat(USelectionSet 
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("LerpSelectionSetWithFloat: No SelectionSet provided"));
 		return nullptr;
 	}
 
@@ -458,6 +494,7 @@ USelectionSet * USelectionSetBPLibrary::RemapToCurve(USelectionSet *Value, UCurv
 	// Need a SelectionSet
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("RemapToCurve: No SelectionSet provided"));
 		return nullptr;
 	}
 
@@ -487,21 +524,22 @@ USelectionSet * USelectionSetBPLibrary::RemapToCurve(USelectionSet *Value, UCurv
 
 USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float Min /*= 0.0f*/, float Max /*= 1.0f*/)
 {
-	// Need a SelectionSet, and it needs at least one value.
+	// Need a SelectionSet with at least one value
 	if (!Value)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("RemapToRange: No SelectionSet provided"));
 		return nullptr;
 	}
-	int32 size = Value->weights.Num();
-	if (size==0)
+	if (Value->Size()==0)
 	{
+		UE_LOG(MDTLog, Warning, TEXT("RemapToRange: SelectionSet has no weights, need at least one item"));
 		return nullptr;
 	}
 
 	// Find the current minimum and maximum.
 	float CurrentMinimum = Value->weights[0];
 	float CurrentMaximum = Value->weights[0];
-	for (int32 i = 1; i<size; i++)
+	for (int32 i = 1; i<Value->Size(); i++)
 	{
 		CurrentMinimum = FMath::Min(CurrentMinimum, Value->weights[i]);
 		CurrentMaximum = FMath::Max(CurrentMaximum, Value->weights[i]);
@@ -509,7 +547,7 @@ USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float
 
 	// Create the results at the correct size and zero it.
 	USelectionSet *result = NewObject<USelectionSet>(Value->GetOuter());
-	result->weights.SetNumZeroed(size);
+	result->weights.SetNumZeroed(Value->Size());
 
 	// Check if all values are the same- if so just return a flat result equal to Min.
 	if (CurrentMinimum==CurrentMaximum)
@@ -519,7 +557,7 @@ USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float
 
 	// Perform the remapping
 	float Scale = (Max-Min)/(CurrentMaximum-CurrentMinimum);
-	for (int32 i = 0; i<size; i++)
+	for (int32 i = 0; i<Value->Size(); i++)
 	{
 		result->weights[i] = (Value->weights[i]-CurrentMinimum) * Scale+Min;
 	}

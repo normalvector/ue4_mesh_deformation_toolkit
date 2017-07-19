@@ -87,7 +87,7 @@ int32 UMeshGeometry::TotalVertexCount() const
 	return totalVertexCount;
 }
 
-bool UMeshGeometry::SelectionSetRightSize(USelectionSet *selection, FString NodeNameForWarning) const
+bool UMeshGeometry::SelectionSetIsRightSize(USelectionSet *selection, FString NodeNameForWarning) const
 {
 	// No selection set is fine...
 	if (!selection)
@@ -487,7 +487,7 @@ USelectionSet * UMeshGeometry::SelectBySection(int32 SectionIndex)
 void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max, USelectionSet *Selection /*=nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Jitter")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Jitter")))
 	{
 		return;
 	}
@@ -517,7 +517,7 @@ void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max
 void UMeshGeometry::Translate(FVector delta, USelectionSet *Selection)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Translate")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Translate")))
 	{
 		return;
 	}
@@ -540,7 +540,7 @@ void UMeshGeometry::Translate(FVector delta, USelectionSet *Selection)
 void UMeshGeometry::Rotate(FRotator Rotation /*= FRotator::ZeroRotator*/, FVector CenterOfRotation /*= FVector::ZeroVector*/, USelectionSet *Selection)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Rotate")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Rotate")))
 	{
 		return;
 	}
@@ -563,7 +563,7 @@ void UMeshGeometry::Rotate(FRotator Rotation /*= FRotator::ZeroRotator*/, FVecto
 void UMeshGeometry::Scale(FVector Scale3d /*= FVector(1, 1, 1)*/, FVector CenterOfScale /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Scale")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Scale")))
 	{
 		return;
 	}
@@ -586,7 +586,7 @@ void UMeshGeometry::Scale(FVector Scale3d /*= FVector(1, 1, 1)*/, FVector Center
 void UMeshGeometry::Transform(FTransform Transform /*= FTransform::Identity*/, FVector CenterOfTransform /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Transform")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Transform")))
 	{
 		return;
 	}
@@ -609,7 +609,7 @@ void UMeshGeometry::Transform(FTransform Transform /*= FTransform::Identity*/, F
 void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStrength /*= 1.0f*/, FVector SphereCenter /*= FVector::ZeroVector*/, USelectionSet *Selection)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Spherize")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Spherize")))
 	{
 		return;
 	}
@@ -637,7 +637,7 @@ void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStreng
 void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Jitter")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Jitter")))
 	{
 		return;
 	}
@@ -661,7 +661,7 @@ void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*
 void UMeshGeometry::ScaleAlongAxis(FVector CenterOfScale /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float Scale /*= 1.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Jitter")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Jitter")))
 	{
 		return;
 	}
@@ -684,7 +684,7 @@ void UMeshGeometry::ScaleAlongAxis(FVector CenterOfScale /*= FVector::ZeroVector
 void UMeshGeometry::RotateAroundAxis(FVector CenterOfRotation /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float AngleInDegrees /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Jitter")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Jitter")))
 	{
 		return;
 	}
@@ -719,7 +719,7 @@ void UMeshGeometry::RotateAroundAxis(FVector CenterOfRotation /*= FVector::ZeroV
 void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
 // Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Lerp")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Lerp")))
 	{
 		return;
 	}
@@ -779,7 +779,7 @@ void UMeshGeometry::FitToSpline(
 )
 {
  // Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("FitToSpline")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("FitToSpline")))
 	{
 		return;
 	}
@@ -875,7 +875,7 @@ void UMeshGeometry::Conform(
 )
 {
  // Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetRightSize(Selection, TEXT("Conform")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
 	{
 		return;
 	}
