@@ -481,4 +481,13 @@ private:
 	/// number of vertices in the mesh geometry.  If they match return true, if not then
 	/// log a warning and return false.
 	bool SelectionSetIsRightSize(USelectionSet *selection, FString NodeNameForWarning) const;
+
+	/// Utility method to check if the mesh geometry looks right, and warns if it doesn't.
+	/// Currently this checks the following for each section:
+	///
+	/// * Has at least 3 vertices
+	/// * Has at least 1 triangle
+	/// * Triangles contain a multiple of 3 points as every set of three defined one tri
+	/// * Has same number of normals as vertices
+	bool CheckGeometryIsValid(FString NodeNameForWarning) const;
 };

@@ -25,7 +25,7 @@ void UMeshGeometry::Conform(
 	USelectionSet *Selection /*= nullptr */
 )
 {
- // Check selectionSet size- log and abort if there's a problem. 
+	// Check selectionSet size- log and abort if there's a problem. 
 	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
 	{
 		return;
@@ -56,7 +56,7 @@ void UMeshGeometry::Conform(
 	{
 		for (auto &vertex:section.vertices)
 		{
-// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
+			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
 			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
 
 			// Project the vertex along the projection axis so we'll be able to work on the final position for impact.
@@ -204,6 +204,74 @@ void UMeshGeometry::FitToSpline(
 			);
 		}
 	}
+}
+
+bool UMeshGeometry::CheckGeometryIsValid(FString NodeNameForWarning) const
+{
+	/// * Each section contains at least 3 vertices
+	/// * Each section contains at least 1 triangle
+	/// * Triangles contain a multiple of 3 points as every set of three defined one tri
+	/// * Has same number of normals as vertices
+
+	// Track if any error occurred- means we can do multiple warnings.
+	bool errorFound = false;
+
+	// Iterate over the sections
+	int32 sectionIndex = 0;
+	for (auto section:this->sections)
+	{
+		// Each section should contain at least three vertices.
+		const int32 sectionVertexCount = section.vertices.Num();
+		if (sectionVertexCount<3)
+		{
+			UE_LOG(
+				MDTLog, Warning,
+				TEXT("%s: Section %d contains only %d vertices (3 required)"),
+				*NodeNameForWarning, sectionIndex, sectionVertexCount
+			);
+			errorFound = true;
+		}
+
+		// Each section should contain at least one triangle
+		const int32 trianglePointNum = section.triangles.Num();
+		if (trianglePointNum<3)
+		{
+			UE_LOG(
+				MDTLog, Warning,
+				TEXT("%s: Section %d contains only %d triangle indices (3 required for one triangle)"),
+				*NodeNameForWarning, sectionIndex, trianglePointNum
+			);
+			errorFound = true;
+		}
+
+		/// Triangles contain a multiple of 3 points as every set of three defined one tri
+		if ((trianglePointNum%3)!=0)
+		{
+			UE_LOG(
+				MDTLog, Warning,
+				TEXT("%s: Section %d contains %d triangle indices (Should be a multiple of three as three per triangle)"),
+				*NodeNameForWarning, sectionIndex, trianglePointNum
+			);
+			errorFound = true;
+		}
+
+		/// Has same number of normals as vertices
+		const int32 sectionNormalCount = section.normals.Num();
+		if (sectionNormalCount!=sectionVertexCount)
+		{
+			UE_LOG(
+				MDTLog, Warning,
+				TEXT("%s: Section %d does not contain same number of vertices and normals (%d vertices, %d normals)"),
+				*NodeNameForWarning, sectionIndex, sectionVertexCount, sectionNormalCount
+			);
+			errorFound = true;
+
+		}
+
+		++sectionIndex;
+	}
+
+	return errorFound;
 }
 
 FBox UMeshGeometry::GetBoundingBox() const
@@ -392,6 +460,10 @@ bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD /*= 0*
 		// Add the finished struct to the mesh's section list
 		this->sections.Emplace(sectionGeometry);
 	}
+
+	// Warn if the mesh doesn't look valid.  For now return it anyway but at least let
+	// them know..
+	CheckGeometryIsValid(TEXT("LoadFromStaticMesh"));
 
 	// All done
 	return true;
@@ -961,7 +1033,7 @@ void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStreng
 
 			// Calculate the required length- incorporating both the SphereRadius and Selection.
 			const float targetVectorLength = FMath::Lerp(vertexRelativeToCenter.Size(), SphereRadius, FilterStrength * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f));
-			
+
 			vertex = SphereCenter+(vertexRelativeToCenter * targetVectorLength);
 		}
 	}
