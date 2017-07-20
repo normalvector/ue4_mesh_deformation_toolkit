@@ -93,6 +93,7 @@ These aren't actually on the Mesh Deformation Component and instead are provided
 All of these return a new Selection and don't modify the ones provided to them.  The short descriptions below are often phrased as though they do but this is because writing 'Return a Selection which is the provided Selection' in each one would make them a lot harder to read.
 
 * *Clamp (Selection, Float, Float)*: Clamps the range of a Selection between the minimum and maximum provided.
+* *Ease*: Remaps a selection by applying a configurable easing function to each value.  Useful for taking the linear fall-off from a selection and turning it into something smoother and more natural looking.
 * *Float - Selection*: Subtract all value in a selection from a constant value, providing a simple reverse and remap.
 * *Float / Selection*: Divide a constant value by all values in a selection.
 * *Lerp (Selection, Float, Float)*: Blends a Selection between its original value and a constant value with a set strength.
@@ -105,7 +106,6 @@ All of these return a new Selection and don't modify the ones provided to them. 
 * *Min (Selection, Selection)*: Combined two Selections together by taking the mium value from each of them.
 * *Randomize (Selection, Float, Float)*: Randomize the values in a Selection between the minimum and maximum values provided.
 * *Remap To Curve (Selection, Curve)*:
-* *Remap By Easing (Selection)*: Remaps a selection by applying a configurable easing function to each value.  Useful for taking the linear fall-off from a selection and turning it into something smoother and more natural. **NOTE: This is a rename of the Ease function**
 * *Remap To Range (Selection, Float, Float)*: Remaps a selection between the minimum and maximum values provided.
 * *SelectionSet + Float*: Adds the given value to all values in a Selection.
 * *Selection + Selection*: Combine two Selections together by adding their values.

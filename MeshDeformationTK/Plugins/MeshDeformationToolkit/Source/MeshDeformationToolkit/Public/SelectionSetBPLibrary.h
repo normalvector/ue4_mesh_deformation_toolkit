@@ -53,6 +53,17 @@ public:
 	)
 		static USelectionSet *Clamp(USelectionSet *Value, float Min=0, float Max=1);
 
+	/// **Math|SelectionSet|Float / SelectionSet**: Divides a float by all the values in a SelectionSet
+	///
+	/// \param Float			The Float to divide (*A*/B)
+	/// \param Value			The SelectionSet to divide by (A/*B*)
+	/// \return				A SelectionSet with the values of Float/Value
+	UFUNCTION(BlueprintPure,
+			  meta = (DisplayName = "Float / SelectionSet", CompactNodeTitle = "/",
+			  Keywords = "/ divide division", Category = "Math|SelectionSet")
+	)
+		static USelectionSet *DivideFloatBySelectionSet(float Float = 1, USelectionSet *Value=nullptr);
+
 	/// **Math|SelectionSet|SelectionSet / Float**: Divides the values from a SelectionSet by a Float
 	///
 	/// \param Value			The SelectionSet to divide (*A*/B)

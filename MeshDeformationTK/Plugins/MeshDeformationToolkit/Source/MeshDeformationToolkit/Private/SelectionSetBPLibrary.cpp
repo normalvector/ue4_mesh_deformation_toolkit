@@ -81,12 +81,56 @@ USelectionSet * USelectionSetBPLibrary::Clamp(USelectionSet *Value, float Min/*=
 	return result;
 }
 
+
+USelectionSet * USelectionSetBPLibrary::DivideFloatBySelectionSet(float Float /*= 1*/, USelectionSet *Value/*=nullptr*/)
+{
+	// Need a SelectionSet
+	if (!Value)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("DivideSelectionSetByFloat: Need a SelectionSet"));
+		return nullptr;
+	}
+
+
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("DivideFloatBySelectionSet"));
+	if (!result)
+	{
+		return nullptr;
+	}
+	
+	// Set the minimum threshold for division
+	const float zeroThreshold = 0.01;
+	for (int32 i = 0; i<size; i++)
+	{
+		// We need to make sure the weight is not zero to avoid divide by zero so
+		// we'll set it to 'near zero' if it is.
+		float weight = Value->weights[i];
+		if (FMath::Abs(weight)<zeroThreshold)
+		{
+			weight = weight<0 ? -zeroThreshold : zeroThreshold;
+		}
+		result->weights[i] = Float/weight;
+	}
+
+	return result;
+}
+
 USelectionSet * USelectionSetBPLibrary::DivideSelectionSetByFloat(USelectionSet *Value, float Float /*= 1*/)
 {
 	// Need a SelectionSet
 	if (!Value)
 	{
 		UE_LOG(MDTLog, Warning, TEXT("DivideSelectionSetByFloat: Need a SelectionSet"));
+		return nullptr;
+	}
+
+	// Float cannot be zero as that would be a/0.
+	if (Float==0)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("DivideSelectionSetByFloat: Cannot divide by zero"));
 		return nullptr;
 	}
 
