@@ -107,8 +107,9 @@ public:
 	///										before it is used for noise generation, if not supplied an identity transform
 	///										will be used which does not modify the vertex position.  Useful for making tiling terrain
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
-			  meta=(Keywords="random fastnoise perlin fractal terrain"))
+			  meta=(Keywords="random fastnoise perlin fractal terrain", AutoCreateRefTerm="Transform"))
 		USelectionSet *SelectByNoise(
+			FTransform Transform,
 			int32 Seed=1337,
 			float Frequency=0.01,
 			ENoiseInterpolation NoiseInterpolation=ENoiseInterpolation::Quintic,
@@ -117,10 +118,7 @@ public:
 			float FractalLacunarity=2.0,
 			float FractalGain=0.5,
 			EFractalType FractalType=EFractalType::FBM,
-			ECellularDistanceFunction CellularDistanceFunction=ECellularDistanceFunction::Euclidian,
-			FVector NoiseTranslation=FVector::ZeroVector,
-			FRotator NoiseRotation=FRotator::ZeroRotator,
-			FVector NoiseScale3D=FVector(1, 1, 1)
+			ECellularDistanceFunction CellularDistanceFunction=ECellularDistanceFunction::Euclidian
 		);
 
 	/// Select all of the vertices which go to make up one of the Sections that a mesh

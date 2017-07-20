@@ -620,6 +620,7 @@ USelectionSet *UMeshGeometry::SelectAll()
 }
 
 USelectionSet * UMeshGeometry::SelectByNoise(
+	FTransform Transform /* AutoCreateRefTerm */,
 	int32 Seed /*= 1337*/,
 	float Frequency /*= 0.01*/,
 	ENoiseInterpolation NoiseInterpolation /*= ENoiseInterpolation::Quintic*/,
@@ -628,10 +629,7 @@ USelectionSet * UMeshGeometry::SelectByNoise(
 	float FractalLacunarity /*= 2.0*/,
 	float FractalGain /*= 0.5*/,
 	EFractalType FractalType /*= EFractalType::FBM*/,
-	ECellularDistanceFunction CellularDistanceFunction /*= ECellularDistanceFunction::Euclidian*/,
-	FVector NoiseTranslation /*= FVector::ZeroVector*/,
-	FRotator NoiseRotation /*= FRotator::ZeroRotator*/,
-	FVector NoiseScale3D /*= FVector(1, 1, 1)*/
+	ECellularDistanceFunction CellularDistanceFunction /*= ECellularDistanceFunction::Euclidian*/
 )
 {
 	USelectionSet *newSelectionSet = NewObject<USelectionSet>(this);
@@ -656,15 +654,13 @@ USelectionSet * UMeshGeometry::SelectByNoise(
 	/// \todo Is this needed.. ?  FastNoise doesn't seem to have a SetPositionWarpAmp param
 	///noise.SetPositionWarpAmp(PositionWarpAmp);
 
-	FTransform NoiseTransform = FTransform(NoiseRotation, NoiseTranslation, NoiseScale3D);
-
 	// Iterate over the sections, and the vertices in each section.
 	for (auto &section:this->sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
 			// Apply the noise transform to the vertex and use the transformed vertex for the noise generation
-			const FVector transformedVertex = NoiseTransform.TransformPosition(vertex);
+			const FVector transformedVertex = Transform.TransformPosition(vertex);
 			float NoiseValue = noise.GetNoise(transformedVertex.X, transformedVertex.Y, transformedVertex.Z);
 			newSelectionSet->weights.Emplace(NoiseValue);
 		}

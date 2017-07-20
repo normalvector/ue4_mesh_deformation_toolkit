@@ -162,7 +162,8 @@ bool UMeshDeformationComponent::LoadFromStaticMesh(UMeshDeformationComponent *&M
 	{
 		UE_LOG(MDTLog, Error, TEXT("LoadFromStaticMesh: Could not create new MeshGeometry"));
 		return false;
-	}
+	}
+
 	// 
 	bool success = MeshGeometry->LoadFromStaticMesh(staticMesh);
 	if (!success)
@@ -232,6 +233,7 @@ USelectionSet * UMeshDeformationComponent::SelectAll() const
 }
 
 USelectionSet * UMeshDeformationComponent::SelectByNoise(
+	FTransform Transform /* AutoCreateRefTerm */,
 	int32 Seed /*= 1337*/,
 	float Frequency /*= 0.01*/,
 	ENoiseInterpolation NoiseInterpolation /*= ENoiseInterpolation::Quintic*/,
@@ -240,10 +242,7 @@ USelectionSet * UMeshDeformationComponent::SelectByNoise(
 	float FractalLacunarity /*= 2.0*/,
 	float FractalGain /*= 0.5*/,
 	EFractalType FractalType /*= EFractalType::FBM*/,
-	ECellularDistanceFunction CellularDistanceFunction /*= ECellularDistanceFunction::Euclidian*/,
-	FVector NoiseTranslation /*= FVector::ZeroVector */,
-	FRotator NoiseRotation /*= FRotator::ZeroRotator */,
-	FVector NoiseScale3D /*= FVector(1, 1, 1) */
+	ECellularDistanceFunction CellularDistanceFunction /*= ECellularDistanceFunction::Euclidian*/
 ) const
 {
 	if (!MeshGeometry)
@@ -252,10 +251,10 @@ USelectionSet * UMeshDeformationComponent::SelectByNoise(
 		return nullptr;
 	}
 	return MeshGeometry->SelectByNoise(
+		Transform,
 		Seed, Frequency, NoiseInterpolation, NoiseType,
 		FractalOctaves, FractalLacunarity, FractalGain, FractalType,
-		CellularDistanceFunction,
-		NoiseTranslation, NoiseRotation, NoiseScale3D
+		CellularDistanceFunction
 	);
 }
 
