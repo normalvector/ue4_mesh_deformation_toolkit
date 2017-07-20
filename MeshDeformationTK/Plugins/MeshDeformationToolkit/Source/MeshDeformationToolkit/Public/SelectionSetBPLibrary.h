@@ -98,15 +98,29 @@ public:
 	)
 		static USelectionSet *LerpSelectionSetWithFloat(USelectionSet *Value, float Float, float Alpha=0);
 
-	/// **Math|SelectionSet|Lerp(SelectionSet)**: Apply a lerp to blend two SelectionSets together
+	/// **Math|SelectionSet|Lerp(SelectionSet, SelectionSet, Float)**:
+	/// Apply a lerp to blend two SelectionSets together based on a given alpha
 	///
 	/// \param A		The first SelectionSet to apply the lerp to
 	/// \param B		The second SelectionSet to apply the lerp to
 	/// \param Alpha	The blend factor between the two SelectionSets, 0=A, 1=B
 	UFUNCTION(BlueprintPure,
-			  meta=(DisplayName="Lerp (SelectionSet)", CompactNodeTitle = "Lerp", Category="Math|SelectionSet", Keywords="blend linear interpolate alpha")
+			  meta=(DisplayName="Lerp(SelectionSet, SelectionSet, Float)", CompactNodeTitle = "Lerp", Category="Math|SelectionSet", Keywords="blend linear interpolate alpha")
 	)
-		static USelectionSet *LerpSelectionSets(USelectionSet *A, USelectionSet *B, float Alpha=0);
+		static USelectionSet *LerpSelectionSetsWithFloat(USelectionSet *A, USelectionSet *B, float Alpha=0);
+
+
+	/// **Math|SelectionSet|Lerp(SelectionSet, SelectionSet, SelectionSet)**:
+	/// Apply a lerp to blend two SelectionSets together based on a third SelectionSet
+	///
+	/// \param A		The first SelectionSet to apply the lerp to
+	/// \param B		The second SelectionSet to apply the lerp to
+	/// \param Alpha	The SelectionSet with blend factors between the two
+	///					SelectionSets, 0=A, 1=B
+	UFUNCTION(BlueprintPure,
+			  meta = (DisplayName = "Lerp(SelectionSet, SelectionSet, SelectionSet)", CompactNodeTitle = "Lerp", Category = "Math|SelectionSet", Keywords = "blend linear interpolate alpha")
+	)
+		static USelectionSet *LerpSelectionSetsWithSelectionSet(USelectionSet *A, USelectionSet *B, USelectionSet *Alpha);
 
 	/// **Math|SelectionSet|Max (Float)**: Return the maximum of a SelectionSet and a Float
 	///
@@ -281,7 +295,15 @@ public:
 	)
 		static USelectionSet *SubtractSelectionSets(USelectionSet *A, USelectionSet *B);
 	private:
-		/// Utility function which checks that two SelectionSets are provided, and are the same size
+		/// Utility function which checks that two SelectionSets are provided, and are
+		/// the same size
 		static bool HaveTwoSelectionSetsOfSameSize(
-			USelectionSet *SelectionA, USelectionSet *SelectionB, FString NodeNameForWarning);
+			USelectionSet *SelectionA, USelectionSet *SelectionB,
+			FString NodeNameForWarning);
+
+		/// Utility function which checks that two SelectionSets are provided, and are
+		/// the same size
+		static bool HaveThreeSelectionSetsOfSameSize(
+			USelectionSet *SelectionA, USelectionSet *SelectionB, USelectionSet *SelectionC,
+			FString NodeNameForWarning);
 };

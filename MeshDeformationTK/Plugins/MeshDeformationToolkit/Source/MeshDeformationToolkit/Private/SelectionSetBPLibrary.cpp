@@ -225,7 +225,33 @@ bool USelectionSetBPLibrary::HaveTwoSelectionSetsOfSameSize(USelectionSet *Selec
 	return true;
 }
 
-USelectionSet * USelectionSetBPLibrary::LerpSelectionSets(USelectionSet *A, USelectionSet *B, float Alpha/*=0*/)
+
+bool USelectionSetBPLibrary::HaveThreeSelectionSetsOfSameSize(USelectionSet *SelectionA, USelectionSet *SelectionB, USelectionSet *SelectionC, FString NodeNameForWarning)
+{
+
+	if (!SelectionA||!SelectionB||!SelectionC)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("%s: Need three SelectionSets"), *NodeNameForWarning);
+		return false;
+	}
+
+	const int32 sizeA = SelectionA->Size();
+	const int32 sizeB = SelectionB->Size();
+	const int32 sizeC = SelectionC->Size();
+	if (sizeA!=sizeB || sizeA!=sizeC)
+	{
+		UE_LOG(
+			MDTLog, Warning,
+			TEXT("%s: SelectionSets are not the same size (%d, %d and %d"),
+			*NodeNameForWarning, sizeA, sizeB, sizeC
+		);
+		return false;
+	}
+	return true;
+}
+
+// Note: The BP name and C++ names of this function are different as UFUNCTION() doesn't allow overloading
+USelectionSet * USelectionSetBPLibrary::LerpSelectionSetsWithFloat(USelectionSet *A, USelectionSet *B, float Alpha/*=0*/)
 {
 	// Need two SelectionSets of same size
 	if (!HaveTwoSelectionSetsOfSameSize(A, B, "LerpSelectionSets"))
@@ -245,6 +271,33 @@ USelectionSet * USelectionSetBPLibrary::LerpSelectionSets(USelectionSet *A, USel
 	for (int32 i = 0; i<size; i++)
 	{
 		result->weights[i] = FMath::Lerp(A->weights[i], B->weights[i], Alpha);
+	}
+
+	return result;
+}
+
+
+// Note: The BP name and C++ names of this function are different as UFUNCTION() doesn't allow overloading
+USelectionSet * USelectionSetBPLibrary::LerpSelectionSetsWithSelectionSet(USelectionSet *A, USelectionSet *B, USelectionSet *Alpha)
+{
+	// Need three SelectionSets of same size
+	if (!HaveThreeSelectionSetsOfSameSize(A, B, Alpha, "LerpSelectionSets"))
+	{
+		return nullptr;
+	}
+
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = A->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, A->GetOuter(), TEXT("LerpSelectionSets"));
+	if (!result)
+	{
+		return nullptr;
+	}
+
+	for (int32 i = 0; i<size; i++)
+	{
+		result->weights[i] = FMath::Lerp(A->weights[i], B->weights[i], Alpha->weights[i]);
 	}
 
 	return result;
