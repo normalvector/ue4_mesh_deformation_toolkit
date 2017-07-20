@@ -428,6 +428,29 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 	}
 }
 
+void UMeshGeometry::LerpVector(FVector Position, float Alpha /*= 0.0*/, USelectionSet *Selection /*= nullptr*/)
+{
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetIsRightSize(Selection, TEXT("Lerp")))
+	{
+		return;
+	}
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section:this->sections)
+	{
+		for (auto &vertex:section.vertices)
+		{
+			vertex = FMath::Lerp(
+				vertex,
+				Position,
+				Alpha * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f)
+			);
+		}
+	}
+}
+
 bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD /*= 0*/)
 {
 	// If there's no static mesh we have nothing to do..
@@ -529,7 +552,9 @@ void UMeshGeometry::RotateAroundAxis(
 	}
 }
 
-bool UMeshGeometry::SaveToProceduralMeshComponent(UProceduralMeshComponent *proceduralMeshComponent, bool createCollision)
+bool UMeshGeometry::SaveToProceduralMeshComponent(
+	UProceduralMeshComponent *proceduralMeshComponent,
+	bool createCollision)
 {
 	// If there's no PMC we have nothing to do..
 	if (!proceduralMeshComponent)

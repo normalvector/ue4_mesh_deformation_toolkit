@@ -97,6 +97,11 @@ int32 UMeshDeformationComponent::GetTotalVertexCount() const
 	return MeshGeometry->TotalVertexCount();
 }
 
+bool UMeshDeformationComponent::HasGeometry()
+{
+	return MeshGeometry ? true : false;
+}
+
 void UMeshDeformationComponent::Inflate(UMeshDeformationComponent *&MeshDeformationComponent, float Offset /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
@@ -154,6 +159,21 @@ void UMeshDeformationComponent::Lerp(
 	);
 }
 
+void UMeshDeformationComponent::LerpVector(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	FVector Position, float Alpha /*= 0.0*/, USelectionSet *Selection /*= nullptr*/)
+{
+	MeshDeformationComponent = this;
+
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("Lerp: No meshGeometry loaded"));
+		return;
+	}
+
+	MeshGeometry->LerpVector(Position, Alpha, Selection);
+}
+
 bool UMeshDeformationComponent::LoadFromStaticMesh(UMeshDeformationComponent *&MeshDeformationComponent, UStaticMesh *staticMesh, int32 LOD /*= 0*/)
 {
 	MeshDeformationComponent = this;
@@ -198,16 +218,20 @@ void UMeshDeformationComponent::RotateAroundAxis(UMeshDeformationComponent *&Mes
 	MeshGeometry->RotateAroundAxis(CenterOfRotation, Axis, AngleInDegrees, Selection);
 }
 
-bool UMeshDeformationComponent::SaveToProceduralMeshComponent(UMeshDeformationComponent *&MeshDeformationComponent, UProceduralMeshComponent *proceduralMeshComponent, bool createCollision)
+bool UMeshDeformationComponent::SaveToProceduralMeshComponent(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	UProceduralMeshComponent *ProceduralMeshComponent,
+	bool createCollision)
 {
 	MeshDeformationComponent = this;
+
 	if (!MeshGeometry)
 	{
 		UE_LOG(MDTLog, Warning, TEXT("SaveToProceduralMeshComponent: No meshGeometry loaded"));
 		return false;
 	}
 
-	return MeshGeometry->SaveToProceduralMeshComponent(proceduralMeshComponent, createCollision);
+	return MeshGeometry->SaveToProceduralMeshComponent(ProceduralMeshComponent, createCollision);
 }
 
 void UMeshDeformationComponent::Scale(UMeshDeformationComponent *&MeshDeformationComponent, FVector Scale3d /*= FVector(1, 1, 1)*/, FVector CenterOfScale /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)

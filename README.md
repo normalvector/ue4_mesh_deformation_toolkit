@@ -140,9 +140,11 @@ All of these transform operations can be controlled by providing an optional Sel
 
 ## Utility
 
-* [Get Bounding Box](): Return the bounds of the mesh as a [Box](https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Math/FBox/index.html) which.
-* [Get Summary](): A simple text string summary of how many sections, vertices and triangles are in the current geometry.
-* [Total Triangle Count](): Return the total number of triangles in the mesh.
+* *Get Bounding Box*: Return the bounds of the mesh as a [Box](https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Math/FBox/index.html) which.
+* *Get Summary*: A simple text string summary of how many sections, vertices and triangles are in the current geometry.
+* *Has Geometry*: Returns whether we have any geometry loaded or not
+* *Get Total Triangle Count*: Return the total number of triangles in the mesh.
+* *Get Total Vertex Count*: Return the total number of vertices in the mesh.
 
 # How It Works
 When everything is working and finished I will be taking the time to document how exactly this plugin works, including how you can extend it yourself by writing new selection/transform nodes either in C++ or Blueprint.

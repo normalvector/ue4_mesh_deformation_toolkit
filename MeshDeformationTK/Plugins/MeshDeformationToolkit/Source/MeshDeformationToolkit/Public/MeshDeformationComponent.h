@@ -372,6 +372,14 @@ public:
 			USelectionSet *Selection=nullptr
 		);
 
+	/// Does a linear interpolate pulling/pushing all vertices relative to the
+	/// vector provided.
+	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
+			  meta = (Keywords = "blend linear interpolate alpha pull push"))
+		void LerpVector(
+			UMeshDeformationComponent *&MeshDeformationComponent,
+			FVector Position, float Alpha = 0.0, USelectionSet *Selection = nullptr);
+
 	/// Rotates the vertices of the mesh a specified amount round the specified position.
 	///
 	/// If a SelectionSet is provided then the actual rotator will be scaled accordingly allowing
@@ -533,6 +541,9 @@ public:
 			UProceduralMeshComponent *ProceduralMeshComponent,
 			bool CreateCollision
 		);
+
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent)
+		bool HasGeometry();
 
 	/*
 	##################################################
