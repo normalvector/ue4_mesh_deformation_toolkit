@@ -22,7 +22,8 @@ void UMeshGeometry::Conform(
 	float HeightAdjust /*= 0*/,
 	bool TraceComplex /*=true*/,
 	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
-	USelectionSet *Selection /*= nullptr */
+	USelectionSet *Selection /*= nullptr */,
+	int32 DebugVar
 )
 {
 	// Check selectionSet size- log and abort if there's a problem. 
@@ -67,7 +68,6 @@ void UMeshGeometry::Conform(
 			// Handle vertexAlongProjection in traceEnd so that it'll handle collisions where the base collides but not this vertex.
 			FVector traceStart = Transform.TransformPosition(vertex);
 			FVector traceEnd = Transform.TransformPosition(vertex-vertexAlongProjection)+scaledProjection;
-			const float traceLength = (traceEnd-traceStart).Size();
 
 			// Do the actual trace
 			FHitResult hitResult;
@@ -76,36 +76,66 @@ void UMeshGeometry::Conform(
 				traceStart, traceEnd,
 				CollisionChannel, traceQueryParams, FCollisionResponseParams()
 			);
+			
+			// Don't thiink this is useful as the traceEnd is flat.
+			const float traceLength = (traceEnd-traceStart).Size();
+			const float intersectionDepth = traceLength-hitResult.Distance;
 
-			// Update vertex based on whether there was a hit or not.
-			if (hitResult.bBlockingHit)
+			switch (DebugVar)
 			{
-// We have a hit- move the vertex to the location of the hit converted to local space, restoring the vertex's height by using
-//  VertexAlongPosition
-//vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) - vertexAlongProjection;
-				const float intersectionDepth = traceLength-hitResult.Distance;
-				vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint)+
-					Projection.GetSafeNormal() * FMath::Min(intersectionDepth, HeightAdjust-vertexAlongProjection.Size());
+				case 1:
+					// Debug: Show traceStart- This seems good
+					vertex = Transform.InverseTransformPosition(traceStart);
+					break;
+				case 2:
+					// Debug: Show the traceEnd- This seems good
+					vertex = Transform.InverseTransformPosition(traceEnd);
+					break;
+				case 3:
+					// Debug: Show the collision point if there's a collision- This seems good
+					if (hitResult.bBlockingHit) {
+						vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint);
+					}
+					break;
+				case 4:
+					// Debug: Show the projected position
+					vertex += Transform.InverseTransformVector(scaledProjection);
+					break;
+				case 5:
+					// Debug: Show intersection depth as projection.
+					// This works for the top item but flips at the bottom and breaks at the side.
+					vertex = Transform.InverseTransformPosition(
+						hitResult.ImpactPoint -
+						Projection.GetSafeNormal() * intersectionDepth
+					);
+					break;
+				case 6:
+					// Debug: Show intersection depth as vertex along projection.
+					// This works for the top item but flips at the bottom and breaks at the side.
+					vertex = Transform.InverseTransformPosition(
+						hitResult.ImpactPoint
+					)-vertexAlongProjection * intersectionDepth;
+					break;
+				default:
+					// Update vertex based on whether there was a hit or not.
+					if (hitResult.bBlockingHit)
+					{
+						// We have a hit- move the vertex to the location of the hit converted to local space, restoring the vertex's height by using
+						//  VertexAlongPosition
+						//vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) - vertexAlongProjection;
+						vertex = Transform.InverseTransformPosition(
+							hitResult.ImpactPoint +
+							Projection.GetSafeNormal() *
+							FMath::Min(intersectionDepth, HeightAdjust-vertexAlongProjection.Size())
+						);
+					}
+					else
+					{
+						// No hit, move the original vertex down by the projection
+						vertex += Transform.InverseTransformVector(scaledProjection);
+					}
+
 			}
-			else
-			{
-		  // No hit, move the original vertex down by the projection
-				vertex += Transform.InverseTransformVector(scaledProjection);
-			}
-
-			// Debug: Show traceStart- This seems good
-			//vertex = Transform.InverseTransformPosition(traceStart);
-
-			// Debug: Show the traceEnd- This seems good
-			//vertex = Transform.InverseTransformPosition(traceEnd);
-
-			// Debug: Show the collision point if there's a collision- This seems good
-			//if (hitResult.bBlockingHit) {
-			//	vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint);
-			//}
-
-			// Debug: Show the projected position
-			//vertex += Transform.InverseTransformVector(scaledProjection);
 		}
 	}
 }

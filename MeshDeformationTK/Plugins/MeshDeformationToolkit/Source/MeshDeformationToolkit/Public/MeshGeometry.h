@@ -238,7 +238,8 @@ public:
 			float HeightAdjust=0,
 			bool TraceComplex=true,
 			ECollisionChannel CollisionChannel=ECC_WorldStatic,
-			USelectionSet *Selection=nullptr
+			USelectionSet *Selection=nullptr,
+			int32 DebugVar = 0
 		);
 
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
