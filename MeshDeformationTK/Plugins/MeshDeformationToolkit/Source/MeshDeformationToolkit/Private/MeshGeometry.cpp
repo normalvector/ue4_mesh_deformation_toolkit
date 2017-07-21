@@ -60,118 +60,15 @@ void UMeshGeometry::Conform(
 	UE_LOG(MDTLog, Warning, TEXT("Projection normal in LS: %s"),
 		*projectionNormalInLS.ToString());
 
-	// Get the radius of the object and then calculate the point on a max-radius sphere\
-	// and on the line passing through the origin and in the direction of the projection-
-	// it'll give us a fixed 'max distance' vertex we can use to sort vertices along
-	// their projection.
-	const FVector projectLimitInLS = projectionNormalInLS * radius;
-	UE_LOG(MDTLog, Warning, TEXT("Projection limit (Radius = %f) in LS: %s"),
-		radius, *projectLimitInLS.ToString());
-
-	// Iterate over the vertices- project each onto a line along Projection and
-	// through local origin and find the furthest to establish where the base is.
-	// Store results since we'll need them later and this may be faster than
-	// recalculating them (ToDo: Find out more about TArray<> performance).
-	// ToDo: Should this also be scaled by Selection?
-	TArray<float> distancesToRadiusPoints;
-	TArray<FVector> nearestPointOnOriginProjection;
-	float minDistanceToRadiusPoint;
-	for (auto &section : this->sections)
-	{
-		for (auto &vertex : section.vertices)
-		{
-			// Calculate the projection along origin in direction of projection,
-			// and use this to get the distance to the radius point.
-			const FVector nearestPointOnProjectionLine =
-				FMath::ClosestPointOnInfiniteLine(
-					FVector::ZeroVector, projectionInLS,
-					vertex
-				);
-			nearestPointOnOriginProjection.Add(nearestPointOnProjectionLine);
-
-			const float distanceToRadiusPoint =
-				(nearestPointOnProjectionLine - projectLimitInLS).Size();
-
-			// Looks good..
-			//UE_LOG(MDTLog, Warning, TEXT("Vertex %s, Nearest point %s- Distance: %f (Min: %f)"),
-			//	*vertex.ToString(), *nearestPointOnProjectionLine.ToString(),
-			//	distanceToRadiusPoint, minDistanceToRadiusPoint);
-
-			// Update projectionBase depending on whether this is first vert.
-			minDistanceToRadiusPoint =
-				distancesToRadiusPoints.Num()==0 ?
-				distanceToRadiusPoint :
-				FMath::Min(minDistanceToRadiusPoint, distanceToRadiusPoint);
-
-			// Store the projection data for later
-			distancesToRadiusPoints.Add(distanceToRadiusPoint);
-		}
-	}
-	UE_LOG(MDTLog, Warning, TEXT("Min distance to radius point: %f"), minDistanceToRadiusPoint);
-
-	// Iterate over the sections, and the vertices in the sections.
-	int32 index = 0;	// We'll be using this as index for Selection and ProjectionDepths
-	for (auto &section : this->sections)
-	{
-		for (auto &vertex : section.vertices)
-		{
-			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
-			const FVector scaledProjection = Projection; // TODO: *(Selection ? Selection->weights[index] : 1.0f);
-
-			// Handle vertexAlongProjection in traceEnd so that it'll handle collisions where the base collides but not this vertex.
-			FVector traceStart = Transform.TransformPosition(vertex);
-			FVector traceEnd =
-				Transform.TransformPosition(
-					vertex - nearestPointOnOriginProjection[index]
-				)
-				 + scaledProjection;
-			/*
-			UE_LOG(MDTLog, Warning,
-				TEXT("TraceEnd %s, Vertex %s, ProjNormLS: %s, ScaledProj: %s"),
-				*traceEnd.ToString(),
-				*vertex.ToString(),
-				*projectionNormalInLS.ToString(),
-				*scaledProjection.ToString()
-				);
-			UE_LOG(MDTLog, Warning,
-				TEXT("Distance to Base : %f(Min %f), Radius: %f"),
-				distancesToRadiusPoints[index] - minDistanceToRadiusPoint,
-				minDistanceToRadiusPoint,
-				radius
-			);
-			*/
-
-			// Do the actual trace
-			FHitResult hitResult;
-			bool hitSuccess = World->LineTraceSingleByChannel(
-				hitResult,
-				traceStart, traceEnd,
-				CollisionChannel, traceQueryParams, FCollisionResponseParams()
-			);
-
-			if (hitResult.bBlockingHit)
-			{
-				// We have a hit
-				vertex =
-					Transform.InverseTransformPosition(
-						hitResult.ImpactPoint
-					)
-					;
-			}
-			else
-			{
-				// No hit, move the original vertex down by the projection
-				vertex += Transform.InverseTransformVector(scaledProjection);
-			}
-			//vertex = traceStart; // Looks good- Position at origin
-			//vertex = traceEnd; // Looks good- Produces planes
-			
-			// Increase index before next run.  Need to do this separately as used for
-			// multiple things.
-			++index;
-		}
-	}
+	// Get the distance to the base plane
+	const float distanceToBasePlane = MiniumProjectionPlaneDistance(-projectionInLS);
+	UE_LOG(MDTLog, Warning,
+		TEXT("Distance to base plane: %f (Proj %s, Bounds %s - %s)"),
+		distanceToBasePlane, *Projection.ToString(),
+		*GetBoundingBox().Min.ToString(), *GetBoundingBox().Max.ToString()
+	);
 }
+
 /*
 Conform old version
 )
@@ -1201,6 +1098,67 @@ USelectionSet * UMeshGeometry::SelectNearSpline(USplineComponent *spline, FTrans
 	}
 
 	return newSelectionSet;
+}
+
+FVector UMeshGeometry::NearestPointOnPlane(FVector Vertex, FVector PointOnPlane, FVector PlaneNormal)
+{
+	// This is based on:
+	//  https://www.gamedev.net/forums/topic/395194-closest-point-on-plane--distance/
+	PlaneNormal.Normalize();
+	const float distanceToPlane =
+		FVector::PointPlaneDist(Vertex, PointOnPlane, PlaneNormal.GetSafeNormal());
+	return (Vertex - (PlaneNormal * distanceToPlane));
+}
+
+float UMeshGeometry::MiniumProjectionPlaneDistance(FVector projection)
+{
+	// The projection needs to be normalized to act as plane
+	projection = projection.GetSafeNormal();
+	if (projection.IsZero()) {
+		return 0;
+	}
+
+	// Get the radius and store it- we don't want to keep getting it
+	const float radius = GetRadius();
+
+	// Iterate over the sections, and the vertices in each section.
+	float furthestPlane;
+	bool haveProcessedFirstVertex = false;
+	for (auto &section : this->sections)
+	{
+		for (auto &vertex : section.vertices)
+		{
+			// Get the nearest point from the origin to a plane with the
+			// supplied projection and passing through the vector.
+			const FVector nearestPointOnVertexPlane =
+				NearestPointOnPlane(FVector::ZeroVector, vertex, projection);
+
+			// Check we're on the correct side of the plane
+			const FPlane plane = FPlane(nearestPointOnVertexPlane, -projection);
+			// Do some vector maths to work out which side of the plane we're on.
+			const bool dotTest = FVector::DotProduct(vertex.GetSafeNormal(), -projection.GetSafeNormal()) >=0;
+
+			const float distanceFromVertexToPlane = nearestPointOnVertexPlane.Size() * (dotTest ? 1 : -1);
+
+			UE_LOG(MDTLog, Warning, TEXT("Vertex %s, Plane pos: %s, norm %s, Dist %f, Dot %s, On %f"),
+				*vertex.ToString(),
+				*nearestPointOnVertexPlane.ToString(),
+				*projection.ToString(),
+				distanceFromVertexToPlane,
+				dotTest ? TEXT("Yes") : TEXT("No"),
+				plane.PlaneDot(vertex)
+			);
+
+		
+			// Update furthestPlane info
+			furthestPlane =
+				haveProcessedFirstVertex ?
+				FMath::Max(furthestPlane, distanceFromVertexToPlane) :
+				distanceFromVertexToPlane;
+			haveProcessedFirstVertex = true;
+		}
+	}
+	return furthestPlane;
 }
 
 bool UMeshGeometry::SelectionSetIsRightSize(USelectionSet *selection, FString NodeNameForWarning) const
