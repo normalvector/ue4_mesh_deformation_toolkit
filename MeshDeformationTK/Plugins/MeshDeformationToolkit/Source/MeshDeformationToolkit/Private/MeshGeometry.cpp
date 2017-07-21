@@ -14,6 +14,7 @@ UMeshGeometry::UMeshGeometry()
 	sections = TArray<FSectionGeometry>();
 }
 
+// New experimental version of Conform using line projections
 void UMeshGeometry::Conform(
 	UObject* WorldContextObject,
 	FTransform Transform,
@@ -24,6 +25,119 @@ void UMeshGeometry::Conform(
 	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
 	USelectionSet *Selection /*= nullptr */,
 	int32 DebugVar
+) {
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
+	{
+		return;
+	}
+
+	// Get the world content we're operating in
+	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
+	if (!World)
+	{
+		UE_LOG(MDTLog, Error, TEXT("Conform: Cannot access game world"));
+		return;
+	}
+
+	// Prepare the trace query parameters
+	const FName traceTag("ConformTraceTag");
+	FCollisionQueryParams traceQueryParams = FCollisionQueryParams();
+	traceQueryParams.TraceTag = traceTag;
+	traceQueryParams.bTraceComplex = TraceComplex;
+	traceQueryParams.AddIgnoredActors(IgnoredActors);
+
+	// Convert the projection into local space as we'll need it for the projection
+	// calculations and don't want to do it per-vert.  Also calculate the normalized
+	// version and store that.
+	const FVector projectionInLS = Transform.InverseTransformVector(Projection);
+	const FVector projectionNormalInLS = projectionInLS.GetSafeNormal();
+
+	// Get the radius of the object and then calculate the point on a max-radius sphere\
+	// and on the line passing through the origin and in the direction of the projection-
+	// it'll give us a fixed 'max distance' vertex we can use to sort vertices along
+	// their projection.
+	const FVector projectLimitInLS = projectionNormalInLS * GetRadius();
+
+	// Iterate over the vertices- project each onto a line along Projection and
+	// through local origin and find the furthest to establish where the base is.
+	// Store results since we'll need them later and this may be faster than
+	// recalculating them (ToDo: Find out more about TArray<> performance).
+	// ToDo: Should this also be scaled by Selection?
+	TArray<float> distancesToRadiusPoints;
+	float minDistanceToRadiusPoint;
+	for (auto &section : this->sections)
+	{
+		for (auto &vertex : section.vertices)
+		{
+			// Calculate the projection along origin in direction of projection,
+			// and use this to get the distance to the radius point.
+			const FVector nearestPointOnProjectionLine =
+				FMath::ClosestPointOnInfiniteLine(
+					FVector::ZeroVector, projectionInLS,
+					vertex
+				);
+			const float distanceToRadiusPoint =
+				(nearestPointOnProjectionLine - projectLimitInLS).Size();
+
+			// Update projectionBase depending on whether this is first vert.
+			minDistanceToRadiusPoint =
+				distancesToRadiusPoints.Num()==0 ?
+				minDistanceToRadiusPoint :
+				FMath::Min(minDistanceToRadiusPoint, distanceToRadiusPoint);
+
+			// Store the projection data for later
+			distancesToRadiusPoints.Add(distanceToRadiusPoint);
+		}
+	}
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 index = 0;	// We'll be using this as index for Selection and ProjectionDepths
+	for (auto &section : this->sections)
+	{
+		for (auto &vertex : section.vertices)
+		{
+			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
+			const FVector scaledProjection = Projection * (Selection ? Selection->weights[index] : 1.0f);
+		
+			// Handle vertexAlongProjection in traceEnd so that it'll handle collisions where the base collides but not this vertex.
+			FVector traceStart = Transform.TransformPosition(vertex);
+			FVector traceEnd = Transform.TransformPosition(
+				vertex +
+				projectionNormalInLS * (
+					distancesToRadiusPoints[index] - minDistanceToRadiusPoint
+				)) + scaledProjection;
+
+			// Do the actual trace
+			FHitResult hitResult;
+			bool hitSuccess = World->LineTraceSingleByChannel(
+				hitResult,
+				traceStart, traceEnd,
+				CollisionChannel, traceQueryParams, FCollisionResponseParams()
+			);
+
+			if (hitResult.bBlockingHit)
+			{
+				// We have a hit
+				vertex =
+					Transform.InverseTransformPosition(hitResult.ImpactPoint) +
+					-projectionNormalInLS * (
+						distancesToRadiusPoints[index] - minDistanceToRadiusPoint
+						);
+			}
+			else
+			{
+				// No hit, move the original vertex down by the projection
+				vertex += Transform.InverseTransformVector(scaledProjection);
+			}
+			// Increase index before next run.  Need to do this separately as used for
+			// multiple things.
+			++index;
+		}
+	}
+}
+/*
+Conform old version
 )
 {
 	// Check selectionSet size- log and abort if there's a problem. 
@@ -59,10 +173,16 @@ void UMeshGeometry::Conform(
 		{
 			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
 			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
+			const FVector zCheck = FVector(0, 0, 1);
 
 			// Project the vertex along the projection axis so we'll be able to work on the final position for impact.
 			// This is in Local Space.
 			const FVector vertexAlongProjection = vertex.ProjectOnTo(Transform.InverseTransformVector(Projection));
+			const float vertexSizeDotProj =
+				vertex.Size() * FVector::DotProduct(
+					vertex.GetSafeNormal(),
+					Transform.InverseTransformVector(zCheck).GetSafeNormal());
+			const float vertProjSize = (vertex * Projection).Size();
 
 			// Calculate the start and end locations of the collision trace, both in World Space.
 			// Handle vertexAlongProjection in traceEnd so that it'll handle collisions where the base collides but not this vertex.
@@ -82,7 +202,8 @@ void UMeshGeometry::Conform(
 			const float intersectionDepth = scaledProjectionLength-hitResult.Distance;
 			
 			const float vertDotProj = FVector::DotProduct(
-				vertex, Transform.InverseTransformVector(Projection)
+				vertex.GetSafeNormal(),
+				Projection.GetSafeNormal()
 			);
 			// What we know..
 			// traceStart and traceEnd are fine
@@ -102,9 +223,14 @@ void UMeshGeometry::Conform(
 				// We have a hit- move the vertex to the location of the hit converted to local space, restoring the vertex's height by using
 				//  VertexAlongPosition
 				//vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) - vertexAlongProjection;
+				const float penetrationDepth = scaledProjection.Size() - hitResult.Distance;
 				vertex =
-					Transform.InverseTransformPosition(hitResult.ImpactPoint
-													   -vertexAlongProjection * 100.0f);
+					Transform.InverseTransformPosition(
+						hitResult.ImpactPoint +
+						-Projection.GetSafeNormal() * vertProjSize
+						//	scaledProjection.Size() - (penetrationDepth + vertexAlongProjection.Size())
+						//	)
+					);
 			}
 			else
 			{
@@ -114,7 +240,7 @@ void UMeshGeometry::Conform(
 		}
 	}
 }
-
+*/
 
 void UMeshGeometry::FitToSpline(
 	USplineComponent *SplineComponent,
@@ -318,6 +444,30 @@ FBox UMeshGeometry::GetBoundingBox() const
 
 	// Build a bounding box from the result
 	return FBox(min, max);
+}
+
+float UMeshGeometry::GetRadius() const
+{
+	// This is the radius so far
+	float radius;
+
+	// When we hit the first vertex we'll need to set both Min and Max
+	//  to it as we'll have no comparison
+	bool haveProcessedFirstVector = false;
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section : this->sections)
+	{
+		for (auto &vertex : section.vertices)
+		{
+			radius = haveProcessedFirstVector ?
+				FMath::Max(radius, vertex.Size()) :
+				vertex.Size();
+		}
+	}
+
+	return radius;
 }
 
 FString UMeshGeometry::GetSummary() const

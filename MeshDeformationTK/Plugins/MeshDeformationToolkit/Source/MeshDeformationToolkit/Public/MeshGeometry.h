@@ -451,9 +451,17 @@ public:
 	*/
 
 	/// Return the bounding box for all of the vertices in the mesh.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
+	UFUNCTION(BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="size limits bounds min max"))
 		FBox GetBoundingBox() const;
+	
+	// Return the radius of the mesh (Distance from the origin to the
+	//  furthest vertex, safe bounding sphere radius).
+	// This isn't being exposed on the MDC as there it's unclear whether
+	//  this would include transformations and so on.
+	UFUNCTION(BlueprintPure, Category = MeshGeometry,
+		meta = (Keywords = "size"))
+		float GetRadius() const;
 
 	/// Get a brief description of this geometry in the form *"4 sections, 1000 vertices, 500 triangles"*
 	///
