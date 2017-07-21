@@ -47,17 +47,26 @@ void UMeshGeometry::Conform(
 	traceQueryParams.bTraceComplex = TraceComplex;
 	traceQueryParams.AddIgnoredActors(IgnoredActors);
 
+	// Cache the radius so we don't need to keep recalculating it.
+	const float radius = GetRadius();
+
 	// Convert the projection into local space as we'll need it for the projection
 	// calculations and don't want to do it per-vert.  Also calculate the normalized
 	// version and store that.
 	const FVector projectionInLS = Transform.InverseTransformVector(Projection);
 	const FVector projectionNormalInLS = projectionInLS.GetSafeNormal();
+	UE_LOG(MDTLog, Warning, TEXT("Projection in LS: %s"),
+		*projectionInLS.ToString());
+	UE_LOG(MDTLog, Warning, TEXT("Projection normal in LS: %s"),
+		*projectionNormalInLS.ToString());
 
 	// Get the radius of the object and then calculate the point on a max-radius sphere\
 	// and on the line passing through the origin and in the direction of the projection-
 	// it'll give us a fixed 'max distance' vertex we can use to sort vertices along
 	// their projection.
-	const FVector projectLimitInLS = projectionNormalInLS * GetRadius();
+	const FVector projectLimitInLS = projectionNormalInLS * radius;
+	UE_LOG(MDTLog, Warning, TEXT("Projection limit (Radius = %f) in LS: %s"),
+		radius, *projectLimitInLS.ToString());
 
 	// Iterate over the vertices- project each onto a line along Projection and
 	// through local origin and find the furthest to establish where the base is.
@@ -65,6 +74,7 @@ void UMeshGeometry::Conform(
 	// recalculating them (ToDo: Find out more about TArray<> performance).
 	// ToDo: Should this also be scaled by Selection?
 	TArray<float> distancesToRadiusPoints;
+	TArray<FVector> nearestPointOnOriginProjection;
 	float minDistanceToRadiusPoint;
 	for (auto &section : this->sections)
 	{
@@ -77,19 +87,27 @@ void UMeshGeometry::Conform(
 					FVector::ZeroVector, projectionInLS,
 					vertex
 				);
+			nearestPointOnOriginProjection.Add(nearestPointOnProjectionLine);
+
 			const float distanceToRadiusPoint =
 				(nearestPointOnProjectionLine - projectLimitInLS).Size();
+
+			// Looks good..
+			//UE_LOG(MDTLog, Warning, TEXT("Vertex %s, Nearest point %s- Distance: %f (Min: %f)"),
+			//	*vertex.ToString(), *nearestPointOnProjectionLine.ToString(),
+			//	distanceToRadiusPoint, minDistanceToRadiusPoint);
 
 			// Update projectionBase depending on whether this is first vert.
 			minDistanceToRadiusPoint =
 				distancesToRadiusPoints.Num()==0 ?
-				minDistanceToRadiusPoint :
+				distanceToRadiusPoint :
 				FMath::Min(minDistanceToRadiusPoint, distanceToRadiusPoint);
 
 			// Store the projection data for later
 			distancesToRadiusPoints.Add(distanceToRadiusPoint);
 		}
 	}
+	UE_LOG(MDTLog, Warning, TEXT("Min distance to radius point: %f"), minDistanceToRadiusPoint);
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 index = 0;	// We'll be using this as index for Selection and ProjectionDepths
@@ -98,16 +116,30 @@ void UMeshGeometry::Conform(
 		for (auto &vertex : section.vertices)
 		{
 			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
-			const FVector scaledProjection = Projection * (Selection ? Selection->weights[index] : 1.0f);
-		
+			const FVector scaledProjection = Projection; // TODO: *(Selection ? Selection->weights[index] : 1.0f);
+
 			// Handle vertexAlongProjection in traceEnd so that it'll handle collisions where the base collides but not this vertex.
 			FVector traceStart = Transform.TransformPosition(vertex);
-			FVector traceEnd = Transform.TransformPosition(
-				vertex +
-				projectionNormalInLS * (
-					distancesToRadiusPoints[index] - minDistanceToRadiusPoint
-				)) + scaledProjection;
+			FVector traceEnd =
+				Transform.TransformPosition(
+					vertex - nearestPointOnOriginProjection[index]
+				)
+				 + scaledProjection;
+			UE_LOG(MDTLog, Warning,
+				TEXT("TraceEnd %s, Vertex %s, ProjNormLS: %s, ScaledProj: %s"),
+				*traceEnd.ToString(),
+				*vertex.ToString(),
+				*projectionNormalInLS.ToString(),
+				*scaledProjection.ToString()
+				);
+			UE_LOG(MDTLog, Warning,
+				TEXT("Distance to Base : %f(Min %f), Radius: %f"),
+				distancesToRadiusPoints[index] - minDistanceToRadiusPoint,
+				minDistanceToRadiusPoint,
+				radius
+			);
 
+			/*
 			// Do the actual trace
 			FHitResult hitResult;
 			bool hitSuccess = World->LineTraceSingleByChannel(
@@ -122,14 +154,17 @@ void UMeshGeometry::Conform(
 				vertex =
 					Transform.InverseTransformPosition(hitResult.ImpactPoint) +
 					-projectionNormalInLS * (
-						distancesToRadiusPoints[index] - minDistanceToRadiusPoint
-						);
+						distancesToRadiusPoints[index] - minDistanceToRadiusPoint*2.0
+					);
 			}
 			else
 			{
 				// No hit, move the original vertex down by the projection
 				vertex += Transform.InverseTransformVector(scaledProjection);
 			}
+			*/
+			vertex = traceEnd;
+			
 			// Increase index before next run.  Need to do this separately as used for
 			// multiple things.
 			++index;
