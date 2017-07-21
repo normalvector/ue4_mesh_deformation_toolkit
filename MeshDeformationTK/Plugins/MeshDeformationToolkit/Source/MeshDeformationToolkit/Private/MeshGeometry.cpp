@@ -125,6 +125,7 @@ void UMeshGeometry::Conform(
 					vertex - nearestPointOnOriginProjection[index]
 				)
 				 + scaledProjection;
+			/*
 			UE_LOG(MDTLog, Warning,
 				TEXT("TraceEnd %s, Vertex %s, ProjNormLS: %s, ScaledProj: %s"),
 				*traceEnd.ToString(),
@@ -138,8 +139,8 @@ void UMeshGeometry::Conform(
 				minDistanceToRadiusPoint,
 				radius
 			);
+			*/
 
-			/*
 			// Do the actual trace
 			FHitResult hitResult;
 			bool hitSuccess = World->LineTraceSingleByChannel(
@@ -152,18 +153,18 @@ void UMeshGeometry::Conform(
 			{
 				// We have a hit
 				vertex =
-					Transform.InverseTransformPosition(hitResult.ImpactPoint) +
-					-projectionNormalInLS * (
-						distancesToRadiusPoints[index] - minDistanceToRadiusPoint*2.0
-					);
+					Transform.InverseTransformPosition(
+						hitResult.ImpactPoint
+					)
+					;
 			}
 			else
 			{
 				// No hit, move the original vertex down by the projection
 				vertex += Transform.InverseTransformVector(scaledProjection);
 			}
-			*/
-			vertex = traceEnd;
+			//vertex = traceStart; // Looks good- Position at origin
+			//vertex = traceEnd; // Looks good- Produces planes
 			
 			// Increase index before next run.  Need to do this separately as used for
 			// multiple things.
