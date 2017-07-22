@@ -238,10 +238,23 @@ public:
 			float HeightAdjust=0,
 			bool TraceComplex=true,
 			ECollisionChannel CollisionChannel=ECC_WorldStatic,
-			USelectionSet *Selection=nullptr,
-			int32 DebugVar = 0
+			USelectionSet *Selection=nullptr
 		);
 
+	UFUNCTION(
+		BlueprintCallable, Category = MeshGeometry,
+		meta = (AutoCreateRefTerm = "IgnoredActors", WorldContext = "WorldContextObject", Keywords = "drop drape cloth collision soft trace")
+	)
+		void ConformDown(
+			UObject* WorldContextObject,
+			FTransform Transform,
+			TArray <AActor *> IgnoredActors,
+			float ProjectionLength = 100,
+			float HeightAdjust = 0,
+			bool TraceComplex = true,
+			ECollisionChannel CollisionChannel = ECC_WorldStatic,
+			USelectionSet *Selection = nullptr
+		);
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
 	///
 	/// \param StartPosition				The position (0 to 1) on the spline that the mesh should start, 

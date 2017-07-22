@@ -23,8 +23,7 @@ void UMeshGeometry::Conform(
 	float HeightAdjust /*= 0*/,
 	bool TraceComplex /*=true*/,
 	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
-	USelectionSet *Selection /*= nullptr */,
-	int32 DebugVar
+	USelectionSet *Selection /*= nullptr */
 ) {
 	// Check selectionSet size- log and abort if there's a problem. 
 	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
@@ -47,30 +46,16 @@ void UMeshGeometry::Conform(
 	traceQueryParams.bTraceComplex = TraceComplex;
 	traceQueryParams.AddIgnoredActors(IgnoredActors);
 
-	// Cache the radius so we don't need to keep recalculating it.
-	const float radius = GetRadius();
-
 	// Convert the projection into local space as we'll need it for the projection
 	// calculations and don't want to do it per-vert.  Also calculate the normalized
 	// version and store that.
 	const FVector projectionInLS = Transform.InverseTransformVector(Projection);
 	const FVector projectionNormalInLS = projectionInLS.GetSafeNormal();
-	UE_LOG(MDTLog, Warning, TEXT("Projection in LS: %s"),
-		*projectionInLS.ToString());
-	UE_LOG(MDTLog, Warning, TEXT("Projection normal in LS: %s"),
-		*projectionNormalInLS.ToString());
 
 	// Get the distance to the base plane
 	const float distanceToBasePlane = MiniumProjectionPlaneDistance(-projectionInLS);
 	const FVector pointOnBasePlane = Projection.GetSafeNormal() * distanceToBasePlane;
 	const FVector pointOnBasePlaneLS = projectionNormalInLS * distanceToBasePlane;
-
-	const FVector projectionNormal = Projection.GetSafeNormal();
-	UE_LOG(MDTLog, Warning,
-		TEXT("Distance to base plane: %f (Proj %s, Bounds %s - %s)"),
-		distanceToBasePlane, *Projection.ToString(),
-		*GetBoundingBox().Min.ToString(), *GetBoundingBox().Max.ToString()
-	);
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
@@ -80,42 +65,106 @@ void UMeshGeometry::Conform(
 		{
 			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
 			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
-			const FVector scaledProjectionLS = Transform.InverseTransformVector(scaledProjection);
-			const float adjustedScaledProjectionSize = scaledProjection.Size();
 
 			// Compute the start/end positions of the trace
 			const FVector traceStart = Transform.TransformPosition(vertex);
 			const FVector traceEnd = Transform.TransformPosition(
 				NearestPointOnPlane(
 					vertex,
-					pointOnBasePlaneLS + adjustedScaledProjectionSize*projectionNormalInLS,
+					pointOnBasePlaneLS + scaledProjection.Size() *projectionNormalInLS,
 					projectionNormalInLS
 				)
 			);
-			//vertex = Transform.InverseTransformPosition(traceEnd);
-			if (true) {
-				// Do the actual trace
-				FHitResult hitResult;
-				bool hitSuccess = World->LineTraceSingleByChannel(
-					hitResult,
-					traceStart, traceEnd,
-					CollisionChannel, traceQueryParams, FCollisionResponseParams()
-				);
 
-				// Position the vertex based on whether we had a hit or not.
-				if (hitResult.bBlockingHit) {
-					const float distanceFromVertexToBasePlane =
-						FVector::PointPlaneDist(vertex, pointOnBasePlaneLS, projectionNormalInLS);
-					const float hitProjectionHeight =
-						distanceFromVertexToBasePlane - HeightAdjust;
-					vertex = Transform.InverseTransformPosition(
+			// Do the actual trace
+			FHitResult hitResult;
+			bool hitSuccess = World->LineTraceSingleByChannel(
+				hitResult,
+				traceStart, traceEnd,
+				CollisionChannel, traceQueryParams, FCollisionResponseParams()
+			);
+
+			// Position the vertex based on whether we had a hit or not.
+			if (hitResult.bBlockingHit) {
+				// Calculate the offset for the vertex- it's based on the distance to the
+				// base plane.
+				const float distanceFromVertexToBasePlane =
+					FVector::PointPlaneDist(vertex, pointOnBasePlaneLS, projectionNormalInLS);
+				const float hitProjectionHeight =
+					distanceFromVertexToBasePlane - HeightAdjust;
+
+				vertex = 
+					Transform.InverseTransformPosition(
 						hitResult.ImpactPoint
-					)
-						+ projectionNormalInLS * hitProjectionHeight;
-				}
-				else {
-					vertex = vertex + scaledProjectionLS;
-				}
+					) + projectionNormalInLS * hitProjectionHeight;
+			}
+			else {
+				// No collision- just add the projection to the vertex.
+				vertex = vertex + Transform.InverseTransformVector(scaledProjection);;
+			}
+		}
+	}
+}
+
+void UMeshGeometry::ConformDown(UObject* WorldContextObject, FTransform Transform, TArray <AActor *> IgnoredActors, float ProjectionLength /*= 100*/, float HeightAdjust /*= 0*/, bool TraceComplex /*= true*/, ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/, USelectionSet *Selection /*= nullptr */)
+{
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
+	{
+		return;
+	}
+
+	// Get the world content we're operating in
+	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
+	if (!World)
+	{
+		UE_LOG(MDTLog, Error, TEXT("Conform: Cannot access game world"));
+		return;
+	}
+
+	// Prepare the trace query parameters
+	const FName traceTag("ConformTraceTag");
+	FCollisionQueryParams traceQueryParams = FCollisionQueryParams();
+	traceQueryParams.TraceTag = traceTag;
+	traceQueryParams.bTraceComplex = TraceComplex;
+	traceQueryParams.AddIgnoredActors(IgnoredActors);
+
+	// Calculate the projection vector.
+	const FVector projection = FVector(0, 0, -ProjectionLength);
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section : this->sections)
+	{
+		for (auto &vertex : section.vertices)
+		{
+			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
+			const FVector scaledProjection = projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
+
+			// Compute the start/end positions of the trace
+			const FVector traceStart = Transform.TransformPosition(vertex);
+			const FVector traceEnd =
+				Transform.TransformPosition(FVector(vertex.X, vertex.Y, 0)) + scaledProjection;
+
+			// Do the actual trace
+			FHitResult hitResult;
+			bool hitSuccess = World->LineTraceSingleByChannel(
+				hitResult,
+				traceStart, traceEnd,
+				CollisionChannel, traceQueryParams, FCollisionResponseParams()
+			);
+
+			// Position the vertex based on whether we had a hit or not.
+			if (hitResult.bBlockingHit) {
+				// Add the original .Z and heightAdjust to the hit result for the final collision output.
+				vertex =
+					Transform.InverseTransformPosition(
+						hitResult.ImpactPoint
+					) + FVector(0,0,vertex.Z + HeightAdjust);
+			}
+			else {
+				// No collision- just add the projection to the vertex.
+				vertex = vertex + Transform.InverseTransformVector(scaledProjection);;
 			}
 		}
 	}

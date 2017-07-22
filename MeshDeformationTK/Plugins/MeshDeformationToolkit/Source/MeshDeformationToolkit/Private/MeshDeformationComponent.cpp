@@ -27,8 +27,7 @@ void UMeshDeformationComponent::Conform(
 
 	MeshGeometry->Conform(
 		WorldContextObject, Transform, IgnoredActors, Projection, HeightAdjust, TraceComplex,
-		CollisionChannel, Selection,
-		0
+		CollisionChannel, Selection
 	);
 }
 
