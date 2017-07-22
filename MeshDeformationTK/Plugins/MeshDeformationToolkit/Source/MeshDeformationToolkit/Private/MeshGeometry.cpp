@@ -80,36 +80,43 @@ void UMeshGeometry::Conform(
 		{
 			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
 			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
+			const FVector scaledProjectionLS = Transform.InverseTransformVector(scaledProjection);
+			const float adjustedScaledProjectionSize = scaledProjection.Size();
 
 			// Compute the start/end positions of the trace
 			const FVector traceStart = Transform.TransformPosition(vertex);
 			const FVector traceEnd = Transform.TransformPosition(
 				NearestPointOnPlane(
 					vertex,
-					pointOnBasePlaneLS,
+					pointOnBasePlaneLS + adjustedScaledProjectionSize*projectionNormalInLS,
 					projectionNormalInLS
 				)
 			);
-			vertex = Transform.InverseTransformPosition(traceEnd);
-			/*
-			// Do the actual trace
-			FHitResult hitResult;
-			bool hitSuccess = World->LineTraceSingleByChannel(
-				hitResult,
-				traceStart, traceEnd,
-				CollisionChannel, traceQueryParams, FCollisionResponseParams()
-			);
-
-			// Position the vertex based on whether we had a hit or not.
-			if (hitResult.bBlockingHit) {
-				vertex = Transform.InverseTransformPosition(
-					hitResult.ImpactPoint
+			//vertex = Transform.InverseTransformPosition(traceEnd);
+			if (true) {
+				// Do the actual trace
+				FHitResult hitResult;
+				bool hitSuccess = World->LineTraceSingleByChannel(
+					hitResult,
+					traceStart, traceEnd,
+					CollisionChannel, traceQueryParams, FCollisionResponseParams()
 				);
+
+				// Position the vertex based on whether we had a hit or not.
+				if (hitResult.bBlockingHit) {
+					const float distanceFromVertexToBasePlane =
+						FVector::PointPlaneDist(vertex, pointOnBasePlaneLS, projectionNormalInLS);
+					const float hitProjectionHeight =
+						distanceFromVertexToBasePlane - HeightAdjust;
+					vertex = Transform.InverseTransformPosition(
+						hitResult.ImpactPoint
+					)
+						+ projectionNormalInLS * hitProjectionHeight;
+				}
+				else {
+					vertex = vertex + scaledProjectionLS;
+				}
 			}
-			else {
-				vertex = vertex + Transform.InverseTransformVector(scaledProjection);
-			}
-			*/
 		}
 	}
 }
@@ -1185,6 +1192,7 @@ float UMeshGeometry::MiniumProjectionPlaneDistance(FVector projection)
 
 			const float distanceFromVertexToPlane = nearestPointOnVertexPlane.Size() * (dotTest ? 1 : -1);
 
+			/*
 			UE_LOG(MDTLog, Warning, TEXT("Vertex %s, Plane pos: %s, norm %s, Dist %f, Dot %s, On %f"),
 				*vertex.ToString(),
 				*nearestPointOnVertexPlane.ToString(),
@@ -1193,8 +1201,8 @@ float UMeshGeometry::MiniumProjectionPlaneDistance(FVector projection)
 				dotTest ? TEXT("Yes") : TEXT("No"),
 				plane.PlaneDot(vertex)
 			);
+			*/
 
-		
 			// Update furthestPlane info
 			furthestPlane =
 				haveProcessedFirstVertex ?
