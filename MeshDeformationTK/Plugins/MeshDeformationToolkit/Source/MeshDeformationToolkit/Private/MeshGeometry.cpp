@@ -63,6 +63,7 @@ void UMeshGeometry::Conform(
 	// Get the distance to the base plane
 	const float distanceToBasePlane = MiniumProjectionPlaneDistance(-projectionInLS);
 	const FVector pointOnBasePlane = Projection.GetSafeNormal() * distanceToBasePlane;
+	const FVector pointOnBasePlaneLS = projectionNormalInLS * distanceToBasePlane;
 
 	const FVector projectionNormal = Projection.GetSafeNormal();
 	UE_LOG(MDTLog, Warning,
@@ -82,13 +83,33 @@ void UMeshGeometry::Conform(
 
 			// Compute the start/end positions of the trace
 			const FVector traceStart = Transform.TransformPosition(vertex);
-			const FVector traceEnd = NearestPointOnPlane(
-				Transform.InverseTransformPosition(vertex),
-				pointOnBasePlane - projectionNormal*scaledProjection,
-				projectionNormal
+			const FVector traceEnd = Transform.TransformPosition(
+				NearestPointOnPlane(
+					vertex,
+					pointOnBasePlaneLS,
+					projectionNormalInLS
+				)
+			);
+			vertex = Transform.InverseTransformPosition(traceEnd);
+			/*
+			// Do the actual trace
+			FHitResult hitResult;
+			bool hitSuccess = World->LineTraceSingleByChannel(
+				hitResult,
+				traceStart, traceEnd,
+				CollisionChannel, traceQueryParams, FCollisionResponseParams()
 			);
 
-			vertex = traceEnd;
+			// Position the vertex based on whether we had a hit or not.
+			if (hitResult.bBlockingHit) {
+				vertex = Transform.InverseTransformPosition(
+					hitResult.ImpactPoint
+				);
+			}
+			else {
+				vertex = vertex + Transform.InverseTransformVector(scaledProjection);
+			}
+			*/
 		}
 	}
 }
