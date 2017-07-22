@@ -62,11 +62,35 @@ void UMeshGeometry::Conform(
 
 	// Get the distance to the base plane
 	const float distanceToBasePlane = MiniumProjectionPlaneDistance(-projectionInLS);
+	const FVector pointOnBasePlane = Projection.GetSafeNormal() * distanceToBasePlane;
+
+	const FVector projectionNormal = Projection.GetSafeNormal();
 	UE_LOG(MDTLog, Warning,
 		TEXT("Distance to base plane: %f (Proj %s, Bounds %s - %s)"),
 		distanceToBasePlane, *Projection.ToString(),
 		*GetBoundingBox().Min.ToString(), *GetBoundingBox().Max.ToString()
 	);
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section : this->sections)
+	{
+		for (auto &vertex : section.vertices)
+		{
+			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
+			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
+
+			// Compute the start/end positions of the trace
+			const FVector traceStart = Transform.TransformPosition(vertex);
+			const FVector traceEnd = NearestPointOnPlane(
+				Transform.InverseTransformPosition(vertex),
+				pointOnBasePlane - projectionNormal*scaledProjection,
+				projectionNormal
+			);
+
+			vertex = traceEnd;
+		}
+	}
 }
 
 /*
