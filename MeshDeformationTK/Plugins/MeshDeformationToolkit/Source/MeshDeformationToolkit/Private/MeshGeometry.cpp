@@ -106,7 +106,15 @@ void UMeshGeometry::Conform(
 	}
 }
 
-void UMeshGeometry::ConformDown(UObject* WorldContextObject, FTransform Transform, TArray <AActor *> IgnoredActors, float ProjectionLength /*= 100*/, float HeightAdjust /*= 0*/, bool TraceComplex /*= true*/, ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/, USelectionSet *Selection /*= nullptr */)
+void UMeshGeometry::ConformDown(
+	UObject* WorldContextObject, 
+	FTransform Transform,
+	TArray <AActor *> IgnoredActors /*= nullptr*/,
+	float ProjectionLength /*= 100*/,
+	float HeightAdjust /*= 0*/,
+	bool TraceComplex /*= true*/,
+	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
+	USelectionSet *Selection /*= nullptr */)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
 	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
@@ -169,112 +177,6 @@ void UMeshGeometry::ConformDown(UObject* WorldContextObject, FTransform Transfor
 		}
 	}
 }
-
-/*
-Conform old version
-)
-{
-	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
-	{
-		return;
-	}
-
-	// Get the world content we're operating in
-	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
-	if (!World)
-	{
-		UE_LOG(MDTLog, Error, TEXT("Conform: Cannot access game world"));
-		return;
-	}
-
-	// Prepare the trace query parameters
-	const FName traceTag("ConformTraceTag");
-	FCollisionQueryParams traceQueryParams = FCollisionQueryParams();
-	traceQueryParams.TraceTag = traceTag;
-	traceQueryParams.bTraceComplex = TraceComplex;
-	traceQueryParams.AddIgnoredActors(IgnoredActors);
-
-	// Calculate the height adjustment vector- this is a constant World Space vector scaled by HeightAdjust which we can use to control
-	//  where we're treating as the base.
-	FVector heightAdjustVector = Projection.GetSafeNormal() * HeightAdjust;
-
-	// Iterate over the sections, and the vertices in the sections.
-	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
-	{
-		for (auto &vertex:section.vertices)
-		{
-			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
-			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
-			const FVector zCheck = FVector(0, 0, 1);
-
-			// Project the vertex along the projection axis so we'll be able to work on the final position for impact.
-			// This is in Local Space.
-			const FVector vertexAlongProjection = vertex.ProjectOnTo(Transform.InverseTransformVector(Projection));
-			const float vertexSizeDotProj =
-				vertex.Size() * FVector::DotProduct(
-					vertex.GetSafeNormal(),
-					Transform.InverseTransformVector(zCheck).GetSafeNormal());
-			const float vertProjSize = (vertex * Projection).Size();
-
-			// Calculate the start and end locations of the collision trace, both in World Space.
-			// Handle vertexAlongProjection in traceEnd so that it'll handle collisions where the base collides but not this vertex.
-			FVector traceStart = Transform.TransformPosition(vertex);
-			FVector traceEnd = Transform.TransformPosition(vertex-vertexAlongProjection)+scaledProjection;
-
-			// Do the actual trace
-			FHitResult hitResult;
-			bool hitSuccess = World->LineTraceSingleByChannel(
-				hitResult,
-				traceStart, traceEnd,
-				CollisionChannel, traceQueryParams, FCollisionResponseParams()
-			);
-			
-			// Don't think this is useful as the traceEnd is flat.
-			const float scaledProjectionLength = scaledProjection.Size();
-			const float intersectionDepth = scaledProjectionLength-hitResult.Distance;
-			
-			const float vertDotProj = FVector::DotProduct(
-				vertex.GetSafeNormal(),
-				Projection.GetSafeNormal()
-			);
-			// What we know..
-			// traceStart and traceEnd are fine
-			// Collision is right.
-			// vertexAlongProjection is along projection but goes both sides of the sphere.
-			// -Projection seems to be in the right direction
-			// VertexAlongProjection.size() seems to do the reverse trick so isn't suitable.
-
-			// Update vertex based on whether there was a hit or not.
-			const float dotScale = FVector::DotProduct(
-				vertex.GetSafeNormal(),
-				Transform.InverseTransformVector(Projection).GetSafeNormal()
-			);
-
-			if (hitResult.bBlockingHit)
-			{
-				// We have a hit- move the vertex to the location of the hit converted to local space, restoring the vertex's height by using
-				//  VertexAlongPosition
-				//vertex = Transform.InverseTransformPosition(hitResult.ImpactPoint) - vertexAlongProjection;
-				const float penetrationDepth = scaledProjection.Size() - hitResult.Distance;
-				vertex =
-					Transform.InverseTransformPosition(
-						hitResult.ImpactPoint +
-						-Projection.GetSafeNormal() * vertProjSize
-						//	scaledProjection.Size() - (penetrationDepth + vertexAlongProjection.Size())
-						//	)
-					);
-			}
-			else
-			{
-				// No hit, move the original vertex down by the projection
-				vertex += Transform.InverseTransformVector(scaledProjection);
-			}
-		}
-	}
-}
-*/
 
 void UMeshGeometry::FitToSpline(
 	USplineComponent *SplineComponent,

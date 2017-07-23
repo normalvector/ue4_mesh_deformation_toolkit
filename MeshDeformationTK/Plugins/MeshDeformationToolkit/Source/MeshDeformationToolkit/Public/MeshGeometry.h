@@ -222,10 +222,28 @@ public:
 	##################################################
 	*/
 
-	// there was a hit, false otherwise	*/
-	//		UFUNCTION(BlueprintCallable, Category = "Collision", meta = (bIgnoreSelf = "true", WorldContext = "WorldContextObject", AutoCreateRefTerm = "ActorsToIgnore", DisplayName = "LineTraceByChannel", AdvancedDisplay = "TraceColor,TraceHitColor,DrawTime", Keywords = "raycast"))
-	//		static bool LineTraceSingle(UObject* WorldContextObject, const FVector Start, const FVector End, ETraceTypeQuery TraceChannel, bool bTraceComplex, const TArray<AActor*>& ActorsToIgnore, EDrawDebugTrace::Type DrawDebugType, FHitResult& OutHit, bool bIgnoreSelf, FLinearColor TraceColor = FLinearColor::Red, FLinearColor TraceHitColor = FLinearColor::Green, float DrawTime = 5.0f);
-
+	/// Conforms the mesh against collision geometry by projecting along an arbitrary vector.
+	///
+	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
+	/// for each vertex in the source mesh.
+	///
+	/// \param WorldContextObject		The object to get the world object from, this is set automatically
+	///									in the MeshDeformerComponent Blueprint so the end-user doesn't need\
+	///									to do it.
+	///	\param Transform				The base transformation of the object.  It's important this is
+	///									specified as it's needed to position the line traces.
+	/// \param IgnoredActors			An optional array of actors which will be ignored by the line trace.
+	/// \param Projection				The projection to conform.  Each vertex will be moved along this
+	///									vector until it hits something.
+	/// \param HeightAdjust				An offset which will be applied to each vertex which collides with
+	///									an object.  If this is +ve then the object will be move up and away
+	///									from the collision, if this is -ve then the object will be dropped
+	///									down through the collided object.
+	/// \param TraceComplex				Whether to use complex polygon-based collision rather than the simpler
+	///									collision mesh.
+	/// \param CollisionChannel			The collision channel to use for the line-trace operations.
+	/// \param Selection				An optional SelectionSet to control the effect on a per-vertex
+	///									basis.  If provided this will change the strength of the Projection.
 	UFUNCTION(
 		BlueprintCallable, Category=MeshGeometry,
 		meta=(AutoCreateRefTerm="IgnoredActors", WorldContext="WorldContextObject", Keywords="drop drape cloth collision soft trace")
@@ -241,6 +259,28 @@ public:
 			USelectionSet *Selection=nullptr
 		);
 
+	/// Conforms the mesh against collision geometry by projecting along an arbitrary vector.
+	///
+	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
+	/// for each vertex in the source mesh.
+	///
+	/// \param WorldContextObject		The object to get the world object from, this is set automatically
+	///									in the MeshDeformerComponent Blueprint so the end-user doesn't need\
+	///									to do it.
+	///	\param Transform				The base transformation of the object.  It's important this is
+	///									specified as it's needed to position the line traces.
+	/// \param IgnoredActors			An optional array of actors which will be ignored by the line trace.
+	/// \param Projection				The distance (in UU) to drop the geometry by until it hits another
+	///									object.
+	/// \param HeightAdjust				An offset which will be applied to each vertex which collides with
+	///									an object.  If this is +ve then the object will be move up and away
+	///									from the collision, if this is -ve then the object will be dropped
+	///									down through the collided object.
+	/// \param TraceComplex				Whether to use complex polygon-based collision rather than the simpler
+	///									collision mesh.
+	/// \param CollisionChannel			The collision channel to use for the line-trace operations.
+	/// \param Selection				An optional SelectionSet to control the effect on a per-vertex
+	///									basis.  If provided this will change the strength of the Projection.
 	UFUNCTION(
 		BlueprintCallable, Category = MeshGeometry,
 		meta = (AutoCreateRefTerm = "IgnoredActors", WorldContext = "WorldContextObject", Keywords = "drop drape cloth collision soft trace")
@@ -255,6 +295,8 @@ public:
 			ECollisionChannel CollisionChannel = ECC_WorldStatic,
 			USelectionSet *Selection = nullptr
 		);
+
+
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
 	///
 	/// \param StartPosition				The position (0 to 1) on the spline that the mesh should start, 
