@@ -666,6 +666,40 @@ USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float
 	return result;
 }
 
+
+USelectionSet * USelectionSetBPLibrary::RemapRipple(
+	USelectionSet *Value, int32 NumberOfRipples /*= 4*/, bool UpAndDown /*= true*/)
+{
+	// Need a SelectionSet
+	if (!Value)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("RemapRipple: Need a SelectionSet"));
+		return nullptr;
+	}
+
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 size = Value->Size();
+	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+		size, Value->GetOuter(), TEXT("RemapRipple"));
+	if (!result)
+	{
+		return nullptr;
+	}
+
+	// Perform the remap
+	for (int32 i=0; i<size; i++) {
+		const float scaledValue = Value->weights[i] * NumberOfRipples;
+		const bool isOdd = (FPlatformMath::FloorToInt(scaledValue) % 2) ==1;
+		const bool shouldInvert = UpAndDown && isOdd;
+	
+		result->weights[i] = shouldInvert ?
+			1.0f-FMath::Fmod(scaledValue, 1.0f) :
+			FMath::Fmod(scaledValue, 1.0f);
+	}
+
+	return result;
+}
+
 USelectionSet * USelectionSetBPLibrary::Set(USelectionSet *Value, float Float/*=0*/)
 {
 	// Need a SelectionSet

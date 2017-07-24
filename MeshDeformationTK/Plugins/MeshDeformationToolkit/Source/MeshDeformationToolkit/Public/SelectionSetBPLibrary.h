@@ -259,6 +259,13 @@ public:
 		static USelectionSet *RemapToRange(USelectionSet *Value, float Min=0.0f, float Max=1.0f);
 
 
+	/// **Math|SelectionSet|RemapRipple**: Remaps a SelectionSet by applying a number of ripples.
+	///
+	/// This can be used to create repeated gradients, or to convert a selection into a series
+	/// of rings.
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "RemapRipple(SelectionSet, Int, bool)", Category = "Math|SelectionSet"))
+		static USelectionSet *RemapRipple(USelectionSet *Value, int32 NumberOfRipples = 4, bool UpAndDown = true);
+
 	/// **Math|SelectionSet|Set**: Set all values of a SelectionSet to the same Float
 	///
 	/// This can be used to create new SelectionSets to be combined with the original, and will

@@ -552,7 +552,7 @@ public:
 	/// \return The total triangle count
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="tris polys polygons faces"))
-		int32 TotalTriangleCount() const;
+		int32 GetTotalTriangleCount() const;
 
 	/// Return the number of total vertices in the geometry.
 	///
@@ -561,7 +561,7 @@ public:
 	/// \return The total vertex count
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="verts points"))
-		int32 TotalVertexCount() const;
+		int32 GetTotalVertexCount() const;
 private:
 	/// Given a plane this returns the nearest point on it to the vertex provied
 	FVector NearestPointOnPlane(FVector Vertex, FVector PointOnPlane, FVector PlaneNormal);

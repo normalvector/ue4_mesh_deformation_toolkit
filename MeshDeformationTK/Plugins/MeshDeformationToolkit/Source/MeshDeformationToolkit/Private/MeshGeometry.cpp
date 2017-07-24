@@ -469,8 +469,28 @@ FString UMeshGeometry::GetSummary() const
 {
 	return FString::Printf(
 		TEXT("%d sections, %d vertices, %d triangles"),
-		this->sections.Num(), this->TotalVertexCount(), this->TotalTriangleCount()
+		this->sections.Num(), this->GetTotalVertexCount(), this->GetTotalTriangleCount()
 	);
+}
+
+int32 UMeshGeometry::GetTotalTriangleCount() const
+{
+	int32 totalTriangleCount = 0;
+	for (auto section:this->sections)
+	{
+		totalTriangleCount += section.triangles.Num();
+	}
+	return totalTriangleCount/3; // 3pts per triangle
+}
+
+int32 UMeshGeometry::GetTotalVertexCount() const
+{
+	int32 totalVertexCount = 0;
+	for (auto section:this->sections)
+	{
+		totalVertexCount += section.vertices.Num();
+	}
+	return totalVertexCount;
 }
 
 void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
@@ -789,7 +809,7 @@ USelectionSet *UMeshGeometry::SelectAll()
 	{
 		UE_LOG(MDTLog, Error, TEXT("SelectAll: Cannot create new SelectionSet"));
 	}
-	newSelectionSet->CreateSelectionSet(this->TotalVertexCount());
+	newSelectionSet->CreateSelectionSet(this->GetTotalVertexCount());
 	newSelectionSet->SetAllWeights(1.0f);
 	return newSelectionSet;
 }
@@ -1233,7 +1253,7 @@ bool UMeshGeometry::SelectionSetIsRightSize(USelectionSet *selection, FString No
 
 	// Get the sizes
 	const int32 selectionSetSize = selection->Size();
-	const int32 geometrySize = TotalVertexCount();
+	const int32 geometrySize = GetTotalVertexCount();
 
 	// Check them
 	if (selectionSetSize!=geometrySize)
@@ -1269,26 +1289,6 @@ void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStreng
 			vertex = SphereCenter+(vertexRelativeToCenter * targetVectorLength);
 		}
 	}
-}
-
-int32 UMeshGeometry::TotalTriangleCount() const
-{
-	int32 totalTriangleCount = 0;
-	for (auto section:this->sections)
-	{
-		totalTriangleCount += section.triangles.Num();
-	}
-	return totalTriangleCount/3; // 3pts per triangle
-}
-
-int32 UMeshGeometry::TotalVertexCount() const
-{
-	int32 totalVertexCount = 0;
-	for (auto section:this->sections)
-	{
-		totalVertexCount += section.vertices.Num();
-	}
-	return totalVertexCount;
 }
 
 void UMeshGeometry::Transform(FTransform Transform /*= FTransform::Identity*/, FVector CenterOfTransform /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)

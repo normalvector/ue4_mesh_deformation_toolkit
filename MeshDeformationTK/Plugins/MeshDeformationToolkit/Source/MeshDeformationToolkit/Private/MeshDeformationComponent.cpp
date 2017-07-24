@@ -115,7 +115,7 @@ int32 UMeshDeformationComponent::GetTotalTriangleCount() const
 		return 0;
 	}
 
-	return MeshGeometry->TotalTriangleCount();
+	return MeshGeometry->GetTotalTriangleCount();
 }
 
 int32 UMeshDeformationComponent::GetTotalVertexCount() const
@@ -126,7 +126,7 @@ int32 UMeshDeformationComponent::GetTotalVertexCount() const
 		return 0;
 	}
 
-	return MeshGeometry->TotalVertexCount();
+	return MeshGeometry->GetTotalVertexCount();
 }
 
 bool UMeshDeformationComponent::HasGeometry()
