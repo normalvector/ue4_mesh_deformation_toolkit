@@ -503,6 +503,17 @@ public:
 	##################################################
 	*/
 
+	/// Save the current geometry to a *StaticMesh*, replacing the geometry in the
+	/// mesh provided.  This will only work inside the Editor, this can't be done
+	/// in-game.
+	/// 
+	/// \param staticMesh					The mesh to replace
+
+	/// \return *True* if the update was successful, *False* if not
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+			  meta = (Keywords = "sm output write"))
+		bool SaveToStaticMesh(UStaticMesh *staticMesh);
+
 	/// Save the current geometry to a *ProceduralMeshComponent*.
 	/// 
 	/// This will rebuild the mesh, completely replacing any geometry it has there.

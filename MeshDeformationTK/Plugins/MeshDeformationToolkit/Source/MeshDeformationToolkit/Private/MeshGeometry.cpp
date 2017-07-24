@@ -1156,6 +1156,7 @@ USelectionSet * UMeshGeometry::SelectNearSpline(USplineComponent *spline, FTrans
 	if (!newSelectionSet)
 	{
 		UE_LOG(MDTLog, Error, TEXT("SelectNearSpline: Cannot create new SelectionSet"));
+		return nullptr;
 	}
 
 	// Calculate the selection radius- we need it for falloff
@@ -1335,4 +1336,27 @@ void UMeshGeometry::Translate(FVector delta, USelectionSet *Selection)
 			);
 		}
 	}
+}
+
+bool UMeshGeometry::SaveToStaticMesh(UStaticMesh *staticMesh)
+{
+	// Check we have a static mesh
+	if (!staticMesh)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: No Static Mesh provided"));
+		return false;
+	}
+
+	// Get the name of the object
+	const FStringAssetReference staticMeshName = FStringAssetReference(staticMesh);
+	if (!staticMeshName.IsValid())
+	{
+
+		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Cannot access name of Static Mesh"));
+		return false;
+	}
+
+
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Static mesh is %s"), *staticMeshName.ToString());
+	return true;
 }
