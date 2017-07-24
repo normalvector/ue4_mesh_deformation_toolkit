@@ -19,6 +19,8 @@ void UMeshDeformationComponent::Conform(
 	FVector Projection /*= FVector(0, 0, -100)*/, float HeightAdjust /*= 0*/, bool TraceComplex /*= true*/,
 	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/, USelectionSet *Selection /*= nullptr */)
 {
+	MeshDeformationComponent = this;
+
 	if (!MeshGeometry)
 	{
 		UE_LOG(MDTLog, Warning, TEXT("Conform: No meshGeometry loaded"));
@@ -52,6 +54,36 @@ void UMeshDeformationComponent::FitToSpline(
 	MeshGeometry->FitToSpline(
 		SplineComponent, StartPosition, EndPosition, MeshScale, ProfileCurve, SectionProfileCurve, Selection
 	);
+}
+
+void UMeshDeformationComponent::FlipNormals(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	USelectionSet *Selection /*= nullptr*/)
+{
+	MeshDeformationComponent = this;
+
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("FlipNormals: No meshGeometry loaded"));
+		return;
+	}
+	MeshGeometry->FlipNormals(Selection);
+}
+
+void UMeshDeformationComponent::FlipTextureUV(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	bool FlipU /*= false*/, bool FlipV /*= false*/,
+	USelectionSet *Selection /*= nullptr*/)
+{
+	MeshDeformationComponent = this;
+
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("FlipTextureUV: No meshGeometry loaded"));
+		return;
+	}
+	MeshGeometry->FlipTextureUV(FlipU, FlipV, Selection);
+
 }
 
 FBox UMeshDeformationComponent::GetBoundingBox() const

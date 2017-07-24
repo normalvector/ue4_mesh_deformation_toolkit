@@ -273,12 +273,71 @@ void UMeshGeometry::FitToSpline(
 	}
 }
 
+void UMeshGeometry::FlipNormals(USelectionSet *Selection /*= nullptr*/)
+{
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetIsRightSize(Selection, TEXT("FlipNormals")))
+	{
+		return;
+	}
+
+	// Iterate over the sections, and the normals in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section:this->sections)
+	{
+		for (auto &normal:section.normals)
+		{
+			// Obtain the next weighting and check if it's >=0.5
+			const bool shouldFlip =
+				Selection ? Selection->weights[nextSelectionIndex++]>=0.5 : true;
+
+			// If we need to flip then rebuild the UV based on which channels we're
+			//  flipping.
+			if (shouldFlip)
+			{
+				normal = -normal;
+			}
+		}
+	}
+}
+
+void UMeshGeometry::FlipTextureUV(bool FlipU /*= false*/, bool FlipV /*= false*/, USelectionSet *Selection /*= nullptr*/)
+{
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetIsRightSize(Selection, TEXT("FlipTextureUV")))
+	{
+		return;
+	}
+
+	// Iterate over the sections, and the uvs in the sections.
+	int32 nextSelectionIndex = 0;
+	for (auto &section:this->sections)
+	{
+		for (auto &uv:section.uvs)
+		{
+			// Obtain the next weighting and check if it's >=0.5
+			const bool shouldFlip =
+				Selection ? Selection->weights[nextSelectionIndex++]>=0.5 : true;
+
+			// If we're meant to be flipping then flip the correct channels.
+			if (shouldFlip)
+			{
+				uv = FVector2D(
+					FlipU ? 1.0f-uv.X : uv.X,
+					FlipV ? 1.0f-uv.Y : uv.Y
+				);
+			}
+		}
+	}
+
+}
+
 bool UMeshGeometry::CheckGeometryIsValid(FString NodeNameForWarning) const
 {
-	/// * Each section contains at least 3 vertices
-	/// * Each section contains at least 1 triangle
-	/// * Triangles contain a multiple of 3 points as every set of three defined one tri
-	/// * Has same number of normals as vertices
+	// * Each section contains at least 3 vertices
+	// * Each section contains at least 1 triangle
+	// * Triangles contain a multiple of 3 points as every set of three defined one tri
+	// * Has same number of normals as vertices
 
 	// Track if any error occurred- means we can do multiple warnings.
 	bool errorFound = false;
@@ -754,10 +813,9 @@ USelectionSet * UMeshGeometry::SelectByNoise(
 		UE_LOG(MDTLog, Error, TEXT("SelectAll: Cannot create new SelectionSet"));
 	}
 
-	// TODO: Lots of work here!
-	FastNoise noise;
 
 	// Set up all of the noise details from the parameters provided
+	FastNoise noise;
 	noise.SetSeed(Seed);
 	noise.SetFrequency(Frequency);
 	noise.SetInterp((FastNoise::Interp)NoiseInterpolation);

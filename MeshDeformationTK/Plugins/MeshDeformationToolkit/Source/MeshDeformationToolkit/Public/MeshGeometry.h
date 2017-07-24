@@ -337,6 +337,24 @@ public:
 			USelectionSet *Selection=nullptr
 		);
 
+	/// Flip the surface normals.
+	///
+	/// \param Selection						The SelectionSet to be applied- this will
+	///											be used as a true/false filter based on
+	///											whether each weighting is >=0.5.
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+		void FlipNormals(USelectionSet *Selection = nullptr);
+
+	/// Flip the texture map channel in U (horizontal), V(vertical), both, or neither.
+	///
+	/// \param FlipU							Flip the texture horizontally
+	/// \param FlipV							Flip the texture vertically
+	/// \param Selection						The SelectionSet to be applied- this will
+	///											be used as a true/false filter based on
+	///											whether each weighting is >=0.5.
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
+		void FlipTextureUV(bool FlipU = false, bool FlipV = false, USelectionSet *Selection = nullptr);
+
 	/// Moves vertices a specified offset along their own normals
 	///
 	/// \param Offset							The distance to offset
