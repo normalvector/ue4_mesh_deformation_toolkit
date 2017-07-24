@@ -6,7 +6,9 @@
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h" // ClosestPointOnLine/ClosestPointOnInfiniteLine, GetMappedRangeValue
 #include "SelectionSet.h"
 #include "FastNoise.h"
-#include "Developer/RawMesh/Public/RawMesh.h"
+#include "Developer/RawMesh/Public/RawMesh.h" // The structure for building static meshes
+#include "Runtime/AssetRegistry/Public/AssetRegistryModule.h" // Allows registering new static meshes
+
 #include "MeshGeometry.h"
 
 UMeshGeometry::UMeshGeometry()
@@ -763,17 +765,31 @@ bool UMeshGeometry::SaveToStaticMesh(
 	}
 
 	// Get the name of the object
-	const FStringAssetReference staticMeshName = FStringAssetReference(StaticMesh);
-	if (!staticMeshName.IsValid())
+	const FStringAssetReference staticMeshAssetReference = FStringAssetReference(StaticMesh);
+	if (!staticMeshAssetReference.IsValid())
 	{
-
 		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Cannot access name of Static Mesh"));
 		return false;
 	}
+	const FName staticMeshName = FName(*staticMeshAssetReference.ToString());
 
+	// Convert the name to a package name
+	const FString packageName = staticMeshAssetReference.GetLongPackageName();
+
+	// Check the name is a valid long path
+	if (!FPackageName::IsValidLongPackageName(packageName))
+	{
+		UE_LOG(
+			MDTLog, Error, TEXT("SaveToStaticMesh: '%s' is not a valid long package name"),
+		   *packageName
+		);
+		return false;
+	}
 	// We now have the name
-	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Static mesh is %s"), *staticMeshName.ToString());
-	
+	UE_LOG(
+		MDTLog, Warning, TEXT("SaveToStaticMesh: Static mesh is %s (%s)"),
+		*staticMeshAssetReference.ToString(), *packageName);
+
 	// Save the object to the PMC
 	this->SaveToProceduralMeshComponent(proceduralMeshComponent, true);
 
@@ -826,6 +842,60 @@ bool UMeshGeometry::SaveToStaticMesh(
 		VertexBase += ProcSection->ProcVertexBuffer.Num();
 	}
 
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Built RawData"));
+
+	//  Check we got valid data
+	if (RawMesh.VertexPositions.Num()<3||RawMesh.WedgeIndices.Num()<3)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Mesh data not valid, need at least 3 vertices"));
+		return false;
+	}
+
+	// Create the static mesh resource
+	UPackage *package = CreatePackage(nullptr, *packageName);
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Now have new package"));
+
+	UStaticMesh *newStaticMesh = NewObject<UStaticMesh>(
+		package, FName(*packageName), RF_Public|RF_Standalone
+		);
+	//UStaticMesh *staticMesh = NewObject<UStaticMesh>(
+	//	package, staticMeshName, RF_Public|RF_Standalone
+	//	);
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Now have new UStaticMesh"));
+	newStaticMesh->InitResources();
+	newStaticMesh->LightingGuid = FGuid::NewGuid();
+
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Now have new SM"));
+
+	// Add the data to the static mesh
+	FStaticMeshSourceModel* sourceModel = new (newStaticMesh->SourceModels) FStaticMeshSourceModel();
+	sourceModel->BuildSettings.bRecomputeNormals = false;
+	sourceModel->BuildSettings.bRecomputeTangents = false;
+	sourceModel->BuildSettings.bRemoveDegenerates = false;
+	sourceModel->BuildSettings.bUseHighPrecisionTangentBasis = false;
+	sourceModel->BuildSettings.bUseFullPrecisionUVs = false;
+	sourceModel->BuildSettings.bGenerateLightmapUVs = true;
+	sourceModel->BuildSettings.SrcLightmapIndex = 0;
+	sourceModel->BuildSettings.DstLightmapIndex = 1;
+	sourceModel->RawMeshBulkData->SaveRawMesh(RawMesh);
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Added data to StaticMesh"));
+
+	// Copy materials
+	for (auto &material:Materials)
+	{
+		newStaticMesh->StaticMaterials.Add(FStaticMaterial(material));
+	}
+
+	//Set the Imported version before calling the build
+	newStaticMesh->ImportVersion = EImportStaticMeshVersion::LastVersion;
+
+	// Build mesh from source
+	newStaticMesh->Build(false);
+	newStaticMesh->PostEditChange();
+
+	// Notify asset registry of new asset
+	FAssetRegistryModule::AssetCreated(newStaticMesh);
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Asset created"));
 	return true;
 }
 
