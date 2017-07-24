@@ -6,6 +6,7 @@
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h" // ClosestPointOnLine/ClosestPointOnInfiniteLine, GetMappedRangeValue
 #include "SelectionSet.h"
 #include "FastNoise.h"
+#include "Developer/RawMesh/Public/RawMesh.h"
 #include "MeshGeometry.h"
 
 UMeshGeometry::UMeshGeometry()
@@ -749,6 +750,85 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(
 	return true;
 }
 
+bool UMeshGeometry::SaveToStaticMesh(
+	UStaticMesh *StaticMesh,
+	UProceduralMeshComponent *proceduralMeshComponent,
+	TArray<UMaterialInstance *> Materials)
+{
+	// Check we have a static mesh
+	if (!StaticMesh)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: No Static Mesh provided"));
+		return false;
+	}
+
+	// Get the name of the object
+	const FStringAssetReference staticMeshName = FStringAssetReference(StaticMesh);
+	if (!staticMeshName.IsValid())
+	{
+
+		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Cannot access name of Static Mesh"));
+		return false;
+	}
+
+	// We now have the name
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Static mesh is %s"), *staticMeshName.ToString());
+	
+	// Save the object to the PMC
+	this->SaveToProceduralMeshComponent(proceduralMeshComponent, true);
+
+	// Build the raw mesh data based on
+	// https://github.com/EpicGames/UnrealEngine/blob/f794321ffcad597c6232bc706304c0c9b4e154b2/Engine/Plugins/Runtime/ProceduralMeshComponent/Source/ProceduralMeshComponentEditor/Private/ProceduralMeshComponentDetails.cpp
+	FRawMesh RawMesh;
+	const int32 NumSections = proceduralMeshComponent->GetNumSections();
+	int32 VertexBase = 0;
+	for (int32 SectionIdx = 0; SectionIdx<NumSections; SectionIdx++)
+	{
+		FProcMeshSection* ProcSection = proceduralMeshComponent->GetProcMeshSection(SectionIdx);
+
+		// Copy verts
+		for (FProcMeshVertex& Vert:ProcSection->ProcVertexBuffer)
+		{
+			RawMesh.VertexPositions.Add(Vert.Position);
+		}
+
+		// Copy 'wedge' info
+		int32 NumIndices = ProcSection->ProcIndexBuffer.Num();
+		for (int32 IndexIdx = 0; IndexIdx<NumIndices; IndexIdx++)
+		{
+			int32 Index = ProcSection->ProcIndexBuffer[IndexIdx];
+
+			RawMesh.WedgeIndices.Add(Index+VertexBase);
+
+			FProcMeshVertex& ProcVertex = ProcSection->ProcVertexBuffer[Index];
+
+			FVector TangentX = ProcVertex.Tangent.TangentX;
+			FVector TangentZ = ProcVertex.Normal;
+			FVector TangentY = (TangentX ^ TangentZ).GetSafeNormal() * (ProcVertex.Tangent.bFlipTangentY ? -1.f : 1.f);
+
+			RawMesh.WedgeTangentX.Add(TangentX);
+			RawMesh.WedgeTangentY.Add(TangentY);
+			RawMesh.WedgeTangentZ.Add(TangentZ);
+
+			RawMesh.WedgeTexCoords[0].Add(ProcVertex.UV0);
+			RawMesh.WedgeColors.Add(ProcVertex.Color);
+		}
+
+		// copy face info
+		int32 NumTris = NumIndices/3;
+		for (int32 TriIdx = 0; TriIdx<NumTris; TriIdx++)
+		{
+			RawMesh.FaceMaterialIndices.Add(SectionIdx);
+			RawMesh.FaceSmoothingMasks.Add(0); // Assume this is ignored as bRecomputeNormals is false
+		}
+
+		// Update offset for creating one big index/vertex buffer
+		VertexBase += ProcSection->ProcVertexBuffer.Num();
+	}
+
+	return true;
+}
+
 void UMeshGeometry::Scale(FVector Scale3d /*= FVector(1, 1, 1)*/, FVector CenterOfScale /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
@@ -1336,27 +1416,4 @@ void UMeshGeometry::Translate(FVector delta, USelectionSet *Selection)
 			);
 		}
 	}
-}
-
-bool UMeshGeometry::SaveToStaticMesh(UStaticMesh *staticMesh)
-{
-	// Check we have a static mesh
-	if (!staticMesh)
-	{
-		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: No Static Mesh provided"));
-		return false;
-	}
-
-	// Get the name of the object
-	const FStringAssetReference staticMeshName = FStringAssetReference(staticMesh);
-	if (!staticMeshName.IsValid())
-	{
-
-		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Cannot access name of Static Mesh"));
-		return false;
-	}
-
-
-	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Static mesh is %s"), *staticMeshName.ToString());
-	return true;
 }

@@ -39,6 +39,7 @@ public class MeshDeformationToolkit : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+                "Rawmesh", // Need access to UE4's Rawmesh to write Static Meshes
                 "ProceduralMeshComponent"
 				// ... add private dependencies that you statically link with here ...	
 			}

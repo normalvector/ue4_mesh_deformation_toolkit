@@ -508,11 +508,13 @@ public:
 	/// in-game.
 	/// 
 	/// \param staticMesh					The mesh to replace
+	/// \param proceduralMeshComponent		A ProceduralMeshComponent which will be used to build
+	///										all of the data structures that StaticMesh needs.
 
 	/// \return *True* if the update was successful, *False* if not
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 			  meta = (Keywords = "sm output write"))
-		bool SaveToStaticMesh(UStaticMesh *staticMesh);
+		bool SaveToStaticMesh(UStaticMesh *StaticMesh, UProceduralMeshComponent *proceduralMeshComponent, TArray<UMaterialInstance *> Materials);
 
 	/// Save the current geometry to a *ProceduralMeshComponent*.
 	/// 
