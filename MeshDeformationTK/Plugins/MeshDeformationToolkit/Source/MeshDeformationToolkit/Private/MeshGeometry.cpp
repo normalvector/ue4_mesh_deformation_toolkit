@@ -1336,6 +1336,12 @@ USelectionSet * UMeshGeometry::SelectNearSpline(USplineComponent *spline, FTrans
 		return nullptr;
 	}
 
+	if (!spline)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectNearSpline: No spline provided"));
+		return nullptr;
+	}
+
 	// Calculate the selection radius- we need it for falloff
 	const float selectionRadius = outerRadius-innerRadius;
 

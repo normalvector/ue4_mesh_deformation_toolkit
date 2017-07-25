@@ -33,6 +33,31 @@ void UMeshDeformationComponent::Conform(
 	);
 }
 
+void UMeshDeformationComponent::ConformDown(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	UObject* WorldContextObject,
+	FTransform Transform,
+	TArray <AActor *> IgnoredActors,
+	float ProjectionLength /*= 100*/,
+	float HeightAdjust /*= 0*/,
+	bool TraceComplex /*= true*/,
+	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
+	USelectionSet *Selection /*= nullptr */)
+{
+	MeshDeformationComponent = this;
+
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("ConformDown: No meshGeometry loaded"));
+		return;
+	}
+
+	MeshGeometry->ConformDown(
+		WorldContextObject, Transform, IgnoredActors, ProjectionLength, HeightAdjust,
+		TraceComplex, CollisionChannel, Selection
+	);
+}
+
 void UMeshDeformationComponent::FitToSpline(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	USplineComponent *SplineComponent,

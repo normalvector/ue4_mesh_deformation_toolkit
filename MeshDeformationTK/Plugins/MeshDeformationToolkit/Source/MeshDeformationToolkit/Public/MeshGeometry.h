@@ -259,7 +259,7 @@ public:
 			USelectionSet *Selection=nullptr
 		);
 
-	/// Conforms the mesh against collision geometry by projecting along an arbitrary vector.
+	/// Conforms the mesh against collision geometry by projecting downwards (-Z).
 	///
 	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
 	/// for each vertex in the source mesh.
