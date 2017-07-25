@@ -564,8 +564,22 @@ public:
 			bool CreateCollision
 		);
 
-	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent)
-		bool HasGeometry();
+	/// Save the current geometry to a *StaticMesh*, replacing the geometry in the
+	/// mesh provided.  This will only work inside the Editor, this can't be done
+	/// in-game.
+	/// 
+	/// \param StaticMesh					The mesh to replace
+	/// \param ProceduralMeshComponent		A ProceduralMeshComponent which will be used to build
+	///										all of the data structures that StaticMesh needs.
+	/// \param Materials					An array of materials which will be applied to the
+	///										built mesh.
+	/// \return *True* if the update was successful, *False* if not
+	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
+			  meta = (Keywords = "sm output write"))
+		bool SaveToStaticMesh(
+			UStaticMesh *StaticMesh,
+			UProceduralMeshComponent *ProceduralMeshComponent,
+			TArray<UMaterialInstance *> Materials);
 
 	/*
 	##################################################
@@ -575,6 +589,10 @@ public:
 	If they serve as general data access they should be Pure and have a name starting with *Get*.
 	##################################################
 	*/
+
+	/// Return a boolean indicating if we have geometry loaded.
+	UFUNCTION(BlueprintPure, Category = MeshDeformationComponent)
+		bool HasGeometry();
 
 	/// Return the bounding box for all of the vertices in the mesh.
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshDeformationComponent,

@@ -507,14 +507,18 @@ public:
 	/// mesh provided.  This will only work inside the Editor, this can't be done
 	/// in-game.
 	/// 
-	/// \param staticMesh					The mesh to replace
-	/// \param proceduralMeshComponent		A ProceduralMeshComponent which will be used to build
+	/// \param StaticMesh					The mesh to replace
+	/// \param ProceduralMeshComponent		A ProceduralMeshComponent which will be used to build
 	///										all of the data structures that StaticMesh needs.
-
+	/// \param Materials					An array of materials which will be applied to the
+	///										built mesh.
 	/// \return *True* if the update was successful, *False* if not
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 			  meta = (Keywords = "sm output write"))
-		bool SaveToStaticMesh(UStaticMesh *StaticMesh, UProceduralMeshComponent *proceduralMeshComponent, TArray<UMaterialInstance *> Materials);
+		bool SaveToStaticMesh(
+			UStaticMesh *StaticMesh,
+			UProceduralMeshComponent *proceduralMeshComponent,
+			TArray<UMaterialInstance *> Materials);
 
 	/// Save the current geometry to a *ProceduralMeshComponent*.
 	/// 

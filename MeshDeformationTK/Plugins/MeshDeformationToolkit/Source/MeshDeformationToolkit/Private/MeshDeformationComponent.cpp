@@ -266,6 +266,16 @@ bool UMeshDeformationComponent::SaveToProceduralMeshComponent(
 	return MeshGeometry->SaveToProceduralMeshComponent(ProceduralMeshComponent, createCollision);
 }
 
+bool UMeshDeformationComponent::SaveToStaticMesh(UStaticMesh *StaticMesh, UProceduralMeshComponent *ProceduralMeshComponent, TArray<UMaterialInstance *> Materials)
+{
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: No meshGeometry loaded"));
+		return false;
+	}
+	return MeshGeometry->SaveToStaticMesh(StaticMesh, ProceduralMeshComponent, Materials);
+}
+
 void UMeshDeformationComponent::Scale(UMeshDeformationComponent *&MeshDeformationComponent, FVector Scale3d /*= FVector(1, 1, 1)*/, FVector CenterOfScale /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;

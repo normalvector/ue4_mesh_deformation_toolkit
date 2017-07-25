@@ -757,6 +757,12 @@ bool UMeshGeometry::SaveToStaticMesh(
 	UProceduralMeshComponent *proceduralMeshComponent,
 	TArray<UMaterialInstance *> Materials)
 {
+	// This will only work in the editor..
+#if !WITH_EDITOR
+	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Cannot run outside of editor"));
+	return false;
+#endif
+
 	// Check we have a static mesh
 	if (!StaticMesh)
 	{
@@ -790,6 +796,26 @@ bool UMeshGeometry::SaveToStaticMesh(
 	UE_LOG(
 		MDTLog, Warning, TEXT("SaveToStaticMesh: Static mesh packagename=%s, assetname=%s"),
 		*packageName, *assetName);
+
+	// Check that we're not trying to update this too often using timer.
+	// TODO: There should be a cleaner way to do this..
+	static TMap<FString, double> startTimesByName = TMap<FString, double>();
+	const FString timerName = staticMeshAssetReference.ToString();
+	const double startTime = FPlatformTime::Seconds();
+	const double requiredTimeSinceLastBuild = 0.1f;	// In seconds.
+	const double minimumLastRebuildTime = startTime-requiredTimeSinceLastBuild;
+	UE_LOG(
+		MDTLog, Warning, TEXT("SaveToStaticMesh: Building at time=%f"),
+		startTime
+	);
+	if (startTimesByName.Contains(timerName) && startTimesByName[timerName]>minimumLastRebuildTime)
+	{
+		UE_LOG(
+			MDTLog, Warning, TEXT("SaveToStaticMesh: Rebuilt too recently, cannot rebuild again yet")
+		);
+		return false;
+	}
+	startTimesByName.Emplace(timerName, startTime);
 
 	// Save the object to the PMC
 	this->SaveToProceduralMeshComponent(proceduralMeshComponent, true);
