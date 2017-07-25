@@ -773,8 +773,9 @@ bool UMeshGeometry::SaveToStaticMesh(
 	}
 	const FName staticMeshName = FName(*staticMeshAssetReference.ToString());
 
-	// Convert the name to a package name
+	// Get the package name and asset name from the reference
 	const FString packageName = staticMeshAssetReference.GetLongPackageName();
+	const FString assetName = staticMeshAssetReference.GetAssetName();
 
 	// Check the name is a valid long path
 	if (!FPackageName::IsValidLongPackageName(packageName))
@@ -787,8 +788,8 @@ bool UMeshGeometry::SaveToStaticMesh(
 	}
 	// We now have the name
 	UE_LOG(
-		MDTLog, Warning, TEXT("SaveToStaticMesh: Static mesh is %s (%s)"),
-		*staticMeshAssetReference.ToString(), *packageName);
+		MDTLog, Warning, TEXT("SaveToStaticMesh: Static mesh packagename=%s, assetname=%s"),
+		*packageName, *assetName);
 
 	// Save the object to the PMC
 	this->SaveToProceduralMeshComponent(proceduralMeshComponent, true);
@@ -856,7 +857,7 @@ bool UMeshGeometry::SaveToStaticMesh(
 	UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: Now have new package"));
 
 	UStaticMesh *newStaticMesh = NewObject<UStaticMesh>(
-		package, FName(*packageName), RF_Public|RF_Standalone
+		package, FName(*assetName), RF_Public|RF_Standalone
 		);
 	//UStaticMesh *staticMesh = NewObject<UStaticMesh>(
 	//	package, staticMeshName, RF_Public|RF_Standalone
