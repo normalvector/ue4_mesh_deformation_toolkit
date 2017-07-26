@@ -7,23 +7,23 @@
 USelectionSet * USelectionSet::CreateAndCheckValid(int32 RequiredSize, UObject *OuterObject, FString NodeNameForWarning)
 {
 	// Create the results at the correct size and zero it.
-	USelectionSet *newSelectionSet = NewObject<USelectionSet>(OuterObject);
-	if (!newSelectionSet)
+	USelectionSet *NewSelectionSet = NewObject<USelectionSet>(OuterObject);
+	if (!NewSelectionSet)
 	{
 		UE_LOG(MDTLog, Error, TEXT("%s: Cannot create new SelectionSet"), *NodeNameForWarning);
 		return nullptr;
 	}
 
 	// Set size.
-	newSelectionSet->CreateSelectionSet(RequiredSize);
+	NewSelectionSet->CreateSelectionSet(RequiredSize);
 
-	return newSelectionSet;
+	return NewSelectionSet;
 }
 
-void USelectionSet::CreateSelectionSet(int32 size)
+void USelectionSet::CreateSelectionSet(int32 Size)
 {
 	this->Empty();
-	Weights.AddZeroed(size);
+	Weights.AddZeroed(Size);
 }
 
 void USelectionSet::Empty()
@@ -31,20 +31,20 @@ void USelectionSet::Empty()
 	Weights.Empty();
 }
 
-USelectionSet *USelectionSet::RandomizeWeights(FRandomStream &randomStream, float min /*= 0*/, float max /*= 1*/)
+USelectionSet *USelectionSet::RandomizeWeights(FRandomStream &RandomStream, float Min /*= 0*/, float Max /*= 1*/)
 {
-	for (auto &weight:Weights)
+	for (auto &Weight:Weights)
 	{
-		weight = randomStream.FRandRange(min, max);
+		Weight = RandomStream.FRandRange(Min, Max);
 	}
 	return this;
 }
 
-USelectionSet *USelectionSet::SetAllWeights(float weight)
+USelectionSet *USelectionSet::SetAllWeights(float Value)
 {
-	for (auto &weightItr:Weights)
+	for (auto &Weight:Weights)
 	{
-		weightItr = weight;
+		Weight = Value;
 	}
 	return this;
 }
