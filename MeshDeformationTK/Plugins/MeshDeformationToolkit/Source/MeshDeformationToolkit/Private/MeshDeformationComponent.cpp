@@ -15,9 +15,15 @@ UMeshDeformationComponent::UMeshDeformationComponent()
 }
 
 void UMeshDeformationComponent::Conform(
-	UMeshDeformationComponent *&MeshDeformationComponent, UObject* WorldContextObject, FTransform Transform, TArray <AActor *> IgnoredActors,
-	FVector Projection /*= FVector(0, 0, -100)*/, float HeightAdjust /*= 0*/, bool TraceComplex /*= true*/,
-	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/, USelectionSet *Selection /*= nullptr */)
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	UObject* WorldContextObject,
+	FTransform Transform,
+	TArray <AActor *> IgnoredActors,
+	FVector Projection /*= FVector(0, 0, -100)*/,
+	float HeightAdjust /*= 0*/,
+	bool bTraceComplex /*= true*/,
+	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
+	USelectionSet *Selection /*= nullptr */)
 {
 	MeshDeformationComponent = this;
 
@@ -28,7 +34,7 @@ void UMeshDeformationComponent::Conform(
 	}
 
 	MeshGeometry->Conform(
-		WorldContextObject, Transform, IgnoredActors, Projection, HeightAdjust, TraceComplex,
+		WorldContextObject, Transform, IgnoredActors, Projection, HeightAdjust, bTraceComplex,
 		CollisionChannel, Selection
 	);
 }
@@ -40,7 +46,7 @@ void UMeshDeformationComponent::ConformDown(
 	TArray <AActor *> IgnoredActors,
 	float ProjectionLength /*= 100*/,
 	float HeightAdjust /*= 0*/,
-	bool TraceComplex /*= true*/,
+	bool bTraceComplex /*= true*/,
 	ECollisionChannel CollisionChannel /*= ECC_WorldStatic*/,
 	USelectionSet *Selection /*= nullptr */)
 {
@@ -54,7 +60,7 @@ void UMeshDeformationComponent::ConformDown(
 
 	MeshGeometry->ConformDown(
 		WorldContextObject, Transform, IgnoredActors, ProjectionLength, HeightAdjust,
-		TraceComplex, CollisionChannel, Selection
+		bTraceComplex, CollisionChannel, Selection
 	);
 }
 
@@ -97,7 +103,8 @@ void UMeshDeformationComponent::FlipNormals(
 
 void UMeshDeformationComponent::FlipTextureUV(
 	UMeshDeformationComponent *&MeshDeformationComponent,
-	bool FlipU /*= false*/, bool FlipV /*= false*/,
+	bool bFlipU /*= false*/,
+	bool bFlipV /*= false*/,
 	USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
@@ -107,7 +114,7 @@ void UMeshDeformationComponent::FlipTextureUV(
 		UE_LOG(MDTLog, Warning, TEXT("FlipTextureUV: No meshGeometry loaded"));
 		return;
 	}
-	MeshGeometry->FlipTextureUV(FlipU, FlipV, Selection);
+	MeshGeometry->FlipTextureUV(bFlipU, bFlipV, Selection);
 
 }
 
@@ -172,8 +179,10 @@ void UMeshDeformationComponent::Inflate(UMeshDeformationComponent *&MeshDeformat
 
 void UMeshDeformationComponent::Jitter(
 	UMeshDeformationComponent *&MeshDeformationComponent,
-	FRandomStream &randomStream,
-	FVector min, FVector max, USelectionSet *selection)
+	FRandomStream &fRandomStream,
+	FVector Min,
+	FVector Max,
+	USelectionSet *selection)
 {
 	MeshDeformationComponent = this;
 	if (!MeshGeometry)
@@ -181,7 +190,7 @@ void UMeshDeformationComponent::Jitter(
 		UE_LOG(MDTLog, Warning, TEXT("Jitter: No meshGeometry loaded"));
 		return;
 	}
-	MeshGeometry->Jitter(randomStream, min, max, selection);
+	MeshGeometry->Jitter(fRandomStream, Min, Max, selection);
 }
 
 void UMeshDeformationComponent::Lerp(
@@ -218,7 +227,10 @@ void UMeshDeformationComponent::Lerp(
 
 void UMeshDeformationComponent::LerpVector(
 	UMeshDeformationComponent *&MeshDeformationComponent,
-	FVector Position, float Alpha /*= 0.0*/, USelectionSet *Selection /*= nullptr*/)
+	FVector Position,
+	float Alpha /*= 0.0*/,
+	USelectionSet *Selection /*= nullptr*/
+)
 {
 	MeshDeformationComponent = this;
 
@@ -231,7 +243,11 @@ void UMeshDeformationComponent::LerpVector(
 	MeshGeometry->LerpVector(Position, Alpha, Selection);
 }
 
-bool UMeshDeformationComponent::LoadFromStaticMesh(UMeshDeformationComponent *&MeshDeformationComponent, UStaticMesh *staticMesh, int32 LOD /*= 0*/)
+bool UMeshDeformationComponent::LoadFromStaticMesh(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	UStaticMesh *StaticMesh,
+	int32 LOD /*= 0*/
+)
 {
 	MeshDeformationComponent = this;
 	MeshGeometry = NewObject<UMeshGeometry>(this);
@@ -242,7 +258,7 @@ bool UMeshDeformationComponent::LoadFromStaticMesh(UMeshDeformationComponent *&M
 	}
 
 	// 
-	bool success = MeshGeometry->LoadFromStaticMesh(staticMesh);
+	bool success = MeshGeometry->LoadFromStaticMesh(StaticMesh);
 	if (!success)
 	{
 		MeshGeometry = nullptr;
