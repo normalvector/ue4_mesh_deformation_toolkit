@@ -14,8 +14,13 @@ struct FSectionGeometry
 {
 	GENERATED_USTRUCT_BODY()
 
-	/// The vertex data
-		UPROPERTY(BlueprintReadWrite, meta=(Keywords="points"))
+	/// The vertices in this section
+	UPROPERTY(
+		BlueprintReadWrite,
+		meta=(
+			Keywords="points"
+			)
+	)
 		TArray<FVector> vertices;
 
 	/// The triangles
@@ -23,7 +28,11 @@ struct FSectionGeometry
 	/// These are indices of the vertex data and the first triangle will be stored at
 	/// triangles[0], triangles[1], and triangles[2], the second as triangles[3],
 	/// triangles[4], and triangles[5].. and so on.
-	UPROPERTY(BlueprintReadWrite, meta=(Keywords="faces polys polygons tris"))
+	UPROPERTY(
+		BlueprintReadWrite,
+		meta=(
+			Keywords="faces polys polygons tris"
+		))
 		TArray<int32> triangles;
 
 	/// These are the normals for each vertex
@@ -31,7 +40,6 @@ struct FSectionGeometry
 		TArray<FVector> normals;
 
 	/// These are the UV values for each vertex
-	/// \todo Think about supporting multiple UV sets.
 	UPROPERTY(BlueprintReadWrite, meta=(Keywords="texture map"))
 		TArray<FVector2D> uvs;
 

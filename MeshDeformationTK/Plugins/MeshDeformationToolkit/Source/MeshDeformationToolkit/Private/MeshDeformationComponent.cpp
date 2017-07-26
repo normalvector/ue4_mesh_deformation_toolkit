@@ -383,7 +383,7 @@ USelectionSet * UMeshDeformationComponent::SelectInVolume(
 	return MeshGeometry->SelectInVolume(CornerA, CornerB);
 }
 
-USelectionSet * UMeshDeformationComponent::SelectFacing(
+USelectionSet * UMeshDeformationComponent::SelectByNormal(
 	FVector Facing /*= FVector::UpVector*/, float InnerRadiusInDegrees /*= 0*/,
 	float OuterRadiusInDegrees /*= 30.0f*/) const
 {
