@@ -257,13 +257,12 @@ bool UMeshDeformationComponent::LoadFromStaticMesh(
 		return false;
 	}
 
-	// 
-	bool success = MeshGeometry->LoadFromStaticMesh(StaticMesh);
-	if (!success)
+	bool bSuccess = MeshGeometry->LoadFromStaticMesh(StaticMesh);
+	if (!bSuccess)
 	{
 		MeshGeometry = nullptr;
 	}
-	return success;
+	return bSuccess;
 }
 
 
@@ -294,7 +293,7 @@ void UMeshDeformationComponent::RotateAroundAxis(UMeshDeformationComponent *&Mes
 bool UMeshDeformationComponent::SaveToProceduralMeshComponent(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	UProceduralMeshComponent *ProceduralMeshComponent,
-	bool createCollision)
+	bool bCreateCollision)
 {
 	MeshDeformationComponent = this;
 
@@ -304,7 +303,7 @@ bool UMeshDeformationComponent::SaveToProceduralMeshComponent(
 		return false;
 	}
 
-	return MeshGeometry->SaveToProceduralMeshComponent(ProceduralMeshComponent, createCollision);
+	return MeshGeometry->SaveToProceduralMeshComponent(ProceduralMeshComponent, bCreateCollision);
 }
 
 bool UMeshDeformationComponent::SaveToStaticMesh(UStaticMesh *StaticMesh, UProceduralMeshComponent *ProceduralMeshComponent, TArray<UMaterialInstance *> Materials)
@@ -412,8 +411,9 @@ USelectionSet * UMeshDeformationComponent::SelectByNormal(
 }
 
 USelectionSet * UMeshDeformationComponent::SelectNear(
-	FVector center /*= FVector::ZeroVector*/,
-	float innerRadius /*= 0*/, float outerRadius /*= 100*/
+	FVector Center /*= FVector::ZeroVector*/,
+	float InnerRadius /*= 0*/,
+	float OuterRadius /*= 100*/
 ) const
 {
 	if (!MeshGeometry)
@@ -422,11 +422,13 @@ USelectionSet * UMeshDeformationComponent::SelectNear(
 		return nullptr;
 	}
 
-	return MeshGeometry->SelectNear(center, innerRadius, outerRadius);
+	return MeshGeometry->SelectNear(Center, InnerRadius, OuterRadius);
 }
 
 USelectionSet * UMeshDeformationComponent::SelectNearSpline(
-	USplineComponent *spline, float innerRadius /*= 0*/, float outerRadius /*= 100*/
+	USplineComponent *Spline, 
+	float InnerRadius /*= 0*/,
+	float OuterRadius /*= 100*/
 ) const
 {
 	if (!MeshGeometry)
@@ -436,14 +438,17 @@ USelectionSet * UMeshDeformationComponent::SelectNearSpline(
 	}
 
 	// Get the actor's local->world transform- we're going to need it for the spline.
-	FTransform actorTransform = this->GetOwner()->GetTransform();
+	FTransform ActorTransform = this->GetOwner()->GetTransform();
 
-	return MeshGeometry->SelectNearSpline(spline, actorTransform, innerRadius, outerRadius);
+	return MeshGeometry->SelectNearSpline(Spline, ActorTransform, InnerRadius, OuterRadius);
 }
 
 USelectionSet * UMeshDeformationComponent::SelectNearLine(
-	FVector lineStart, FVector lineEnd, float innerRadius /*=0*/, float outerRadius/*= 100*/,
-	bool lineIsInfinite/* = false */
+	FVector LineStart,
+	FVector LineEnd,
+	float InnerRadius /*=0*/,
+	float OuterRadius/*= 100*/,
+	bool bLineIsInfinite/* = false */
 ) const
 {
 	if (!MeshGeometry)
@@ -452,12 +457,14 @@ USelectionSet * UMeshDeformationComponent::SelectNearLine(
 		return nullptr;
 	}
 
-	return MeshGeometry->SelectNearLine(lineStart, lineEnd, innerRadius, outerRadius, lineIsInfinite);
+	return MeshGeometry->SelectNearLine(LineStart, LineEnd, InnerRadius, OuterRadius, bLineIsInfinite);
 }
 
 USelectionSet * UMeshDeformationComponent::SelectLinear(
-	FVector LineStart, FVector LineEnd, bool Reverse /*= false*/,
-	bool LimitToLine /*= false*/) const
+	FVector LineStart,
+	FVector LineEnd, 
+	bool bReverse /*= false*/,
+	bool bLimitToLine /*= false*/) const
 {
 	if (!MeshGeometry)
 	{
@@ -465,10 +472,15 @@ USelectionSet * UMeshDeformationComponent::SelectLinear(
 		return nullptr;
 	}
 
-	return MeshGeometry->SelectLinear(LineStart, LineEnd, Reverse, LimitToLine);
+	return MeshGeometry->SelectLinear(LineStart, LineEnd, bReverse, bLimitToLine);
 }
 
-void UMeshDeformationComponent::Spherize(UMeshDeformationComponent *&MeshDeformationComponent, float SphereRadius /*= 100.0f*/, float FilterStrength /*= 1.0f*/, FVector SphereCenter /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
+void UMeshDeformationComponent::Spherize(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	float SphereRadius /*= 100.0f*/,
+	float FilterStrength /*= 1.0f*/,
+	FVector SphereCenter /*= FVector::ZeroVector*/,
+	USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
 	if (!MeshGeometry)
@@ -480,7 +492,11 @@ void UMeshDeformationComponent::Spherize(UMeshDeformationComponent *&MeshDeforma
 	MeshGeometry->Spherize(SphereRadius, FilterStrength, SphereCenter, Selection);
 }
 
-void UMeshDeformationComponent::Transform(UMeshDeformationComponent *&MeshDeformationComponent, FTransform Transform, FVector CenterOfTransform /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr*/)
+void UMeshDeformationComponent::Transform(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	FTransform Transform,
+	FVector CenterOfTransform /*= FVector::ZeroVector*/,
+	USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
 	if (!MeshGeometry)
@@ -492,7 +508,10 @@ void UMeshDeformationComponent::Transform(UMeshDeformationComponent *&MeshDeform
 	MeshGeometry->Transform(Transform, CenterOfTransform, Selection);
 }
 
-void UMeshDeformationComponent::Translate(UMeshDeformationComponent *&MeshDeformationComponent, FVector delta, USelectionSet *selection)
+void UMeshDeformationComponent::Translate(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	FVector Delta,
+	USelectionSet *Selection)
 {
 	MeshDeformationComponent = this;
 	if (!MeshGeometry)
@@ -501,10 +520,15 @@ void UMeshDeformationComponent::Translate(UMeshDeformationComponent *&MeshDeform
 		return;
 	}
 
-	MeshGeometry->Translate(delta, selection);
+	MeshGeometry->Translate(Delta, Selection);
 }
 
-void UMeshDeformationComponent::ScaleAlongAxis(UMeshDeformationComponent *&MeshDeformationComponent, FVector CenterOfScale /*= FVector::ZeroVector*/, FVector Axis /*= FVector::UpVector*/, float Scale /*= 1.0f*/, USelectionSet *Selection /*= nullptr*/)
+void UMeshDeformationComponent::ScaleAlongAxis(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	FVector CenterOfScale /*= FVector::ZeroVector*/,
+	FVector Axis /*= FVector::UpVector*/,
+	float Scale /*= 1.0f*/,
+	USelectionSet *Selection /*= nullptr*/)
 {
 	MeshDeformationComponent = this;
 	if (!MeshGeometry)
