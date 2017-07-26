@@ -239,8 +239,8 @@ public:
 		USelectionSet *SelectLinear(
 			FVector LineStart,
 			FVector LineEnd,
-			bool Reverse=false,
-			bool LimitToLine=false
+			bool bReverse=false,
+			bool bLimitToLine=false
 		) const;
 
 	/// Selects the vertices near a point in space.
@@ -289,7 +289,7 @@ public:
 			FVector LineEnd,
 			float InnerRadius=0,
 			float OuterRadius=100,
-			bool LineIsInfinite=false
+			bool bLineIsInfinite=false
 		) const;
 
 	/// Selects the vertices near a Spline, allowing curves to easily guide deformation.
@@ -341,7 +341,7 @@ public:
 			TArray <AActor *> IgnoredActors,
 			FVector Projection=FVector(0, 0, -100),
 			float HeightAdjust=0,
-			bool TraceComplex=true,
+			bool bTraceComplex=true,
 			ECollisionChannel CollisionChannel=ECC_WorldStatic,
 			USelectionSet *Selection=nullptr
 		);
@@ -384,7 +384,7 @@ public:
 			TArray <AActor *> IgnoredActors,
 			float ProjectionLength = 100,
 			float HeightAdjust = 0,
-			bool TraceComplex = true,
+			bool bTraceComplex = true,
 			ECollisionChannel CollisionChannel = ECC_WorldStatic,
 			USelectionSet *Selection = nullptr
 		);
@@ -466,7 +466,9 @@ public:
 			)
 	)
 		void FlipTextureUV(
-			UMeshDeformationComponent *&MeshDeformationComponent, bool FlipU = false, bool FlipV = false, USelectionSet *Selection = nullptr);
+			UMeshDeformationComponent *&MeshDeformationComponent,
+			bool bFlipU = false, bool bFlipV = false,
+			USelectionSet *Selection = nullptr);
 
 	/// Moves vertices a specified offset along their own normals
 	///
@@ -754,7 +756,7 @@ public:
 		bool SaveToProceduralMeshComponent(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			UProceduralMeshComponent *ProceduralMeshComponent,
-			bool CreateCollision
+			bool bCreateCollision
 		);
 
 	/// Save the current geometry to a *StaticMesh*, replacing the geometry in the
