@@ -141,7 +141,12 @@ public:
 			Category="Math|SelectionSet", Keywords="remap easing smooth in out falloff gradient"
 		)
 	)
-		static USelectionSet *Ease(USelectionSet *Value, EEasingFunc::Type EaseFunction=EEasingFunc::Linear, int32 Steps=2, float BlendExp=2.0f);
+		static USelectionSet *Ease(
+			USelectionSet *Value,
+			EEasingFunc::Type EaseFunction=EEasingFunc::Linear,
+			int32 Steps=2,
+			float BlendExp=2.0f
+		);
 
 	/// Apply a lerp to blend a SelectionSet against a Float
 	///
@@ -194,7 +199,11 @@ public:
 			Keywords = "blend linear interpolate alpha"
 		)
 	)
-		static USelectionSet *LerpSelectionSetsWithSelectionSet(USelectionSet *A, USelectionSet *B, USelectionSet *Alpha);
+		static USelectionSet *LerpSelectionSetsWithSelectionSet(
+			USelectionSet *A,
+			USelectionSet *B,
+			USelectionSet *Alpha
+		);
 
 	/// Return the maximum of a SelectionSet and a Float
 	///
