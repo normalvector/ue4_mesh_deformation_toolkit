@@ -21,7 +21,7 @@ struct FSectionGeometry
 			Keywords="points"
 			)
 	)
-		TArray<FVector> vertices;
+		TArray<FVector> Vertices;
 
 	/// The triangles
 	///
@@ -33,32 +33,32 @@ struct FSectionGeometry
 		meta=(
 			Keywords="faces polys polygons tris"
 		))
-		TArray<int32> triangles;
+		TArray<int32> Triangles;
 
 	/// These are the normals for each vertex
 	UPROPERTY(BlueprintReadWrite)
-		TArray<FVector> normals;
+		TArray<FVector> Normals;
 
 	/// These are the UV values for each vertex
 	UPROPERTY(BlueprintReadWrite, meta=(Keywords="texture map"))
-		TArray<FVector2D> uvs;
+		TArray<FVector2D> UVs;
 
 	/// These are the tangents for each vertex
 	UPROPERTY(BlueprintReadWrite)
-		TArray<FProcMeshTangent> tangents;
+		TArray<FProcMeshTangent> Tangents;
 
 	/// These are the colors of each vertex
 	UPROPERTY(BlueprintReadWrite)
-		TArray<FLinearColor> vertexColors;
+		TArray<FLinearColor> VertexColors;
 
 	/// Simple constructor of empty section
 	FSectionGeometry()
 	{
-		vertices=TArray<FVector>();
-		triangles=TArray<int32>();
-		normals=TArray<FVector>();
-		uvs=TArray<FVector2D>();
-		tangents=TArray<FProcMeshTangent>();
-		vertexColors=TArray<FLinearColor>();
+		Vertices=TArray<FVector>();
+		Triangles=TArray<int32>();
+		Normals=TArray<FVector>();
+		UVs=TArray<FVector2D>();
+		Tangents=TArray<FProcMeshTangent>();
+		VertexColors=TArray<FLinearColor>();
 	}
 };
