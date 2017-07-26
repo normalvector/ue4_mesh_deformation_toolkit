@@ -777,6 +777,7 @@ public:
 			)
 	)
 		bool SaveToStaticMesh(
+			UMeshDeformationComponent *&MeshDeformationComponent,
 			UStaticMesh *StaticMesh,
 			UProceduralMeshComponent *ProceduralMeshComponent,
 			TArray<UMaterialInstance *> Materials);

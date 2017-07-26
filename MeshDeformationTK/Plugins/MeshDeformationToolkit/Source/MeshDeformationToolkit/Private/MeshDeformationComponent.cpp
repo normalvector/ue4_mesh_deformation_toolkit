@@ -250,6 +250,7 @@ bool UMeshDeformationComponent::LoadFromStaticMesh(
 )
 {
 	MeshDeformationComponent = this;
+
 	MeshGeometry = NewObject<UMeshGeometry>(this);
 	if (!MeshGeometry)
 	{
@@ -306,8 +307,14 @@ bool UMeshDeformationComponent::SaveToProceduralMeshComponent(
 	return MeshGeometry->SaveToProceduralMeshComponent(ProceduralMeshComponent, bCreateCollision);
 }
 
-bool UMeshDeformationComponent::SaveToStaticMesh(UStaticMesh *StaticMesh, UProceduralMeshComponent *ProceduralMeshComponent, TArray<UMaterialInstance *> Materials)
+bool UMeshDeformationComponent::SaveToStaticMesh(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	UStaticMesh *StaticMesh,
+	UProceduralMeshComponent *ProceduralMeshComponent,
+	TArray<UMaterialInstance *> Materials)
 {
+	MeshDeformationComponent = this;
+
 	if (!MeshGeometry)
 	{
 		UE_LOG(MDTLog, Warning, TEXT("SaveToStaticMesh: No meshGeometry loaded"));
