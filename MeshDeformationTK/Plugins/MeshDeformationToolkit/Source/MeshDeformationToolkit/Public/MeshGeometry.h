@@ -12,11 +12,6 @@
 #include "FastNoiseBPEnums.h"
 #include "MeshGeometry.generated.h"
 
-/// \todo Select linear - Select based on a position and a linear falloff
-/// \todo Select From Texture - Select the vertices based on a texture accessed from the UV.
-/// \todo Think ahead to other procedural tools - Should the "Select" functions be renamed SelectVerts?
-/// \todo Should Selects return nullptr or empty array?  (Should return nullptr and the further bits should check SelectionSet)
-
 /// This class stores the geometry for a mesh which can then be mutated by the
 /// methods provided to allow a range of topological deformations.
 ///
@@ -24,15 +19,6 @@
 /// geometry backend for *MeshDeformationComponent*.
 ///
 /// \see MeshDeformationComponent
-///
-/// \todo Copy/cache MeshGeometry - allows us to do part of it and go back
-/// \todo Lerp - Blend between two MeshGeometrys
-/// \todo SplineLerp - Lerps along a spline where the binormals drive the spline tangents and normals drive the spline
-///                    direction.
-/// \todo Output to Static Mesh - Allow the system to write to a static mesh while running in the editor
-/// \todo Read from PMC - Allow the system to use a PMC as a source of geometry
-/// \todo Read from OBJ - Read in an obj text file
-/// \todo Write to OBJ - Output an obj text file
 
 UCLASS(BlueprintType)
 class MESHDEFORMATIONTOOLKIT_API UMeshGeometry: public UObject
@@ -45,7 +31,7 @@ public:
 	/// This is stored as an array with each element representing the geometry of a single section
 	/// of the geometry.
 	UPROPERTY(BlueprintReadonly)
-		TArray<FSectionGeometry> sections;
+		TArray<FSectionGeometry> Sections;
 
 	/// Default constructor- creates an empty mesh.
 	UMeshGeometry();
@@ -70,7 +56,7 @@ public:
 	/// \return *True* if we could read the geometry, *False* if not
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="create sm"))
-		bool LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD=0);
+		bool LoadFromStaticMesh(UStaticMesh *StaticMesh, int32 LOD=0);
 
 	/*
 	##################################################
@@ -140,7 +126,10 @@ public:
 	/// \return The SelectionSet for the texture channel
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="image picture rgb uv"))
-		USelectionSet *SelectByTexture(UTexture2D *Texture2D, ETextureChannel TextureChannel=ETextureChannel::Red);
+		USelectionSet *SelectByTexture(
+			UTexture2D *Texture2D,
+			ETextureChannel TextureChannel=ETextureChannel::Red
+		);
 
 	/// Selects vertices with a given normal facing
 	///
@@ -153,7 +142,11 @@ public:
 	/// \return A *SelectionSet* for the selected vertices
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="normal vector"))
-		USelectionSet *SelectFacing(FVector Facing=FVector::UpVector, float InnerRadiusInDegrees=0, float OuterRadiusInDegrees=30.0f);
+		USelectionSet *SelectFacing(
+			FVector Facing=FVector::UpVector,
+			float InnerRadiusInDegrees=0,
+			float OuterRadiusInDegrees=30.0f
+		);
 
 	/// Select vertices inside a volume defined by two opposite corner points.
 	/// \param CornerA						The first corner to define the volume
@@ -167,7 +160,12 @@ public:
 	///
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="gradient between"))
-		USelectionSet *SelectLinear(FVector LineStart, FVector LineEnd, bool Reverse=false, bool LimitToLine=false);
+		USelectionSet *SelectLinear(
+			FVector LineStart,
+			FVector LineEnd,
+			bool bReverse=false,
+			bool bLimitToLine=false
+		);
 
 	/// Selects the vertices near a point in space.
 	///
@@ -180,7 +178,11 @@ public:
 	/// \return A *SelectionSet* for the selected vertices
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="close soft"))
-		USelectionSet *SelectNear(FVector center=FVector::ZeroVector, float innerRadius=0, float outerRadius=100);
+		USelectionSet *SelectNear(
+			FVector Center=FVector::ZeroVector,
+			float InnerRadius=0,
+			float OuterRadius=100
+		);
 
 	/// Selects vertices near a line segment with the provided start/end points.
 	///
@@ -196,7 +198,13 @@ public:
 	///							infinite line instead of being the start/end of a line segment
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="infinite"))
-		USelectionSet *SelectNearLine(FVector lineStart, FVector lineEnd, float innerRadius=0, float outerRadius=100, bool lineIsInfinite=false);
+		USelectionSet *SelectNearLine(
+			FVector LineStart, 
+			FVector LineEnd,
+			float InnerRadius=0,
+			float OuterRadius=100,
+			bool bLineIsInfinite=false
+		);
 
 	/// Selects the vertices near a Spline, allowing curves to easily guide deformation.
 	///
@@ -210,7 +218,12 @@ public:
 	///						will not be selected
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="curve"))
-		USelectionSet *SelectNearSpline(USplineComponent *spline, FTransform transform, float innerRadius=0, float outerRadius=100);
+		USelectionSet *SelectNearSpline(
+			USplineComponent *Spline,
+			FTransform Transform,
+			float InnerRadius=0,
+			float OuterRadius=100
+		);
 
 	/*
 	##################################################
@@ -254,7 +267,7 @@ public:
 			TArray <AActor *> IgnoredActors,
 			FVector Projection=FVector(0, 0, -100),
 			float HeightAdjust=0,
-			bool TraceComplex=true,
+			bool bTraceComplex=true,
 			ECollisionChannel CollisionChannel=ECC_WorldStatic,
 			USelectionSet *Selection=nullptr
 		);
@@ -291,7 +304,7 @@ public:
 			TArray <AActor *> IgnoredActors,
 			float ProjectionLength = 100,
 			float HeightAdjust = 0,
-			bool TraceComplex = true,
+			bool bTraceComplex = true,
 			ECollisionChannel CollisionChannel = ECC_WorldStatic,
 			USelectionSet *Selection = nullptr
 		);
@@ -353,7 +366,11 @@ public:
 	///											be used as a true/false filter based on
 	///											whether each weighting is >=0.5.
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry)
-		void FlipTextureUV(bool FlipU = false, bool FlipV = false, USelectionSet *Selection = nullptr);
+		void FlipTextureUV(
+			bool bFlipU = false,
+			bool bFlipV = false,
+			USelectionSet *Selection = nullptr
+		);
 
 	/// Moves vertices a specified offset along their own normals
 	///
@@ -378,7 +395,7 @@ public:
 	///										maximum strength
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="random position"))
-		void Jitter(FRandomStream &randomStream, FVector min, FVector max, USelectionSet *selection=nullptr);
+		void Jitter(FRandomStream &RandomStream, FVector Min, FVector Max, USelectionSet *Selection=nullptr);
 
 	/// Does a linear interpolate with another MeshGeometry object, storing the result in this MeshGeometry.
 	///
@@ -412,7 +429,11 @@ public:
 	///											then all points will be rotated by the full rotation
 	///											specified
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry)
-		void Rotate(FRotator Rotation=FRotator::ZeroRotator, FVector CenterOfRotation=FVector::ZeroVector, USelectionSet *Selection=nullptr);
+		void Rotate(
+			FRotator Rotation=FRotator::ZeroRotator, 
+			FVector CenterOfRotation=FVector::ZeroVector,
+			USelectionSet *Selection=nullptr
+		);
 
 	/// Rotate vertices about an arbitrary axis
 	///
@@ -426,7 +447,12 @@ public:
 	///										applied to each vertex.
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="twist screw"))
-		void RotateAroundAxis(FVector CenterOfRotation=FVector::ZeroVector, FVector Axis=FVector::UpVector, float AngleInDegrees=0.0f, USelectionSet *Selection=nullptr);
+		void RotateAroundAxis(
+			FVector CenterOfRotation=FVector::ZeroVector,
+			FVector Axis=FVector::UpVector,
+			float AngleInDegrees=0.0f,
+			USelectionSet *Selection=nullptr
+		);
 
 	/// Scale the selected points on a per-axis basis about a specified center
 	///
@@ -436,7 +462,11 @@ public:
 	///											vertices will be scaled fully by the specified scale
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="size"))
-		void Scale(FVector Scale3d=FVector(1, 1, 1), FVector CenterOfScale=FVector::ZeroVector, USelectionSet *Selection=nullptr);
+		void Scale(
+			FVector Scale3d=FVector(1, 1, 1),
+			FVector CenterOfScale=FVector::ZeroVector,
+			USelectionSet *Selection=nullptr
+		);
 
 	/// Scale an object along an arbitrary axis
 	///
@@ -451,7 +481,12 @@ public:
 	///											will apply at full strength to all vertices.
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="size"))
-		void ScaleAlongAxis(FVector CenterOfScale=FVector::ZeroVector, FVector Axis=FVector::UpVector, float Scale=1.0f, USelectionSet *Selection=nullptr);
+		void ScaleAlongAxis(
+			FVector CenterOfScale=FVector::ZeroVector,
+			FVector Axis=FVector::UpVector,
+			float Scale=1.0f,
+			USelectionSet *Selection=nullptr
+		);
 
 	/// Morph a mesh into a sphere by moving points along their normal
 	///
@@ -464,7 +499,12 @@ public:
 	/// \todo Should group the sphere parameters together
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="ball"))
-		void Spherize(float SphereRadius=100.0f, float FilterStrength=1.0f, FVector SphereCenter=FVector::ZeroVector, USelectionSet *Selection=nullptr);
+		void Spherize(
+			float SphereRadius=100.0f,
+			float FilterStrength=1.0f,
+			FVector SphereCenter=FVector::ZeroVector,
+			USelectionSet *Selection=nullptr
+		);
 
 	/// Applies Scale/Rotate/Translate as a single operation using a combined transform.
 	///
@@ -477,7 +517,11 @@ public:
 	///										will be transformed at full strength
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="move scale size rotate"))
-		void Transform(FTransform Transform, FVector CenterOfTransform=FVector::ZeroVector, USelectionSet *Selection=nullptr);
+		void Transform(
+			FTransform Transform,
+			FVector CenterOfTransform=FVector::ZeroVector,
+			USelectionSet *Selection=nullptr
+		);
 
 	/// Move all selected by the provided delta vector.
 	///
@@ -490,7 +534,7 @@ public:
 	///											full delta translation
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="move delta"))
-		void Translate(FVector delta, USelectionSet *selection);
+		void Translate(FVector Delta, USelectionSet *Selection);
 
 	/*
 	##################################################
@@ -517,8 +561,9 @@ public:
 			  meta = (Keywords = "sm output write"))
 		bool SaveToStaticMesh(
 			UStaticMesh *StaticMesh,
-			UProceduralMeshComponent *proceduralMeshComponent,
-			TArray<UMaterialInstance *> Materials);
+			UProceduralMeshComponent *ProceduralMeshComponent,
+			TArray<UMaterialInstance *> Materials
+		);
 
 	/// Save the current geometry to a *ProceduralMeshComponent*.
 	/// 
@@ -529,7 +574,7 @@ public:
 	/// \return *True* if the update was successful, *False* if not
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="pmc output write"))
-		bool SaveToProceduralMeshComponent(UProceduralMeshComponent *proceduralMeshComponent, bool createCollision);
+		bool SaveToProceduralMeshComponent(UProceduralMeshComponent *ProceduralMeshComponent, bool CreateCollision);
 
 	/*
 	##################################################
@@ -590,7 +635,7 @@ private:
 	/// Utility function which checks the size of an (optional) selection set against the
 	/// number of vertices in the mesh geometry.  If they match return true, if not then
 	/// log a warning and return false.
-	bool SelectionSetIsRightSize(USelectionSet *selection, FString NodeNameForWarning) const;
+	bool SelectionSetIsRightSize(USelectionSet *Selection, FString NodeNameForWarning) const;
 
 	/// Utility method to check if the mesh geometry looks right, and warns if it doesn't.
 	/// Currently this checks the following for each section:

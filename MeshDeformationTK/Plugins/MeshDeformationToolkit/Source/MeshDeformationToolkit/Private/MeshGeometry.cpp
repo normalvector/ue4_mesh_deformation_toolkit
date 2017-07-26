@@ -14,7 +14,7 @@
 UMeshGeometry::UMeshGeometry()
 {
 	// Create empty data sets.
-	sections = TArray<FSectionGeometry>();
+	Sections = TArray<FSectionGeometry>();
 }
 
 // New experimental version of Conform using line projections
@@ -62,7 +62,7 @@ void UMeshGeometry::Conform(
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section : this->sections)
+	for (auto &section : this->Sections)
 	{
 		for (auto &vertex : section.vertices)
 		{
@@ -145,7 +145,7 @@ void UMeshGeometry::ConformDown(
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section : this->sections)
+	for (auto &section : this->Sections)
 	{
 		for (auto &vertex : section.vertices)
 		{
@@ -219,7 +219,7 @@ void UMeshGeometry::FitToSpline(
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -286,7 +286,7 @@ void UMeshGeometry::FlipNormals(USelectionSet *Selection /*= nullptr*/)
 
 	// Iterate over the sections, and the normals in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &normal:section.normals)
 		{
@@ -314,7 +314,7 @@ void UMeshGeometry::FlipTextureUV(bool FlipU /*= false*/, bool FlipV /*= false*/
 
 	// Iterate over the sections, and the uvs in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &uv:section.uvs)
 		{
@@ -347,7 +347,7 @@ bool UMeshGeometry::CheckGeometryIsValid(FString NodeNameForWarning) const
 
 	// Iterate over the sections
 	int32 sectionIndex = 0;
-	for (auto section:this->sections)
+	for (auto section:this->Sections)
 	{
 		// Each section should contain at least three vertices.
 		const int32 sectionVertexCount = section.vertices.Num();
@@ -415,7 +415,7 @@ FBox UMeshGeometry::GetBoundingBox() const
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -455,7 +455,7 @@ float UMeshGeometry::GetRadius() const
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section : this->sections)
+	for (auto &section : this->Sections)
 	{
 		for (auto &vertex : section.vertices)
 		{
@@ -472,14 +472,14 @@ FString UMeshGeometry::GetSummary() const
 {
 	return FString::Printf(
 		TEXT("%d sections, %d vertices, %d triangles"),
-		this->sections.Num(), this->GetTotalVertexCount(), this->GetTotalTriangleCount()
+		this->Sections.Num(), this->GetTotalVertexCount(), this->GetTotalTriangleCount()
 	);
 }
 
 int32 UMeshGeometry::GetTotalTriangleCount() const
 {
 	int32 totalTriangleCount = 0;
-	for (auto section:this->sections)
+	for (auto section:this->Sections)
 	{
 		totalTriangleCount += section.triangles.Num();
 	}
@@ -489,7 +489,7 @@ int32 UMeshGeometry::GetTotalTriangleCount() const
 int32 UMeshGeometry::GetTotalVertexCount() const
 {
 	int32 totalVertexCount = 0;
-	for (auto section:this->sections)
+	for (auto section:this->Sections)
 	{
 		totalVertexCount += section.vertices.Num();
 	}
@@ -508,7 +508,7 @@ void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*
 
 	// Iterate over the sections, and the the vertices in the sections.
 	// As we need normals to we'll use an index-based for loop here for verts.
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (int32 vertexIndex = 0; vertexIndex<section.vertices.Num(); ++vertexIndex)
 		{
@@ -533,7 +533,7 @@ void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max
 	int32 nextSelectionIndex = 0;
 
 	// Iterate over the sections, and the vertices in each section.
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -563,11 +563,11 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 		UE_LOG(MDTLog, Warning, TEXT("Lerp: No TargetMeshGeometry"));
 		return;
 	}
-	if (this->sections.Num()!=TargetMeshGeometry->sections.Num())
+	if (this->Sections.Num()!=TargetMeshGeometry->Sections.Num())
 	{
 		UE_LOG(
 			MDTLog, Warning, TEXT("Lerp: Cannot lerp geometries with different numbers of sections, %d compared to %d"),
-			this->sections.Num(), TargetMeshGeometry->sections.Num()
+			this->Sections.Num(), TargetMeshGeometry->Sections.Num()
 		);
 		return;
 	}
@@ -575,25 +575,25 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 	// Iterate over the sections, and the vertices in the sections.  Do it by index so we
 	// can access the same data from TargetMeshGeometry
 	int32 nextSelectionIndex = 0;
-	for (int32 sectionIndex = 0; sectionIndex<this->sections.Num(); sectionIndex++)
+	for (int32 sectionIndex = 0; sectionIndex<this->Sections.Num(); sectionIndex++)
 	{
-		if (this->sections[sectionIndex].vertices.Num()!=TargetMeshGeometry->sections[sectionIndex].vertices.Num())
+		if (this->Sections[sectionIndex].vertices.Num()!=TargetMeshGeometry->Sections[sectionIndex].vertices.Num())
 		{
 			UE_LOG(
 				MDTLog, Warning, TEXT("Lerp: Cannot lerp geometries with different numbers of vertices, %d compared to %d for section %d"),
-				this->sections[sectionIndex].vertices.Num(), TargetMeshGeometry->sections[sectionIndex].vertices.Num(), sectionIndex
+				this->Sections[sectionIndex].vertices.Num(), TargetMeshGeometry->Sections[sectionIndex].vertices.Num(), sectionIndex
 			);
 			return;
 		}
 
-		for (int32 vertexIndex = 0; vertexIndex<this->sections[sectionIndex].vertices.Num(); ++vertexIndex)
+		for (int32 vertexIndex = 0; vertexIndex<this->Sections[sectionIndex].vertices.Num(); ++vertexIndex)
 		{
 			// Get the existing data from the two components.
-			FVector vertexFromThis = this->sections[sectionIndex].vertices[vertexIndex];
-			FVector vertexFromTarget = TargetMeshGeometry->sections[sectionIndex].vertices[vertexIndex];
+			FVector vertexFromThis = this->Sections[sectionIndex].vertices[vertexIndex];
+			FVector vertexFromTarget = TargetMeshGeometry->Sections[sectionIndex].vertices[vertexIndex];
 
 			// TODO: World/local logic should live here.
-			this->sections[sectionIndex].vertices[vertexIndex] = FMath::Lerp(
+			this->Sections[sectionIndex].vertices[vertexIndex] = FMath::Lerp(
 				vertexFromThis, vertexFromTarget,
 				Alpha * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f)
 			);
@@ -611,7 +611,7 @@ void UMeshGeometry::LerpVector(FVector Position, float Alpha /*= 0.0*/, USelecti
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -634,7 +634,7 @@ bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD /*= 0*
 	}
 
 	// Clear any existing geometry.
-	this->sections.Empty();
+	this->Sections.Empty();
 
 	// Iterate over the sections
 	const int32 numSections = staticMesh->GetNumSections(LOD);
@@ -654,7 +654,7 @@ bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *staticMesh, int32 LOD /*= 0*
 		sectionGeometry.vertexColors.InsertDefaulted(0, sectionGeometry.vertices.Num());
 
 		// Add the finished struct to the mesh's section list
-		this->sections.Emplace(sectionGeometry);
+		this->Sections.Emplace(sectionGeometry);
 	}
 
 	// Warn if the mesh doesn't look valid.  For now return it anyway but at least let
@@ -675,7 +675,7 @@ void UMeshGeometry::Rotate(FRotator Rotation /*= FRotator::ZeroRotator*/, FVecto
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -709,7 +709,7 @@ void UMeshGeometry::RotateAroundAxis(
 
 	// Iterate over the sections, and the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -741,7 +741,7 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(
 
 	// Iterate over the mesh sections, creating a PMC MeshSection for each one.
 	int32 nextSectionIndex = 0;
-	for (auto section:this->sections)
+	for (auto section:this->Sections)
 	{
 		// Create the PMC section with the StaticMesh's data.
 		proceduralMeshComponent->CreateMeshSection_LinearColor(
@@ -936,7 +936,7 @@ void UMeshGeometry::Scale(FVector Scale3d /*= FVector(1, 1, 1)*/, FVector Center
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -967,7 +967,7 @@ void UMeshGeometry::ScaleAlongAxis(
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1026,7 +1026,7 @@ USelectionSet * UMeshGeometry::SelectByNoise(
 	///noise.SetPositionWarpAmp(PositionWarpAmp);
 
 	// Iterate over the sections, and the vertices in each section.
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1050,7 +1050,7 @@ USelectionSet * UMeshGeometry::SelectBySection(int32 SectionIndex)
 
 	// Iterate over the sections, and the vertices in each section
 	int32 currentSectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1099,7 +1099,7 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 	FColor *colorArray = static_cast<FColor*>(BulkData->Lock(LOCK_READ_ONLY));
 
 	// Iterate over the sections, and the vertices in each section.
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &uv:section.uvs)
 		{
@@ -1158,7 +1158,7 @@ USelectionSet * UMeshGeometry::SelectFacing(FVector Facing /*= FVector::UpVector
 	float selectionRadius = OuterRadiusInDegrees-InnerRadiusInDegrees;
 
 	// Iterate over the sections, and the the normals in the sections.
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto normal:section.normals)
 		{
@@ -1199,7 +1199,7 @@ USelectionSet *UMeshGeometry::SelectInVolume(FVector CornerA, FVector CornerB)
 	const float maxZ = FMath::Max(CornerA.Z, CornerB.Z);
 
 	// Iterate over the sections, and the vertices in each section
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1242,7 +1242,7 @@ USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, 
 	}
 
 	// Iterate over the sections, and the vertices in each section
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1282,7 +1282,7 @@ USelectionSet * UMeshGeometry::SelectNear(FVector center /*=FVector::ZeroVector*
 	const float selectionRadius = outerRadius-innerRadius;
 
 	// Iterate over the sections, and the vertices in each section.
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1308,7 +1308,7 @@ USelectionSet * UMeshGeometry::SelectNearLine(FVector lineStart, FVector lineEnd
 	const float selectionRadius = outerRadius-innerRadius;
 
 	// Iterate over the sections, and the vertices in each section.
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1346,7 +1346,7 @@ USelectionSet * UMeshGeometry::SelectNearSpline(USplineComponent *spline, FTrans
 	const float selectionRadius = outerRadius-innerRadius;
 
 	// Iterate over the sections, and the vertices in each section.
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1389,7 +1389,7 @@ float UMeshGeometry::MiniumProjectionPlaneDistance(FVector projection)
 	// Iterate over the sections, and the vertices in each section.
 	float furthestPlane;
 	bool haveProcessedFirstVertex = false;
-	for (auto &section : this->sections)
+	for (auto &section : this->Sections)
 	{
 		for (auto &vertex : section.vertices)
 		{
@@ -1461,7 +1461,7 @@ void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStreng
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1485,7 +1485,7 @@ void UMeshGeometry::Transform(FTransform Transform /*= FTransform::Identity*/, F
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
@@ -1508,7 +1508,7 @@ void UMeshGeometry::Translate(FVector delta, USelectionSet *Selection)
 
 	// Iterate over the sections, and the the vertices in the sections.
 	int32 nextSelectionIndex = 0;
-	for (auto &section:this->sections)
+	for (auto &section:this->Sections)
 	{
 		for (auto &vertex:section.vertices)
 		{
