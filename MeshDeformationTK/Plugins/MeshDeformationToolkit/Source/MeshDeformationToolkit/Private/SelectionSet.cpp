@@ -23,17 +23,17 @@ USelectionSet * USelectionSet::CreateAndCheckValid(int32 RequiredSize, UObject *
 void USelectionSet::CreateSelectionSet(int32 size)
 {
 	this->Empty();
-	weights.AddZeroed(size);
+	Weights.AddZeroed(size);
 }
 
 void USelectionSet::Empty()
 {
-	weights.Empty();
+	Weights.Empty();
 }
 
 USelectionSet *USelectionSet::RandomizeWeights(FRandomStream &randomStream, float min /*= 0*/, float max /*= 1*/)
 {
-	for (auto &weight:weights)
+	for (auto &weight:Weights)
 	{
 		weight = randomStream.FRandRange(min, max);
 	}
@@ -42,7 +42,7 @@ USelectionSet *USelectionSet::RandomizeWeights(FRandomStream &randomStream, floa
 
 USelectionSet *USelectionSet::SetAllWeights(float weight)
 {
-	for (auto &weightItr:weights)
+	for (auto &weightItr:Weights)
 	{
 		weightItr = weight;
 	}
@@ -51,5 +51,5 @@ USelectionSet *USelectionSet::SetAllWeights(float weight)
 
 int32 USelectionSet::Size() const
 {
-	return weights.Num();
+	return Weights.Num();
 }

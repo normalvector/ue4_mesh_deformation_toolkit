@@ -28,7 +28,7 @@ class MESHDEFORMATIONTOOLKIT_API USelectionSet: public UObject
 public:
 	/// The weights this set contains.
 	UPROPERTY(BlueprintReadWrite, Category=SelectionSet)
-		TArray<float> weights;
+		TArray<float> Weights;
 
 	/// Create an empty selection set with the provided outer item and
 	/// also log errors if there are any problems.
@@ -37,7 +37,7 @@ public:
 
 	/// Creates a selection set of the size provided with zero weights.
 	/// \param size			The number of items in the selection set
-	void CreateSelectionSet(int32 size);
+	void CreateSelectionSet(int32 Size);
 
 	/// Empties the set, setting the size to zero.
 	void Empty();
@@ -47,7 +47,7 @@ public:
 	/// This will preserve the number of elements in the set, only the values will change.
 	///
 	/// \param weight		The weight to assign to all values
-	USelectionSet *SetAllWeights(float weight);
+	USelectionSet *SetAllWeights(float Weight);
 
 	/// Randomize the weights of the selection set
 	///
@@ -56,7 +56,7 @@ public:
 	/// \param randomStream			The RandomStream to use for the source
 	/// \param minWeight			The minimum value of the random weightings
 	/// \param maxWeight			The maximum value of the random weightings
-	USelectionSet *RandomizeWeights(FRandomStream &randomStream, float minWeight=0, float maxWeight=1);
+	USelectionSet *RandomizeWeights(FRandomStream &RandomStream, float MinWeight=0, float MaxWeight=1);
 
 	/// Return the number of weights in the selection set.
 	UFUNCTION(BlueprintPure, meta=(Keywords="length count maximum num"))

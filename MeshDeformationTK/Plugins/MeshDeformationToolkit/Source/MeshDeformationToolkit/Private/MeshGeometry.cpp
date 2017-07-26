@@ -67,7 +67,7 @@ void UMeshGeometry::Conform(
 		for (auto &vertex : section.Vertices)
 		{
 			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
-			const FVector scaledProjection = Projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
+			const FVector scaledProjection = Projection * (Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f);
 
 			// Compute the start/end positions of the trace
 			const FVector traceStart = Transform.TransformPosition(vertex);
@@ -150,7 +150,7 @@ void UMeshGeometry::ConformDown(
 		for (auto &vertex : section.Vertices)
 		{
 			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
-			const FVector scaledProjection = projection * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
+			const FVector scaledProjection = projection * (Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f);
 
 			// Compute the start/end positions of the trace
 			const FVector traceStart = Transform.TransformPosition(vertex);
@@ -270,7 +270,7 @@ void UMeshGeometry::FitToSpline(
 			FVector splineVertexPosition = location+(rightVector * vertex.Y * combinedMeshScale)+(upVector * vertex.Z * combinedMeshScale);
 			vertex = FMath::Lerp(
 				vertex, splineVertexPosition,
-				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f
 			);
 		}
 	}
@@ -292,7 +292,7 @@ void UMeshGeometry::FlipNormals(USelectionSet *Selection /*= nullptr*/)
 		{
 			// Obtain the next weighting and check if it's >=0.5
 			const bool shouldFlip =
-				Selection ? Selection->weights[nextSelectionIndex++]>=0.5 : true;
+				Selection ? Selection->Weights[nextSelectionIndex++]>=0.5 : true;
 
 			// If we need to flip then rebuild the UV based on which channels we're
 			//  flipping.
@@ -320,7 +320,7 @@ void UMeshGeometry::FlipTextureUV(bool FlipU /*= false*/, bool FlipV /*= false*/
 		{
 			// Obtain the next weighting and check if it's >=0.5
 			const bool shouldFlip =
-				Selection ? Selection->weights[nextSelectionIndex++]>=0.5 : true;
+				Selection ? Selection->Weights[nextSelectionIndex++]>=0.5 : true;
 
 			// If we're meant to be flipping then flip the correct channels.
 			if (shouldFlip)
@@ -515,7 +515,7 @@ void UMeshGeometry::Inflate(float Offset /*= 0.0f*/, USelectionSet *Selection /*
 			section.Vertices[vertexIndex] = FMath::Lerp(
 				section.Vertices[vertexIndex],
 				section.Vertices[vertexIndex]+(section.Normals[vertexIndex]*Offset),
-				Selection ? Selection->weights[vertexIndex] : 1.0f
+				Selection ? Selection->Weights[vertexIndex] : 1.0f
 			);
 		}
 	}
@@ -545,7 +545,7 @@ void UMeshGeometry::Jitter(FRandomStream &randomStream, FVector min, FVector max
 			vertex = FMath::Lerp(
 				vertex,
 				vertex+randomJitter,
-				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f
 			);
 		}
 	}
@@ -595,7 +595,7 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 			// TODO: World/local logic should live here.
 			this->Sections[sectionIndex].Vertices[vertexIndex] = FMath::Lerp(
 				vertexFromThis, vertexFromTarget,
-				Alpha * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f)
+				Alpha * (Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f)
 			);
 		}
 	}
@@ -618,7 +618,7 @@ void UMeshGeometry::LerpVector(FVector Position, float Alpha /*= 0.0*/, USelecti
 			vertex = FMath::Lerp(
 				vertex,
 				Position,
-				Alpha * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f)
+				Alpha * (Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f)
 			);
 		}
 	}
@@ -682,7 +682,7 @@ void UMeshGeometry::Rotate(FRotator Rotation /*= FRotator::ZeroRotator*/, FVecto
 			vertex = FMath::Lerp(
 				vertex,
 				CenterOfRotation+Rotation.RotateVector(vertex-CenterOfRotation),
-				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f
 			);
 		}
 	}
@@ -719,7 +719,7 @@ void UMeshGeometry::RotateAroundAxis(
 			FVector offsetFromClosestPoint = vertex-closestPointOnLine;
 			float scaledRotation = FMath::Lerp(
 				0.0f, AngleInDegrees,
-				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f
 			);
 			FVector rotatedOffset = offsetFromClosestPoint.RotateAngleAxis(scaledRotation, normalizedAxis);
 			vertex = closestPointOnLine+rotatedOffset;
@@ -945,7 +945,7 @@ void UMeshGeometry::Scale(FVector Scale3d /*= FVector(1, 1, 1)*/, FVector Center
 			vertex = FMath::Lerp(
 				vertex,
 				CenterOfScale+(vertex-CenterOfScale) * Scale3d,
-				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f
 			);
 		}
 	}
@@ -976,7 +976,7 @@ void UMeshGeometry::ScaleAlongAxis(
 			FVector closestPointOnLine = FMath::ClosestPointOnInfiniteLine(CenterOfScale, CenterOfScale+Axis, vertex);
 			FVector offsetFromClosestPoint = vertex-closestPointOnLine;
 			FVector scaledPointOnLine = Scale * (closestPointOnLine-CenterOfScale)+CenterOfScale;
-			vertex = FMath::Lerp(vertex, scaledPointOnLine+offsetFromClosestPoint, Selection ? Selection->weights[nextSelectionIndex++] : 1.0f);
+			vertex = FMath::Lerp(vertex, scaledPointOnLine+offsetFromClosestPoint, Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f);
 		}
 	}
 }
@@ -1035,7 +1035,7 @@ USelectionSet * UMeshGeometry::SelectByNoise(
 			// Apply the noise transform to the vertex and use the transformed vertex for the noise generation
 			const FVector transformedVertex = Transform.TransformPosition(vertex);
 			float NoiseValue = noise.GetNoise(transformedVertex.X, transformedVertex.Y, transformedVertex.Z);
-			newSelectionSet->weights.Emplace(NoiseValue);
+			newSelectionSet->Weights.Emplace(NoiseValue);
 		}
 	}
 
@@ -1057,7 +1057,7 @@ USelectionSet * UMeshGeometry::SelectBySection(int32 SectionIndex)
 		for (auto &vertex:section.Vertices)
 		{
 			// Add a new weight- 1.0 if section indices match, 0.0 otherwise.
-			newSelectionSet->weights.Emplace(SectionIndex==currentSectionIndex ? 1.0f : 0.0f);
+			newSelectionSet->Weights.Emplace(SectionIndex==currentSectionIndex ? 1.0f : 0.0f);
 		}
 		// Increment the current section index, we've finished with this section
 		currentSectionIndex++;
@@ -1120,16 +1120,16 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 			switch (TextureChannel)
 			{
 				case ETextureChannel::Red:
-					newSelectionSet->weights.Emplace(color.R);
+					newSelectionSet->Weights.Emplace(color.R);
 					break;
 				case ETextureChannel::Green:
-					newSelectionSet->weights.Emplace(color.G);
+					newSelectionSet->Weights.Emplace(color.G);
 					break;
 				case ETextureChannel::Blue:
-					newSelectionSet->weights.Emplace(color.B);
+					newSelectionSet->Weights.Emplace(color.B);
 					break;
 				case ETextureChannel::Alpha:
-					newSelectionSet->weights.Emplace(color.A);
+					newSelectionSet->Weights.Emplace(color.A);
 					break;
 			}
 		}
@@ -1169,14 +1169,14 @@ USelectionSet * UMeshGeometry::SelectFacing(FVector Facing /*= FVector::UpVector
 			if (normalizedNormal.IsNearlyZero(0.01f))
 			{
 				UE_LOG(MDTLog, Warning, TEXT("SelectFacing: Cannot normalize normal vector"));
-				newSelectionSet->weights.Emplace(0);
+				newSelectionSet->Weights.Emplace(0);
 			}
 			else
 			{
 				// Calculate the dot product between the normal and the Facing.
 				const float angleToNormal = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(normal, Facing)));
 				const float angleBias = 1.0f-FMath::Clamp((angleToNormal-InnerRadiusInDegrees)/selectionRadius, 0.0f, 1.0f);
-				newSelectionSet->weights.Emplace(angleBias);
+				newSelectionSet->Weights.Emplace(angleBias);
 			}
 		}
 	}
@@ -1211,7 +1211,7 @@ USelectionSet *UMeshGeometry::SelectInVolume(FVector CornerA, FVector CornerB)
 				(vertex.Y>=minY)&&(vertex.Y<=maxY)&&
 				(vertex.Z>=minZ)&&(vertex.Z<=maxZ);
 			// Add a new weighting based on whether it's insider or outside
-			newSelectionSet->weights.Emplace(vertexInVolume ? 1.0f : 0.0f);
+			newSelectionSet->Weights.Emplace(vertexInVolume ? 1.0f : 0.0f);
 		}
 	}
 
@@ -1254,17 +1254,17 @@ USelectionSet * UMeshGeometry::SelectLinear(FVector LineStart, FVector LineEnd, 
 			// If we've hit one of the end points then return the limits
 			if (NearestPointOnLine==LineEnd)
 			{
-				newSelectionSet->weights.Emplace(LimitToLine ? 0.0f : 1.0f);
+				newSelectionSet->Weights.Emplace(LimitToLine ? 0.0f : 1.0f);
 			}
 			else if (NearestPointOnLine==LineStart)
 			{
-				newSelectionSet->weights.Emplace(0.0f);
+				newSelectionSet->Weights.Emplace(0.0f);
 			}
 			else
 			{
 				// Get the distance to the two start point- it's the ratio we're after.
 				float DistanceToLineStart = (NearestPointOnLine-LineStart).Size();
-				newSelectionSet->weights.Emplace(DistanceToLineStart/LineLength);
+				newSelectionSet->Weights.Emplace(DistanceToLineStart/LineLength);
 			}
 		}
 	}
@@ -1291,7 +1291,7 @@ USelectionSet * UMeshGeometry::SelectNear(FVector center /*=FVector::ZeroVector*
 			const float distanceFromCenter = (vertex-center).Size();
 			// Apply bias to map distance to 0-1 based on innerRadius and outerRadius
 			const float distanceBias = 1.0f-FMath::Clamp((distanceFromCenter-innerRadius)/selectionRadius, 0.0f, 1.0f);
-			newSelectionSet->weights.Emplace(distanceBias);
+			newSelectionSet->Weights.Emplace(distanceBias);
 		}
 	}
 
@@ -1322,7 +1322,7 @@ USelectionSet * UMeshGeometry::SelectNearLine(FVector lineStart, FVector lineEnd
 			// Apply bias to map distance to 0-1 based on innerRadius and outerRadius
 			const float distanceToLine = (vertex-nearestPointOnLine).Size();
 			const float distanceBias = 1.0f-FMath::Clamp((distanceToLine-innerRadius)/selectionRadius, 0.0f, 1.0f);
-			newSelectionSet->weights.Emplace(distanceBias);
+			newSelectionSet->Weights.Emplace(distanceBias);
 		}
 	}
 
@@ -1360,7 +1360,7 @@ USelectionSet * UMeshGeometry::SelectNearSpline(USplineComponent *spline, FTrans
 			const float distanceFromSpline = (vertex-closestPointOnSpline).Size();
 			// Apply bias to map distance to 0-1 based on innerRadius and outerRadius
 			const float distanceBias = 1.0f-FMath::Clamp((distanceFromSpline-innerRadius)/selectionRadius, 0.0f, 1.0f);
-			newSelectionSet->weights.Emplace(distanceBias);
+			newSelectionSet->Weights.Emplace(distanceBias);
 		}
 	}
 
@@ -1470,7 +1470,7 @@ void UMeshGeometry::Spherize(float SphereRadius /*= 100.0f*/, float FilterStreng
 			const FVector vertexRelativeToCenter = vertex-SphereCenter;
 
 			// Calculate the required length- incorporating both the SphereRadius and Selection.
-			const float targetVectorLength = FMath::Lerp(vertexRelativeToCenter.Size(), SphereRadius, FilterStrength * (Selection ? Selection->weights[nextSelectionIndex++] : 1.0f));
+			const float targetVectorLength = FMath::Lerp(vertexRelativeToCenter.Size(), SphereRadius, FilterStrength * (Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f));
 
 			vertex = SphereCenter+(vertexRelativeToCenter * targetVectorLength);
 		}
@@ -1494,7 +1494,7 @@ void UMeshGeometry::Transform(FTransform Transform /*= FTransform::Identity*/, F
 			vertex = FMath::Lerp(
 				vertex,
 				CenterOfTransform+Transform.TransformPosition(vertex-CenterOfTransform),
-				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f
 			);
 		}
 	}
@@ -1517,7 +1517,7 @@ void UMeshGeometry::Translate(FVector delta, USelectionSet *Selection)
 			vertex = FMath::Lerp(
 				vertex,
 				vertex+delta,
-				Selection ? Selection->weights[nextSelectionIndex++] : 1.0f
+				Selection ? Selection->Weights[nextSelectionIndex++] : 1.0f
 			);
 		}
 	}
