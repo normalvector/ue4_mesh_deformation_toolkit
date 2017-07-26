@@ -14,19 +14,19 @@ USelectionSet * USelectionSetBPLibrary::AddFloatToSelectionSet(USelectionSet *Va
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
 		Value->Size(), Value->GetOuter(), TEXT("AddFloatToSelectionSet")
 	);
-	if (!result) {
+	if (!Result) {
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<Value->Size(); i++)
+	for (int32 WeightIndex = 0; WeightIndex<Value->Size(); WeightIndex++)
 	{
-		result->Weights[i] = Value->Weights[i]+Float;
+		Result->Weights[WeightIndex] = Value->Weights[WeightIndex]+Float;
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet *USelectionSetBPLibrary::AddSelectionSets(USelectionSet *A, USelectionSet *B)
@@ -38,21 +38,21 @@ USelectionSet *USelectionSetBPLibrary::AddSelectionSets(USelectionSet *A, USelec
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = A->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, A->GetOuter(), TEXT("AddSelectionSets")
+	const int32 Size = A->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, A->GetOuter(), TEXT("AddSelectionSets")
 	);
-	if (!result)
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = A->Weights[i]+B->Weights[i];
+		Result->Weights[WeightIndex] = A->Weights[WeightIndex]+B->Weights[WeightIndex];
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::Clamp(USelectionSet *Value, float Min/*=0*/, float Max/*=1*/)
@@ -65,20 +65,20 @@ USelectionSet * USelectionSetBPLibrary::Clamp(USelectionSet *Value, float Min/*=
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("Clamp"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("Clamp"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = FMath::Clamp(Value->Weights[i], Min, Max);
+		Result->Weights[WeightIndex] = FMath::Clamp(Value->Weights[WeightIndex], Min, Max);
 	}
 
-	return result;
+	return Result;
 }
 
 
@@ -91,31 +91,30 @@ USelectionSet * USelectionSetBPLibrary::DivideFloatBySelectionSet(float Float /*
 		return nullptr;
 	}
 
-
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("DivideFloatBySelectionSet"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("DivideFloatBySelectionSet"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 	
 	// Set the minimum threshold for division
-	const float zeroThreshold = 0.01;
-	for (int32 i = 0; i<size; i++)
+	const float ZeroThreshold = 0.01;
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
 		// We need to make sure the weight is not zero to avoid divide by zero so
 		// we'll set it to 'near zero' if it is.
-		float weight = Value->Weights[i];
-		if (FMath::Abs(weight)<zeroThreshold)
+		float Weight = Value->Weights[WeightIndex];
+		if (FMath::Abs(Weight)<ZeroThreshold)
 		{
-			weight = weight<0 ? -zeroThreshold : zeroThreshold;
+			Weight = Weight<0 ? -ZeroThreshold : ZeroThreshold;
 		}
-		result->Weights[i] = Float/weight;
+		Result->Weights[WeightIndex] = Float/Weight;
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::DivideSelectionSetByFloat(USelectionSet *Value, float Float /*= 1*/)
@@ -135,20 +134,20 @@ USelectionSet * USelectionSetBPLibrary::DivideSelectionSetByFloat(USelectionSet 
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("DivideSelectionSetByFloat"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("DivideSelectionSetByFloat"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = Value->Weights[i]/Float;
+		Result->Weights[WeightIndex] = Value->Weights[WeightIndex]/Float;
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::DivideSelectionSets(USelectionSet *A, USelectionSet *B)
@@ -160,23 +159,27 @@ USelectionSet * USelectionSetBPLibrary::DivideSelectionSets(USelectionSet *A, US
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = A->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, A->GetOuter(), TEXT("DivideSelectionSets"));
-	if (!result)
+	const int32 Size = A->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, A->GetOuter(), TEXT("DivideSelectionSets"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = A->Weights[i]/B->Weights[i];
+		Result->Weights[WeightIndex] = A->Weights[WeightIndex]/B->Weights[WeightIndex];
 	}
 
-	return result;
+	return Result;
 }
 
-USelectionSet * USelectionSetBPLibrary::Ease(USelectionSet *Value, EEasingFunc::Type EaseFunction /*= EEasingFunc::Linear*/, int32 Steps /*= 2*/, float BlendExp /*= 2.0f*/)
+USelectionSet * USelectionSetBPLibrary::Ease(
+	USelectionSet *Value,
+	EEasingFunc::Type EaseFunction /*= EEasingFunc::Linear*/,
+	int32 Steps /*= 2*/,
+	float BlendExp /*= 2.0f*/)
 {
 	// Need a SelectionSet
 	if (!Value)
@@ -186,68 +189,71 @@ USelectionSet * USelectionSetBPLibrary::Ease(USelectionSet *Value, EEasingFunc::
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("Ease"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("Ease"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 	// TODO: This can be more efficient with lambdas.
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
 		switch (EaseFunction)
 		{
 			case EEasingFunc::Step:
-				result->Weights[i] = FMath::InterpStep<float>(0.f, 1.f, Value->Weights[i], Steps);
+				Result->Weights[WeightIndex] = FMath::InterpStep<float>(0.f, 1.f, Value->Weights[WeightIndex], Steps);
 				break;
 			case EEasingFunc::SinusoidalIn:
-				result->Weights[i] = FMath::InterpSinIn<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpSinIn<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			case EEasingFunc::SinusoidalOut:
-				result->Weights[i] = FMath::InterpSinOut<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpSinOut<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			case EEasingFunc::SinusoidalInOut:
-				result->Weights[i] = FMath::InterpSinInOut<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpSinInOut<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			case EEasingFunc::EaseIn:
-				result->Weights[i] = FMath::InterpEaseIn<float>(0.f, 1.f, Value->Weights[i], BlendExp);
+				Result->Weights[WeightIndex] = FMath::InterpEaseIn<float>(0.f, 1.f, Value->Weights[WeightIndex], BlendExp);
 				break;
 			case EEasingFunc::EaseOut:
-				result->Weights[i] = FMath::InterpEaseOut<float>(0.f, 1.f, Value->Weights[i], BlendExp);
+				Result->Weights[WeightIndex] = FMath::InterpEaseOut<float>(0.f, 1.f, Value->Weights[WeightIndex], BlendExp);
 				break;
 			case EEasingFunc::EaseInOut:
-				result->Weights[i] = FMath::InterpEaseInOut<float>(0.f, 1.f, Value->Weights[i], BlendExp);
+				Result->Weights[WeightIndex] = FMath::InterpEaseInOut<float>(0.f, 1.f, Value->Weights[WeightIndex], BlendExp);
 				break;
 			case EEasingFunc::ExpoIn:
-				result->Weights[i] = FMath::InterpExpoIn<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpExpoIn<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			case EEasingFunc::ExpoOut:
-				result->Weights[i] = FMath::InterpExpoOut<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpExpoOut<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			case EEasingFunc::ExpoInOut:
-				result->Weights[i] = FMath::InterpExpoInOut<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpExpoInOut<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			case EEasingFunc::CircularIn:
-				result->Weights[i] = FMath::InterpCircularIn<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpCircularIn<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			case EEasingFunc::CircularOut:
-				result->Weights[i] = FMath::InterpCircularOut<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpCircularOut<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			case EEasingFunc::CircularInOut:
-				result->Weights[i] = FMath::InterpCircularInOut<float>(0.f, 1.f, Value->Weights[i]);
+				Result->Weights[WeightIndex] = FMath::InterpCircularInOut<float>(0.f, 1.f, Value->Weights[WeightIndex]);
 				break;
 			default:
 				// Do nothing: linear.
-				result->Weights[i] = Value->Weights[i];
+				Result->Weights[WeightIndex] = Value->Weights[WeightIndex];
 				break;
 		}
 	}
 
-	return result;
+	return Result;
 }
 
-bool USelectionSetBPLibrary::HaveTwoSelectionSetsOfSameSize(USelectionSet *SelectionA, USelectionSet *SelectionB, FString NodeNameForWarning)
+bool USelectionSetBPLibrary::HaveTwoSelectionSetsOfSameSize(
+	USelectionSet *SelectionA,
+	USelectionSet *SelectionB,
+	FString NodeNameForWarning)
 {
 	if (!SelectionA||!SelectionB)
 	{
@@ -255,14 +261,14 @@ bool USelectionSetBPLibrary::HaveTwoSelectionSetsOfSameSize(USelectionSet *Selec
 		return false;
 	}
 
-	const int32 sizeA = SelectionA->Size();
-	const int32 sizeB = SelectionB->Size();
-	if (sizeA!=sizeB)
+	const int32 SizeA = SelectionA->Size();
+	const int32 SizeB = SelectionB->Size();
+	if (SizeA!=SizeB)
 	{
 		UE_LOG(
 			MDTLog, Warning,
 			TEXT("%s: SelectionSets are not the same size (%d and %d"),
-			*NodeNameForWarning, sizeA, sizeB
+			*NodeNameForWarning, SizeA, SizeB
 		);
 		return false;
 	}
@@ -270,7 +276,11 @@ bool USelectionSetBPLibrary::HaveTwoSelectionSetsOfSameSize(USelectionSet *Selec
 }
 
 
-bool USelectionSetBPLibrary::HaveThreeSelectionSetsOfSameSize(USelectionSet *SelectionA, USelectionSet *SelectionB, USelectionSet *SelectionC, FString NodeNameForWarning)
+bool USelectionSetBPLibrary::HaveThreeSelectionSetsOfSameSize(
+	USelectionSet *SelectionA,
+	USelectionSet *SelectionB,
+	USelectionSet *SelectionC,
+	FString NodeNameForWarning)
 {
 
 	if (!SelectionA||!SelectionB||!SelectionC)
@@ -279,15 +289,15 @@ bool USelectionSetBPLibrary::HaveThreeSelectionSetsOfSameSize(USelectionSet *Sel
 		return false;
 	}
 
-	const int32 sizeA = SelectionA->Size();
-	const int32 sizeB = SelectionB->Size();
-	const int32 sizeC = SelectionC->Size();
-	if (sizeA!=sizeB || sizeA!=sizeC)
+	const int32 SizeA = SelectionA->Size();
+	const int32 SizeB = SelectionB->Size();
+	const int32 SizeC = SelectionC->Size();
+	if (SizeA!=SizeB || SizeA!=SizeC)
 	{
 		UE_LOG(
 			MDTLog, Warning,
 			TEXT("%s: SelectionSets are not the same size (%d, %d and %d"),
-			*NodeNameForWarning, sizeA, sizeB, sizeC
+			*NodeNameForWarning, SizeA, SizeB, SizeC
 		);
 		return false;
 	}
@@ -304,20 +314,20 @@ USelectionSet * USelectionSetBPLibrary::LerpSelectionSetsWithFloat(USelectionSet
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = A->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, A->GetOuter(), TEXT("LerpSelectionSets"));
-	if (!result)
+	const int32 Size = A->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, A->GetOuter(), TEXT("LerpSelectionSets"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = FMath::Lerp(A->Weights[i], B->Weights[i], Alpha);
+		Result->Weights[WeightIndex] = FMath::Lerp(A->Weights[WeightIndex], B->Weights[WeightIndex], Alpha);
 	}
 
-	return result;
+	return Result;
 }
 
 
@@ -331,20 +341,20 @@ USelectionSet * USelectionSetBPLibrary::LerpSelectionSetsWithSelectionSet(USelec
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = A->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, A->GetOuter(), TEXT("LerpSelectionSets"));
-	if (!result)
+	const int32 Size = A->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, A->GetOuter(), TEXT("LerpSelectionSets"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = FMath::Lerp(A->Weights[i], B->Weights[i], Alpha->Weights[i]);
+		Result->Weights[WeightIndex] = FMath::Lerp(A->Weights[WeightIndex], B->Weights[WeightIndex], Alpha->Weights[WeightIndex]);
 	}
 
-	return result;
+	return Result;
 
 }
 
@@ -358,20 +368,20 @@ USelectionSet * USelectionSetBPLibrary::LerpSelectionSetWithFloat(USelectionSet 
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("LerpSelectionSetWithFloat"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("LerpSelectionSetWithFloat"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = FMath::Lerp(Value->Weights[i], Float, Alpha);
+		Result->Weights[WeightIndex] = FMath::Lerp(Value->Weights[WeightIndex], Float, Alpha);
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::MaxSelectionSetAgainstFloat(USelectionSet *Value, float Float)
@@ -384,21 +394,21 @@ USelectionSet * USelectionSetBPLibrary::MaxSelectionSetAgainstFloat(USelectionSe
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("MaxSelectionSetAgainstFloat"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("MaxSelectionSetAgainstFloat"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
 		//result->weights[i] = Value->weights[i] > Float ? Value->weights[i] : Float;
-		result->Weights[i] = FMath::Max(Value->Weights[i], Float);
+		Result->Weights[WeightIndex] = FMath::Max(Value->Weights[WeightIndex], Float);
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::MaxSelectionSets(USelectionSet *A, USelectionSet *B)
@@ -410,20 +420,20 @@ USelectionSet * USelectionSetBPLibrary::MaxSelectionSets(USelectionSet *A, USele
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = A->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, A->GetOuter(), TEXT("MaxSelectionSets"));
-	if (!result)
+	const int32 Size = A->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, A->GetOuter(), TEXT("MaxSelectionSets"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = FMath::Max(A->Weights[i], B->Weights[i]);
+		Result->Weights[WeightIndex] = FMath::Max(A->Weights[WeightIndex], B->Weights[WeightIndex]);
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::MinSelectionSetAgainstFloat(USelectionSet *Value, float Float)
@@ -436,20 +446,20 @@ USelectionSet * USelectionSetBPLibrary::MinSelectionSetAgainstFloat(USelectionSe
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("MinSelectionSetAgainstFloat"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("MinSelectionSetAgainstFloat"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = FMath::Min(Value->Weights[i], Float);
+		Result->Weights[WeightIndex] = FMath::Min(Value->Weights[WeightIndex], Float);
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::MinSelectionSets(USelectionSet *A, USelectionSet *B)
@@ -461,20 +471,20 @@ USelectionSet * USelectionSetBPLibrary::MinSelectionSets(USelectionSet *A, USele
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = A->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, A->GetOuter(), TEXT("MinSelectionSets"));
-	if (!result)
+	const int32 Size = A->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, A->GetOuter(), TEXT("MinSelectionSets"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = FMath::Min(A->Weights[i], B->Weights[i]);
+		Result->Weights[WeightIndex] = FMath::Min(A->Weights[WeightIndex], B->Weights[WeightIndex]);
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::MultiplySelctionSetByFloat(USelectionSet *Value, float Float/*=1*/)
@@ -487,20 +497,20 @@ USelectionSet * USelectionSetBPLibrary::MultiplySelctionSetByFloat(USelectionSet
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("MultiplySelectionSetByFloat"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("MultiplySelectionSetByFloat"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = Value->Weights[i]*Float;
+		Result->Weights[WeightIndex] = Value->Weights[WeightIndex]*Float;
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::MultiplySelectionSets(USelectionSet *A, USelectionSet *B)
@@ -512,20 +522,20 @@ USelectionSet * USelectionSetBPLibrary::MultiplySelectionSets(USelectionSet *A, 
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = A->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, A->GetOuter(), TEXT("MultiplySelectionSets"));
-	if (!result)
+	const int32 Size = A->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, A->GetOuter(), TEXT("MultiplySelectionSets"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = A->Weights[i]*B->Weights[i];
+		Result->Weights[WeightIndex] = A->Weights[WeightIndex]*B->Weights[WeightIndex];
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::OneMinus(USelectionSet *Value)
@@ -538,20 +548,20 @@ USelectionSet * USelectionSetBPLibrary::OneMinus(USelectionSet *Value)
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("OneMinus"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("OneMinus"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = 1.0f-Value->Weights[i];
+		Result->Weights[WeightIndex] = 1.0f-Value->Weights[WeightIndex];
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomStream &RandomStream, float Min/*=0*/, float Max/*=1*/)
@@ -564,20 +574,20 @@ USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomS
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("Randomize"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("Randomize"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = RandomStream.FRandRange(Min, Max);
+		Result->Weights[WeightIndex] = RandomStream.FRandRange(Min, Max);
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::RemapToCurve(USelectionSet *Value, UCurveFloat *Curve)
@@ -601,21 +611,21 @@ USelectionSet * USelectionSetBPLibrary::RemapToCurve(USelectionSet *Value, UCurv
 	Curve->GetTimeRange(CurveTimeStart, CurveTimeEnd);
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("RemapToCurve"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("RemapToCurve"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
 	// Apply the curve mapping
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = Curve->GetFloatValue(Value->Weights[i]*CurveTimeEnd);
+		Result->Weights[WeightIndex] = Curve->GetFloatValue(Value->Weights[WeightIndex]*CurveTimeEnd);
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float Min /*= 0.0f*/, float Max /*= 1.0f*/)
@@ -635,17 +645,17 @@ USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float
 	// Find the current minimum and maximum.
 	float CurrentMinimum = Value->Weights[0];
 	float CurrentMaximum = Value->Weights[0];
-	for (int32 i = 1; i<Value->Size(); i++)
+	for (int32 WeightIndex = 1; WeightIndex<Value->Size(); WeightIndex++)
 	{
-		CurrentMinimum = FMath::Min(CurrentMinimum, Value->Weights[i]);
-		CurrentMaximum = FMath::Max(CurrentMaximum, Value->Weights[i]);
+		CurrentMinimum = FMath::Min(CurrentMinimum, Value->Weights[WeightIndex]);
+		CurrentMaximum = FMath::Max(CurrentMaximum, Value->Weights[WeightIndex]);
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("RemapToRange"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("RemapToRange"));
+	if (!Result)
 	{
 		return nullptr;
 	}
@@ -653,22 +663,22 @@ USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float
 	// Check if all values are the same- if so just return a flat result equal to Min.
 	if (CurrentMinimum==CurrentMaximum)
 	{
-		return Set(result, Min);
+		return Set(Result, Min);
 	}
 
 	// Perform the remapping
 	float Scale = (Max-Min)/(CurrentMaximum-CurrentMinimum);
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = (Value->Weights[i]-CurrentMinimum) * Scale+Min;
+		Result->Weights[WeightIndex] = (Value->Weights[WeightIndex]-CurrentMinimum) * Scale+Min;
 	}
 
-	return result;
+	return Result;
 }
 
 
 USelectionSet * USelectionSetBPLibrary::RemapRipple(
-	USelectionSet *Value, int32 NumberOfRipples /*= 4*/, bool UpAndDown /*= true*/)
+	USelectionSet *Value, int32 NumberOfRipples /*= 4*/, bool bUpAndDown /*= true*/)
 {
 	// Need a SelectionSet
 	if (!Value)
@@ -678,26 +688,26 @@ USelectionSet * USelectionSetBPLibrary::RemapRipple(
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("RemapRipple"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("RemapRipple"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
 	// Perform the remap
-	for (int32 i=0; i<size; i++) {
-		const float scaledValue = Value->Weights[i] * NumberOfRipples;
-		const bool isOdd = (FPlatformMath::FloorToInt(scaledValue) % 2) ==1;
-		const bool shouldInvert = UpAndDown && isOdd;
+	for (int32 WeightIndex=0; WeightIndex<Size; WeightIndex++) {
+		const float ScaledValue = Value->Weights[WeightIndex] * NumberOfRipples;
+		const bool bIsOdd = (FPlatformMath::FloorToInt(ScaledValue) % 2) ==1;
+		const bool bShouldInvert = bUpAndDown && bIsOdd;
 	
-		result->Weights[i] = shouldInvert ?
-			1.0f-FMath::Fmod(scaledValue, 1.0f) :
-			FMath::Fmod(scaledValue, 1.0f);
+		Result->Weights[WeightIndex] = bShouldInvert ?
+			1.0f-FMath::Fmod(ScaledValue, 1.0f) :
+			FMath::Fmod(ScaledValue, 1.0f);
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::Set(USelectionSet *Value, float Float/*=0*/)
@@ -710,20 +720,20 @@ USelectionSet * USelectionSetBPLibrary::Set(USelectionSet *Value, float Float/*=
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("Set"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("Set"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = Float;
+		Result->Weights[WeightIndex] = Float;
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::SubtractFloatFromSelectionSet(USelectionSet *Value, float Float/*=0*/)
@@ -736,20 +746,20 @@ USelectionSet * USelectionSetBPLibrary::SubtractFloatFromSelectionSet(USelection
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("SubtractFloatFromSelectionSet"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("SubtractFloatFromSelectionSet"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = Value->Weights[i]-Float;
+		Result->Weights[WeightIndex] = Value->Weights[WeightIndex]-Float;
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::SubtractSelectionSetFromFloat(float Float, USelectionSet *Value)
@@ -762,20 +772,20 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSetFromFloat(float Floa
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = Value->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, Value->GetOuter(), TEXT("SubtractSelectionSetFromFloat"));
-	if (!result)
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("SubtractSelectionSetFromFloat"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = Float-Value->Weights[i];
+		Result->Weights[WeightIndex] = Float-Value->Weights[WeightIndex];
 	}
 
-	return result;
+	return Result;
 }
 
 USelectionSet * USelectionSetBPLibrary::SubtractSelectionSets(USelectionSet *A, USelectionSet *B)
@@ -787,18 +797,18 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSets(USelectionSet *A, 
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
-	const int32 size = A->Size();
-	USelectionSet *result = USelectionSet::CreateAndCheckValid(
-		size, A->GetOuter(), TEXT("SubtractSelectionSets"));
-	if (!result)
+	const int32 Size = A->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, A->GetOuter(), TEXT("SubtractSelectionSets"));
+	if (!Result)
 	{
 		return nullptr;
 	}
 
-	for (int32 i = 0; i<size; i++)
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
 	{
-		result->Weights[i] = A->Weights[i]-B->Weights[i];
+		Result->Weights[WeightIndex] = A->Weights[WeightIndex]-B->Weights[WeightIndex];
 	}
 
-	return result;
+	return Result;
 }
