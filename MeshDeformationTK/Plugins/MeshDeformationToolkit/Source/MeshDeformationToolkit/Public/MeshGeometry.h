@@ -132,6 +132,15 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="material geometry"))
 		USelectionSet *SelectBySection(int32 SectionIndex);
+ 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+			  meta = (Keywords = "for section"))
+		USelectionSet *SelectByVertexRange(
+			int32 RangeStart,
+			int32 RangeEnd,
+			int32 RangeStep = 1,
+			int32 SectionIndex = 0
+			);
 
 	/// Select vertices from a texture.
 	///

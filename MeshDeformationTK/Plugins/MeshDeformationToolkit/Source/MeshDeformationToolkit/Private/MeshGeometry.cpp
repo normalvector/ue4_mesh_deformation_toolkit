@@ -1197,6 +1197,47 @@ USelectionSet * UMeshGeometry::SelectByNormal(
 	return NewSelectionSet;
 }
 
+USelectionSet * UMeshGeometry::SelectByVertexRange(
+	int32 RangeStart,
+	int32 RangeEnd,
+	int32 RangeStep, /*= 1*/
+	int32 SectionIndex /* =0*/
+)
+{
+
+	USelectionSet *NewSelectionSet = NewObject<USelectionSet>(this);
+	if (!NewSelectionSet)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectBySection: Cannot create new SelectionSet"));
+	}
+
+	// Iterate over the sections, and the vertices in each section
+	int32 CurrentSectionIndex = 0;
+	for (auto &Section:this->Sections)
+	{
+		int CurrentVertexIndex = 0;
+		for (auto &Vertex:Section.Vertices)
+		{
+			// Work out if this is part of the range or not.
+			bool bIsInRange =
+				(CurrentSectionIndex==SectionIndex)&&	// Right section
+				(CurrentVertexIndex>=RangeStart)&& // At or beyond start of range
+				(CurrentVertexIndex<=RangeEnd)&& // At or before end of range
+				((CurrentVertexIndex-RangeStart)%RangeStep==0); // Step is right
+
+			// Add a new weight- 1.0 if section indices match, 0.0 otherwise.
+			NewSelectionSet->Weights.Emplace(bIsInRange ? 1.0f : 0.0f);
+
+			// Increment the current vertex index, we've finished with this section
+			CurrentVertexIndex++;
+		}
+		// Increment the current section index, we've finished with this section
+		CurrentSectionIndex++;
+	}
+
+	return NewSelectionSet;
+}
+
 USelectionSet *UMeshGeometry::SelectInVolume(FVector CornerA, FVector CornerB)
 {
 	USelectionSet *NewSelectionSet = NewObject<USelectionSet>(this);

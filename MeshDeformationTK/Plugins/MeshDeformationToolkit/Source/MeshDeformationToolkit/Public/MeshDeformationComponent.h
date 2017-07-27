@@ -209,6 +209,24 @@ public:
 			float OuterRadiusInDegrees=30.0f
 		) const;
 
+	/// Select all of the vertices in a a single section by a range.  This is useful
+	/// when you know the vertex ordering of an item.
+	///
+	/// \param RangeStart		The vertex index of the start of the range
+	/// \param RangeEnd			The vertex index of the end of the range
+	/// \param RangeStep		The stepping between indices in range.  1=Every vertex, 2=Every other
+	///							vertex, 3=Every 3 vertices and so on.
+	/// \param SectionID		The ID of the section we're taking the range from
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+			  meta = (Keywords = "for section"))
+		USelectionSet *SelectByVertexRange(
+			int32 RangeStart,
+			int32 RangeEnd,
+			int32 RangeStep = 1,
+			int32 SectionIndex = 0
+		);
+
+
 	/// Select vertices inside a volume defined by two opposite corner points.
 	/// \param CornerA						The first corner to define the volume
 	/// \param CornerB						The second corner to define the volume

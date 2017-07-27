@@ -383,6 +383,20 @@ USelectionSet * UMeshDeformationComponent::SelectByNormal(
 	return MeshGeometry->SelectByNormal(Facing, InnerRadiusInDegrees, OuterRadiusInDegrees);
 }
 
+USelectionSet * UMeshDeformationComponent::SelectByVertexRange(
+	int32 RangeStart,
+	int32 RangeEnd,
+	int32 RangeStep /*= 1*/,
+	int32 SectionIndex /*= 0 */)
+{
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("SelectByVertexRange: No meshGeometry loaded"));
+		return nullptr;
+	}
+	return MeshGeometry->SelectByVertexRange(RangeStart, RangeEnd, RangeStep, SectionIndex);
+}
+
 USelectionSet * UMeshDeformationComponent::SelectBySection(int32 SectionIndex) const
 {
 	if (!MeshGeometry)
