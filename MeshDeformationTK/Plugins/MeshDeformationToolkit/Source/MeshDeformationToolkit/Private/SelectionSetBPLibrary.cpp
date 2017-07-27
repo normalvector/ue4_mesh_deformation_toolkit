@@ -32,7 +32,7 @@ USelectionSet * USelectionSetBPLibrary::AddFloatToSelectionSet(USelectionSet *Va
 USelectionSet *USelectionSetBPLibrary::AddSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided and same size
-	if (!HaveTwoSelectionSetsOfSameSize(A, B, "AddSelectionSets"))
+	if (!Utility::HaveTwoSelectionSetsOfSameSize(A, B, "AddSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -153,7 +153,7 @@ USelectionSet * USelectionSetBPLibrary::DivideSelectionSetByFloat(USelectionSet 
 USelectionSet * USelectionSetBPLibrary::DivideSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need two SelectionSets of same size
-	if (!HaveTwoSelectionSetsOfSameSize(A, B, "DivideSelectioSets"))
+	if (!Utility::HaveTwoSelectionSetsOfSameSize(A, B, "DivideSelectioSets"))
 	{
 		return nullptr;
 	}
@@ -249,66 +249,11 @@ USelectionSet * USelectionSetBPLibrary::Ease(
 
 	return Result;
 }
-
-bool USelectionSetBPLibrary::HaveTwoSelectionSetsOfSameSize(
-	USelectionSet *SelectionA,
-	USelectionSet *SelectionB,
-	FString NodeNameForWarning)
-{
-	if (!SelectionA||!SelectionB)
-	{
-		UE_LOG(MDTLog, Warning, TEXT("%s: Need two SelectionSets"), *NodeNameForWarning);
-		return false;
-	}
-
-	const int32 SizeA = SelectionA->Size();
-	const int32 SizeB = SelectionB->Size();
-	if (SizeA!=SizeB)
-	{
-		UE_LOG(
-			MDTLog, Warning,
-			TEXT("%s: SelectionSets are not the same size (%d and %d"),
-			*NodeNameForWarning, SizeA, SizeB
-		);
-		return false;
-	}
-	return true;
-}
-
-
-bool USelectionSetBPLibrary::HaveThreeSelectionSetsOfSameSize(
-	USelectionSet *SelectionA,
-	USelectionSet *SelectionB,
-	USelectionSet *SelectionC,
-	FString NodeNameForWarning)
-{
-
-	if (!SelectionA||!SelectionB||!SelectionC)
-	{
-		UE_LOG(MDTLog, Warning, TEXT("%s: Need three SelectionSets"), *NodeNameForWarning);
-		return false;
-	}
-
-	const int32 SizeA = SelectionA->Size();
-	const int32 SizeB = SelectionB->Size();
-	const int32 SizeC = SelectionC->Size();
-	if (SizeA!=SizeB || SizeA!=SizeC)
-	{
-		UE_LOG(
-			MDTLog, Warning,
-			TEXT("%s: SelectionSets are not the same size (%d, %d and %d"),
-			*NodeNameForWarning, SizeA, SizeB, SizeC
-		);
-		return false;
-	}
-	return true;
-}
-
 // Note: The BP name and C++ names of this function are different as UFUNCTION() doesn't allow overloading
 USelectionSet * USelectionSetBPLibrary::LerpSelectionSetsWithFloat(USelectionSet *A, USelectionSet *B, float Alpha/*=0*/)
 {
 	// Need two SelectionSets of same size
-	if (!HaveTwoSelectionSetsOfSameSize(A, B, "LerpSelectionSets"))
+	if (!Utility:: HaveTwoSelectionSetsOfSameSize(A, B, "LerpSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -330,12 +275,11 @@ USelectionSet * USelectionSetBPLibrary::LerpSelectionSetsWithFloat(USelectionSet
 	return Result;
 }
 
-
 // Note: The BP name and C++ names of this function are different as UFUNCTION() doesn't allow overloading
 USelectionSet * USelectionSetBPLibrary::LerpSelectionSetsWithSelectionSet(USelectionSet *A, USelectionSet *B, USelectionSet *Alpha)
 {
 	// Need three SelectionSets of same size
-	if (!HaveThreeSelectionSetsOfSameSize(A, B, Alpha, "LerpSelectionSets"))
+	if (!Utility::HaveThreeSelectionSetsOfSameSize(A, B, Alpha, "LerpSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -414,7 +358,7 @@ USelectionSet * USelectionSetBPLibrary::MaxSelectionSetAgainstFloat(USelectionSe
 USelectionSet * USelectionSetBPLibrary::MaxSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided
-	if (!HaveTwoSelectionSetsOfSameSize(A, B, "MaxSelectionSets"))
+	if (!Utility::HaveTwoSelectionSetsOfSameSize(A, B, "MaxSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -465,7 +409,7 @@ USelectionSet * USelectionSetBPLibrary::MinSelectionSetAgainstFloat(USelectionSe
 USelectionSet * USelectionSetBPLibrary::MinSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need two selection sets of same size
-	if (!HaveTwoSelectionSetsOfSameSize(A, B, "MinSelectionSets"))
+	if (!Utility::HaveTwoSelectionSetsOfSameSize(A, B, "MinSelectionSets"))
 	{
 		return nullptr;
 	}
@@ -516,7 +460,7 @@ USelectionSet * USelectionSetBPLibrary::MultiplySelctionSetByFloat(USelectionSet
 USelectionSet * USelectionSetBPLibrary::MultiplySelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need two selection sets of same size
-	if (!HaveTwoSelectionSetsOfSameSize(A, B, "MultiplySelectionSets"))
+	if (!Utility::HaveTwoSelectionSetsOfSameSize(A, B, "MultiplySelectionSets"))
 	{
 		return nullptr;
 	}
@@ -818,7 +762,7 @@ USelectionSet * USelectionSetBPLibrary::SubtractSelectionSetFromFloat(float Floa
 USelectionSet * USelectionSetBPLibrary::SubtractSelectionSets(USelectionSet *A, USelectionSet *B)
 {
 	// Need both provided and same size
-	if (!HaveTwoSelectionSetsOfSameSize(A, B, "SubtractSelectionSets"))
+	if (!Utility::HaveTwoSelectionSetsOfSameSize(A, B, "SubtractSelectionSets"))
 	{
 		return nullptr;
 	}
