@@ -1151,7 +1151,7 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 	return NewSelectionSet;
 }
 
-USelectionSet * UMeshGeometry::SelectFacing(
+USelectionSet * UMeshGeometry::SelectByNormal(
 	FVector Normal /*= FVector::UpVector*/,
 	float InnerRadiusInDegrees /*= 0*/,
 	float OuterRadiusInDegrees /*= 30.0f*/)

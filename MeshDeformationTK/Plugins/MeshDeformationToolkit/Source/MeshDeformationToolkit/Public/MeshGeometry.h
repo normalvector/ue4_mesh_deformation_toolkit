@@ -107,6 +107,23 @@ public:
 			ECellularDistanceFunction CellularDistanceFunction=ECellularDistanceFunction::Euclidian
 		);
 
+	/// Selects vertices with a given normal facing
+	///
+	/// This does a smooth linear selection based on the angle from the specified normal direction.
+	/// \param Facing		The facing to select, in world space
+	/// \param InnerRadiusInDegrees	The inner radius in degrees, all vertices with a normal within
+	///								this deviation from Facing will be selected at full strength.
+	/// \param OuterRadiusInDegrees	The outer radius in degrees, all vertices with a normal greater
+	///								than this deviation from Facing will not be selected.
+	/// \return A *SelectionSet* for the selected vertices
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
+			  meta=(Keywords="facing vector"))
+		USelectionSet *SelectByNormal(
+			FVector Facing=FVector::UpVector,
+			float InnerRadiusInDegrees=0,
+			float OuterRadiusInDegrees=30.0f
+		);
+
 	/// Select all of the vertices which go to make up one of the Sections that a mesh
 	/// can consist of.  This can be thought of as the same as a Material slot for many
 	/// uses.
@@ -129,23 +146,6 @@ public:
 		USelectionSet *SelectByTexture(
 			UTexture2D *Texture2D,
 			ETextureChannel TextureChannel=ETextureChannel::Red
-		);
-
-	/// Selects vertices with a given normal facing
-	///
-	/// This does a smooth linear selection based on the angle from the specified normal direction.
-	/// \param Facing		The facing to select, in world space
-	/// \param InnerRadiusInDegrees	The inner radius in degrees, all vertices with a normal within
-	///								this deviation from Facing will be selected at full strength.
-	/// \param OuterRadiusInDegrees	The outer radius in degrees, all vertices with a normal greater
-	///								than this deviation from Facing will not be selected.
-	/// \return A *SelectionSet* for the selected vertices
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
-			  meta=(Keywords="normal vector"))
-		USelectionSet *SelectFacing(
-			FVector Facing=FVector::UpVector,
-			float InnerRadiusInDegrees=0,
-			float OuterRadiusInDegrees=30.0f
 		);
 
 	/// Select vertices inside a volume defined by two opposite corner points.

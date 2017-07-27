@@ -371,6 +371,18 @@ USelectionSet * UMeshDeformationComponent::SelectByNoise(
 	);
 }
 
+USelectionSet * UMeshDeformationComponent::SelectByNormal(
+	FVector Facing /*= FVector::UpVector*/, float InnerRadiusInDegrees /*= 0*/,
+	float OuterRadiusInDegrees /*= 30.0f*/) const
+{
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("SelectFacing: No meshGeometry loaded"));
+		return nullptr;
+	}
+	return MeshGeometry->SelectByNormal(Facing, InnerRadiusInDegrees, OuterRadiusInDegrees);
+}
+
 USelectionSet * UMeshDeformationComponent::SelectBySection(int32 SectionIndex) const
 {
 	if (!MeshGeometry)
@@ -403,18 +415,6 @@ USelectionSet * UMeshDeformationComponent::SelectInVolume(
 		return nullptr;
 	}
 	return MeshGeometry->SelectInVolume(CornerA, CornerB);
-}
-
-USelectionSet * UMeshDeformationComponent::SelectByNormal(
-	FVector Facing /*= FVector::UpVector*/, float InnerRadiusInDegrees /*= 0*/,
-	float OuterRadiusInDegrees /*= 30.0f*/) const
-{
-	if (!MeshGeometry)
-	{
-		UE_LOG(MDTLog, Warning, TEXT("SelectFacing: No meshGeometry loaded"));
-		return nullptr;
-	}
-	return MeshGeometry->SelectFacing(Facing, InnerRadiusInDegrees, OuterRadiusInDegrees);
 }
 
 USelectionSet * UMeshDeformationComponent::SelectNear(
