@@ -336,6 +336,18 @@ public:
 	)
 		static USelectionSet *OneMinus(USelectionSet *Value);
 
+	UFUNCTION(
+		BlueprintPure,
+		meta = (
+		DisplayName = "Power (SelectionSet, Float)",
+		CompactNodeTitle = "Power",
+		ToolTip = "Return a SelectionSet raised to the Exp-th power",
+		Keywords = "exponont",
+		Category = "Math|SelectionSet"
+	)
+	)
+		static USelectionSet *Power(USelectionSet *Value, float Exp);
+
 	/// Randomizes a SelectionSet's values between two limits
 	///
 	/// \param Value		The source SelectionSet

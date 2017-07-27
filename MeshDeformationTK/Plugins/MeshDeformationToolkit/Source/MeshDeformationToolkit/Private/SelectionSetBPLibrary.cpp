@@ -564,6 +564,33 @@ USelectionSet * USelectionSetBPLibrary::OneMinus(USelectionSet *Value)
 	return Result;
 }
 
+
+USelectionSet * USelectionSetBPLibrary::Power(USelectionSet *Value, float Exp)
+{
+	// Need a SelectionSet
+	if (!Value)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("Power: Need a SelectionSet"));
+		return nullptr;
+	}
+
+	// Create a zeroed SelectionSet to store results, sized correctly for performance
+	const int32 Size = Value->Size();
+	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
+		Size, Value->GetOuter(), TEXT("Power"));
+	if (!Result)
+	{
+		return nullptr;
+	}
+
+	for (int32 WeightIndex = 0; WeightIndex<Size; WeightIndex++)
+	{
+		Result->Weights[WeightIndex] = FMath::Pow(Value->Weights[WeightIndex], Exp);
+	}
+
+	return Result;
+}
+
 USelectionSet * USelectionSetBPLibrary::Randomize(USelectionSet *Value, FRandomStream &RandomStream, float Min/*=0*/, float Max/*=1*/)
 {
 	// Need a SelectionSet
