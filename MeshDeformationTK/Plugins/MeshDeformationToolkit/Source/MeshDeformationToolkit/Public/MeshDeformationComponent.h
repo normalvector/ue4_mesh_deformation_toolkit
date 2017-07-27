@@ -691,17 +691,41 @@ public:
 	/// \param Selection					The SelectionSet, if not specified then all vertices
 	///										will be transformed at full strength
 	UFUNCTION(
-		BlueprintCallable, Category=MeshDeformationComponent,
-		meta=(
-			ToolTip="Applies Scale/Rotate/Translate as a single operation using a Transform",
-			Keywords="move scale size rotate"
-			)
+		BlueprintCallable, Category = MeshDeformationComponent,
+		meta = (
+		ToolTip = "Applies Scale/Rotate/Translate as a single operation using a Transform",
+		Keywords = "move scale size rotate"
+	)
 	)
 		void Transform(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			FTransform Transform,
-			FVector CenterOfTransform=FVector::ZeroVector,
-			USelectionSet *Selection=nullptr
+			FVector CenterOfTransform = FVector::ZeroVector,
+			USelectionSet *Selection = nullptr
+		);
+
+	/// Applies a translate to the UV coordinates to allow control of texture mapping.
+	///
+	/// The order of the operations will be Scale/Rotate/Translate as documented
+	/// [here](https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Math/FTransform/index.html).
+	///
+	/// \param MeshDeformationComponent		This component
+	/// \param Transform					The transformation to apply
+	/// \param CenterOfTransform			The center of the transformation, in local space
+	/// \param Selection					The SelectionSet, if not specified then all vertices
+	///										will be transformed at full strength
+		UFUNCTION(
+			BlueprintCallable, Category = MeshDeformationComponent,
+			meta = (
+			DisplayName = "Transform UV",
+			Keywords = "texture coordinates"
+		)
+		)
+		void TransformUV(
+			UMeshDeformationComponent *&MeshDeformationComponent,
+			FTransform Transform,
+			FVector2D CenterOfTransform = FVector2D::ZeroVector,
+			USelectionSet *Selection = nullptr
 		);
 
 	/// Move all selected by the provided delta vector.

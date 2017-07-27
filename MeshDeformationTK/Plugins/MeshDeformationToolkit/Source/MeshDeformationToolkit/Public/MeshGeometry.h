@@ -523,6 +523,25 @@ public:
 			USelectionSet *Selection=nullptr
 		);
 
+	/// Apply a transformation to the UV map to allow flexible UV mapping control.
+	///
+	/// \param Transform					The transformation to apply
+	/// \param CenterOfTransform			The center of the transformation, in local space
+	/// \param Selection					The SelectionSet, if not specified then all vertices
+	///										will be transformed at full strength
+	UFUNCTION(
+		BlueprintCallable, Category = MeshGeometry,
+		meta = (
+		DisplayName = "Transform UV",
+		Keywords = "texture coordinates"
+		)
+	)
+		void TransformUV(
+			FTransform Transform,
+			FVector2D CenterOfTransform = FVector2D::ZeroVector,
+			USelectionSet *Selection = nullptr
+		);
+
 	/// Move all selected by the provided delta vector.
 	///
 	///  If a *SelectionSet* is provided the delta will be weighted according to the vertex's
@@ -535,7 +554,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="move delta"))
 		void Translate(FVector Delta, USelectionSet *Selection);
-
 	/*
 	##################################################
 	Save Geometry Data

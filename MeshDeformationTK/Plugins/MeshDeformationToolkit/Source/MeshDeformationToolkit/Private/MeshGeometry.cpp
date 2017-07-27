@@ -1523,6 +1523,38 @@ void UMeshGeometry::Transform(
 	}
 }
 
+void UMeshGeometry::TransformUV(FTransform Transform, FVector2D CenterOfTransform /*= FVector::ZeroVector*/, USelectionSet *Selection /*= nullptr */)
+{
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetIsRightSize(Selection, TEXT("TransformUV")))
+	{
+		return;
+	}
+	
+	// Iterate over the sections, and the the vertices in the sections.
+	int32 NextWeightIndex = 0;
+	for (auto &Section:this->Sections)
+	{
+		for (auto &UV:Section.UVs)
+		{
+			// Convert to FVectors to allow us to use FTransform on them
+			const FVector UVAsVector = FVector(UV.X, UV.Y, 0);
+			const FVector CenterOfTransformAsVector = FVector(CenterOfTransform.X, CenterOfTransform.Y, 0);
+
+			const FVector TransformedUVAsVector = FMath::Lerp(
+				UVAsVector,
+				CenterOfTransformAsVector+Transform.TransformPosition(
+					UVAsVector-CenterOfTransformAsVector
+				),
+				Selection ? Selection->Weights[NextWeightIndex++] : 1.0f
+			);
+			
+			// Cast back to Vector2D
+			UV = FVector2D(TransformedUVAsVector.X, TransformedUVAsVector.Y);
+		}
+	}
+}
+
 void UMeshGeometry::Translate(FVector Delta, USelectionSet *Selection)
 {
 	// Check selectionSet size- log and abort if there's a problem. 

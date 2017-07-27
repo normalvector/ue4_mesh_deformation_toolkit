@@ -515,6 +515,18 @@ void UMeshDeformationComponent::Transform(
 	MeshGeometry->Transform(Transform, CenterOfTransform, Selection);
 }
 
+void UMeshDeformationComponent::TransformUV(UMeshDeformationComponent *&MeshDeformationComponent, FTransform Transform, FVector2D CenterOfTransform /*= FVector2D::ZeroVector*/, USelectionSet *Selection /*= nullptr */)
+{
+	MeshDeformationComponent = this;
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("TransformUV: No meshGeometry loaded"));
+		return;
+	}
+
+	MeshGeometry->TransformUV(Transform, CenterOfTransform, Selection);
+}
+
 void UMeshDeformationComponent::Translate(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	FVector Delta,
