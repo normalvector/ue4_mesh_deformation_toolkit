@@ -6,6 +6,7 @@
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h" // ClosestPointOnLine/ClosestPointOnInfiniteLine, GetMappedRangeValue
 #include "SelectionSet.h"
 #include "FastNoise.h"
+#include "Utility.h"
 #include "Developer/RawMesh/Public/RawMesh.h" // The structure for building static meshes
 #include "Runtime/AssetRegistry/Public/AssetRegistryModule.h" // Allows registering new static meshes
 
@@ -72,7 +73,7 @@ void UMeshGeometry::Conform(
 			// Compute the start/end positions of the trace
 			const FVector TraceStart = Transform.TransformPosition(Vertex);
 			const FVector TraceEnd = Transform.TransformPosition(
-				NearestPointOnPlane(
+				Utility::NearestPointOnPlane(
 					Vertex,
 					PointOnBasePlaneLS + ScaledProjection.Size() *ProjectionNormalInLS,
 					ProjectionNormalInLS
@@ -1437,16 +1438,6 @@ USelectionSet * UMeshGeometry::SelectNearSpline(
 	return NewSelectionSet;
 }
 
-FVector UMeshGeometry::NearestPointOnPlane(FVector Vertex, FVector PointOnPlane, FVector PlaneNormal)
-{
-	// This is based on:
-	//  https://www.gamedev.net/forums/topic/395194-closest-point-on-plane--distance/
-	PlaneNormal.Normalize();
-	const float DistanceToPlane =
-		FVector::PointPlaneDist(Vertex, PointOnPlane, PlaneNormal.GetSafeNormal());
-	return (Vertex - (PlaneNormal * DistanceToPlane));
-}
-
 float UMeshGeometry::MiniumProjectionPlaneDistance(FVector Projection)
 {
 	// The projection needs to be normalized to act as plane
@@ -1468,7 +1459,7 @@ float UMeshGeometry::MiniumProjectionPlaneDistance(FVector Projection)
 			// Get the nearest point from the origin to a plane with the
 			// supplied projection and passing through the vector.
 			const FVector NearestPointOnVertexPlane =
-				NearestPointOnPlane(FVector::ZeroVector, Vertex, Projection);
+				Utility::NearestPointOnPlane(FVector::ZeroVector, Vertex, Projection);
 
 			// Check we're on the correct side of the plane
 			const FPlane Plane = FPlane(NearestPointOnVertexPlane, -Projection);

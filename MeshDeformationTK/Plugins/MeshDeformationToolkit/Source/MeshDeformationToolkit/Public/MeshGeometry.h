@@ -652,9 +652,6 @@ public:
 			  meta=(Keywords="verts points"))
 		int32 GetTotalVertexCount() const;
 private:
-	/// Given a plane this returns the nearest point on it to the vertex provied
-	FVector NearestPointOnPlane(FVector Vertex, FVector PointOnPlane, FVector PlaneNormal);
-
 	/// Calculate the minimum distance from the original that a plane with the provided
 	/// projection as normal would have to be to allow a plane to have all verts on one side.
 	float MiniumProjectionPlaneDistance(FVector Projection);
