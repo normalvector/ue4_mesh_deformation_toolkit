@@ -30,7 +30,6 @@
 #include "MeshDeformationToolkit.h"
 
 // Disable warning message 4701 - "Potentially uninitialized local variable".
-// \todo Fix this..
 #pragma warning( disable : 4701 )  
 
 #include "FastNoise.h"
