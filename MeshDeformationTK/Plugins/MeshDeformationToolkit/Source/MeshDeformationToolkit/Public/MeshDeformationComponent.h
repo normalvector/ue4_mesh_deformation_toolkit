@@ -56,7 +56,7 @@ public:
 
 	/// This is the mesh geometry currently stored within the component
 	UPROPERTY(
-		BlueprintReadonly, Category=MeshDeformationComponent,
+		BlueprintReadWrite, Category=MeshDeformationComponent,
 		meta=(
 			ToolTip="The geometry being processed in this component"
 			)
