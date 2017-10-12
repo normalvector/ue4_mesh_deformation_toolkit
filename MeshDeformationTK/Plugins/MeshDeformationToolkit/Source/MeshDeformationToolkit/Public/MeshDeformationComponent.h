@@ -122,6 +122,8 @@ public:
 	/// Not all of these settings are used by each noise type, details on their application is in the
 	/// [FastNoise docs](https://github.com/Auburns/FastNoise/wiki/Noise-Settings).
 	///
+	/// \param Transform					The transform to apply to all of the vertices to allow the positioning
+	///										of the noise and effects such as correctly joined landscape tiles
 	/// \param Seed							The seed for the random number generator
 	/// \param Frequency					The frequency of the noise, the higher the value the more detail
 	/// \param NoiseInterpolation			The interpolation used to smooth between noise values
@@ -216,7 +218,7 @@ public:
 	/// \param RangeEnd			The vertex index of the end of the range
 	/// \param RangeStep		The stepping between indices in range.  1=Every vertex, 2=Every other
 	///							vertex, 3=Every 3 vertices and so on.
-	/// \param SectionID		The ID of the section we're taking the range from
+	/// \param SectionIndex		The ID of the section we're taking the range from
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
 			  meta = (Keywords = "for section"))
 		USelectionSet *SelectByVertexRange(
@@ -244,8 +246,8 @@ public:
 	///
 	/// \param LineStart	The start of the linear gradient where weight=0
 	/// \param LineEnd		The end of the linear gradient where weight=1
-	/// \param Reverse		Swaps LineStart/LineEnd to allow the linear effect to be reversed
-	/// \param LimitToLine	Whether the effect finishes at the end of the line or if weight=1 continues
+	/// \param bReverse		Swaps LineStart/LineEnd to allow the linear effect to be reversed
+	/// \param bLimitToLine	Whether the effect finishes at the end of the line or if weight=1 continues
 	/// \return The SelectionSet with all of the vertices selected according to the gradient
 	UFUNCTION(
 		BlueprintPure, Category=MeshDeformationComponent,
@@ -293,7 +295,7 @@ public:
 	///							will be selected at maximum strength
 	/// \param OuterRadius		The outer radius, all points further from the line segment than this distance
 	///							will not be selected
-	/// \param LineIsInfinite	If this is checked then lineStart/lineEnd will treated as two points on an
+	/// \param bLineIsInfinite	If this is checked then lineStart/lineEnd will treated as two points on an
 	///							infinite line instead of being the start/end of a line segment
 	UFUNCTION(
 		BlueprintPure, Category=MeshDeformationComponent,
@@ -342,6 +344,29 @@ public:
 	##################################################
 	*/
 
+	/// Conforms the mesh against collision geometry by projecting it along a specified vector.
+	///
+	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
+	/// for each vertex in the source mesh.
+	///
+	/// \param MeshDeformationComponent	This component
+	/// \param WorldContextObject		The object to get the world object from, this is set automatically
+	///									in the MeshDeformerComponent Blueprint so the end-user doesn't need
+	///									to do it.
+	///	\param Transform				The base transformation of the object.  It's important this is
+	///									specified as it's needed to position the line traces.
+	/// \param IgnoredActors			An optional array of actors which will be ignored by the line trace.
+	/// \param Projection				The projection to conform.  Each vertex will be moved along this
+	///									vector until it hits something.
+	/// \param HeightAdjust				An offset which will be applied to each vertex which collides with
+	///									an object.  If this is +ve then the object will be move up and away
+	///									from the collision, if this is -ve then the object will be dropped
+	///									down through the collided object.
+	/// \param bTraceComplex				Whether to use complex polygon-based collision rather than the simpler
+	///									collision mesh.
+	/// \param CollisionChannel			The collision channel to use for the line-trace operations.
+	/// \param Selection				An optional SelectionSet to control the effect on a per-vertex
+	///									basis.  If provided this will change the strength of the Projection.
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta = (
@@ -369,19 +394,20 @@ public:
 	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
 	/// for each vertex in the source mesh.
 	///
+	/// \param MeshDeformationComponent	This component
 	/// \param WorldContextObject		The object to get the world object from, this is set automatically
 	///									in the MeshDeformerComponent Blueprint so the end-user doesn't need\
 	///									to do it.
 	///	\param Transform				The base transformation of the object.  It's important this is
 	///									specified as it's needed to position the line traces.
 	/// \param IgnoredActors			An optional array of actors which will be ignored by the line trace.
-	/// \param Projection				The distance (in UU) to drop the geometry by until it hits another
+	/// \param ProjectionLength			The distance (in UU) to drop the geometry by until it hits another
 	///									object.
 	/// \param HeightAdjust				An offset which will be applied to each vertex which collides with
 	///									an object.  If this is +ve then the object will be move up and away
 	///									from the collision, if this is -ve then the object will be dropped
 	///									down through the collided object.
-	/// \param TraceComplex				Whether to use complex polygon-based collision rather than the simpler
+	/// \param bTraceComplex			Whether to use complex polygon-based collision rather than the simpler
 	///									collision mesh.
 	/// \param CollisionChannel			The collision channel to use for the line-trace operations.
 	/// \param Selection				An optional SelectionSet to control the effect on a per-vertex
@@ -409,6 +435,8 @@ public:
 
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
 	///
+	/// \param MeshDeformationComponent		This component
+	/// \param SplineComponent				The spline controlling the shape of the deformation
 	/// \param StartPosition				The position (0 to 1) on the spline that the mesh should start,
 	///										defaults to 0 which is the start of the spline.  Changing
 	///										this allows a mesh to be mapped to different parts of the
@@ -423,7 +451,7 @@ public:
 	///										to different portions of the spline.
 	/// \param MeshScale					Global setting to control the size of the deformed mesh, allowing
 	///										a 'thicker or thinner' mesh to be produced.
-	/// \param ProfileCurve					This optional curve will be applied along the entire length of the
+	/// \param SplineProfileCurve			This optional curve will be applied along the entire length of the
 	///										spline and allows control of the profile of the mesh so you can
 	///										make sure parts thicker/thinner than others.  As this is applied
 	///										to the entire spline if you set StartPosition/EndPosition only part
@@ -472,8 +500,8 @@ public:
 	/// Flip the texture map channel in U (horizontal), V(vertical), both, or neither.
 	///
 	/// \param MeshDeformationComponent			This component
-	/// \param FlipU							Flip the texture horizontally
-	/// \param FlipV							Flip the texture vertically
+	/// \param bFlipU							Flip the texture horizontally
+	/// \param bFlipV							Flip the texture vertically
 	/// \param Selection						The SelectionSet to be applied- this will
 	///											be used as a true/false filter based on
 	///											whether each weighting is >=0.5.
@@ -786,7 +814,7 @@ public:
 	///
 	/// \param MeshDeformationComponent		This component (Out param, helps with method chaining)
 	/// \param ProceduralMeshComponent		The target *ProceduralMeshComponent
-	/// \param CreateCollision				Whether to create a collision shape for it
+	/// \param bCreateCollision				Whether to create a collision shape for it
 	/// \return *True* if the update was successful, *False* if not
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
@@ -805,6 +833,7 @@ public:
 	/// mesh provided.  This will only work inside the Editor, this can't be done
 	/// in-game.
 	/// 
+	/// \param MeshDeformationComponent		This component (Out param, helps with method chaining)
 	/// \param StaticMesh					The mesh to replace
 	/// \param ProceduralMeshComponent		A ProceduralMeshComponent which will be used to build
 	///										all of the data structures that StaticMesh needs.

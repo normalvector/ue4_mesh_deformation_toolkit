@@ -51,7 +51,7 @@ public:
 	/// 
 	/// This replaces any geometry currently stored.
 	///
-	/// \param staticMesh					The mesh to copy the geometry from
+	/// \param StaticMesh					The mesh to copy the geometry from
 	/// \param LOD							A StaticMesh can have multiple meshes for different levels of detail, this specifies which LOD we're taking the information fromaram>
 	/// \return *True* if we could read the geometry, *False* if not
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
@@ -79,6 +79,8 @@ public:
 	/// Not all of these settings are used by each noise type, details on their application is in the
 	/// [FastNoise docs](https://github.com/Auburns/FastNoise/wiki/Noise-Settings).
 	///
+	/// \param Transform					The transform to apply to all of the vertices to allow the positioning
+	///										of the noise and effects such as correctly joined landscape tiles
 	/// \param Seed							The seed for the random number generator
 	/// \param Frequency					The frequency of the noise, the higher the value the more detail
 	/// \param NoiseInterpolation			The interpolation used to smooth between noise values
@@ -89,9 +91,6 @@ public:
 	/// \param FractalGain					The strength of the fractal
 	/// \param FractalType					The type of fractal being used
 	/// \param CellularDistanceFunction		The function used to calculate the value for a given point.
-	/// \param NoiseTransform				An optional transformation which will be applied to each vertex's position
-	///										before it is used for noise generation, if not supplied an identity transform
-	///										will be used which does not modify the vertex position.  Useful for making tiling terrain
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="random fastnoise perlin fractal terrain", AutoCreateRefTerm="Transform"))
 		USelectionSet *SelectByNoise(
@@ -132,7 +131,15 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="material geometry"))
 		USelectionSet *SelectBySection(int32 SectionIndex);
- 
+
+	/// Select all of the vertices in a a single section by a range.  This is useful
+	/// when you know the vertex ordering of an item.
+	///
+	/// \param RangeStart		The vertex index of the start of the range
+	/// \param RangeEnd			The vertex index of the end of the range
+	/// \param RangeStep		The stepping between indices in range.  1=Every vertex, 2=Every other
+	///							vertex, 3=Every 3 vertices and so on.
+	/// \param SectionIndex		The ID of the section we're taking the range from
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 			  meta = (Keywords = "for section"))
 		USelectionSet *SelectByVertexRange(
@@ -167,6 +174,10 @@ public:
 
 	/// Select vertices linearly between two points.
 	///
+	/// \param LineStart	The start of the linear gradient where weight=0
+	/// \param LineEnd		The end of the linear gradient where weight=1
+	/// \param bReverse		Swaps LineStart/LineEnd to allow the linear effect to be reversed
+	/// \param bLimitToLine	Whether the effect finishes at the end of the line or if weight=1 continues
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="gradient between"))
 		USelectionSet *SelectLinear(
@@ -180,10 +191,10 @@ public:
 	///
 	/// This does a smooth linear radial selection based on distance form the point provided.
 	///
-	/// \param center		The center of the selection in local space
-	/// \param innerRadius	The inner radius, all points inside this will be selected at
+	/// \param Center		The center of the selection in local space
+	/// \param InnerRadius	The inner radius, all points inside this will be selected at
 	///								maximum strength
-	/// \param outerRadius	The outer radius, all points outside this will not be selected
+	/// \param OuterRadius	The outer radius, all points outside this will not be selected
 	/// \return A *SelectionSet* for the selected vertices
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="close soft"))
@@ -197,13 +208,13 @@ public:
 	///
 	/// This does a smooth linear selection based on the distance from the line points provided.
 	///
-	/// \param lineStart		The position of the start of the line in local space
-	/// \param lineEnd			The position of the end of the line in local spac3e
-	/// \param innerRadius		The inner radius, all points closer to the line segment than this distance
+	/// \param LineStart		The position of the start of the line in local space
+	/// \param LineEnd			The position of the end of the line in local spac3e
+	/// \param InnerRadius		The inner radius, all points closer to the line segment than this distance
 	///							will be selected at maximum strength
-	/// \param outerRadius		The outer radius, all points further from the line segment than this distance
+	/// \param OuterRadius		The outer radius, all points further from the line segment than this distance
 	///							will not be selected
-	/// \param lineIsInfinite	If this is checked then lineStart/lineEnd will treated as two points on an
+	/// \param bLineIsInfinite	If this is checked then lineStart/lineEnd will treated as two points on an
 	///							infinite line instead of being the start/end of a line segment
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="infinite"))
@@ -219,11 +230,11 @@ public:
 	///
 	/// This does a smooth linear radial selection based on distance from the spline provided.
 	///
-	/// \param spline		The spline to be used for the selection
-	/// \param transform	This is the transform to convert from local->world space and is normally GetOwner()->GetTransform()
-	/// \param innerRadius	The inner radius, all points closer to the spline than this distance
+	/// \param Spline		The spline to be used for the selection
+	/// \param Transform	This is the transform to convert from local->world space and is normally GetOwner()->GetTransform()
+	/// \param InnerRadius	The inner radius, all points closer to the spline than this distance
 	///						will be selected at maximum strength.
-	/// \param outerRadius	The outer radius, all points further from the spline than this distance
+	/// \param OuterRadius	The outer radius, all points further from the spline than this distance
 	///						will not be selected
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=MeshGeometry,
 			  meta=(Keywords="curve"))
@@ -261,7 +272,7 @@ public:
 	///									an object.  If this is +ve then the object will be move up and away
 	///									from the collision, if this is -ve then the object will be dropped
 	///									down through the collided object.
-	/// \param TraceComplex				Whether to use complex polygon-based collision rather than the simpler
+	/// \param bTraceComplex			Whether to use complex polygon-based collision rather than the simpler
 	///									collision mesh.
 	/// \param CollisionChannel			The collision channel to use for the line-trace operations.
 	/// \param Selection				An optional SelectionSet to control the effect on a per-vertex
@@ -292,13 +303,13 @@ public:
 	///	\param Transform				The base transformation of the object.  It's important this is
 	///									specified as it's needed to position the line traces.
 	/// \param IgnoredActors			An optional array of actors which will be ignored by the line trace.
-	/// \param Projection				The distance (in UU) to drop the geometry by until it hits another
+	/// \param ProjectionLength			The distance (in UU) to drop the geometry by until it hits another
 	///									object.
 	/// \param HeightAdjust				An offset which will be applied to each vertex which collides with
 	///									an object.  If this is +ve then the object will be move up and away
 	///									from the collision, if this is -ve then the object will be dropped
 	///									down through the collided object.
-	/// \param TraceComplex				Whether to use complex polygon-based collision rather than the simpler
+	/// \param bTraceComplex			Whether to use complex polygon-based collision rather than the simpler
 	///									collision mesh.
 	/// \param CollisionChannel			The collision channel to use for the line-trace operations.
 	/// \param Selection				An optional SelectionSet to control the effect on a per-vertex
@@ -321,6 +332,7 @@ public:
 
 	/// Deform the mesh along a spline with more control than UE4's own SplineMeshComponent.
 	///
+	/// \param SplineComponent				The spline controlling the shape of the deformation
 	/// \param StartPosition				The position (0 to 1) on the spline that the mesh should start, 
 	///										defaults to 0 which is the start of the spline.  Changing
 	///										this allows a mesh to be mapped to different parts of the
@@ -335,7 +347,7 @@ public:
 	///										to different portions of the spline.
 	/// \param MeshScale					Global setting to control the size of the deformed mesh, allowing
 	///										a 'thicker or thinner' mesh to be produced.
-	/// \param ProfileCurve					This optional curve will be applied along the entire length of the
+	/// \param SplineProfileCurve			This optional curve will be applied along the entire length of the
 	///										spline and allows control of the profile of the mesh so you can
 	///										make sure parts thicker/thinner than others.  As this is applied
 	///										to the entire spline if you set StartPosition/EndPosition only part
@@ -369,8 +381,8 @@ public:
 
 	/// Flip the texture map channel in U (horizontal), V(vertical), both, or neither.
 	///
-	/// \param FlipU							Flip the texture horizontally
-	/// \param FlipV							Flip the texture vertically
+	/// \param bFlipU							Flip the texture horizontally
+	/// \param bFlipV							Flip the texture vertically
 	/// \param Selection						The SelectionSet to be applied- this will
 	///											be used as a true/false filter based on
 	///											whether each weighting is >=0.5.
@@ -396,10 +408,10 @@ public:
 	///  (with [continuous uniform distribution]() between *Min* and *Max*, and will
 	///  be scaled by each vertex's selection weights if they're provided.
 	///
-	/// \param randomStream					The random stream to source numbers from
-	/// \param min							The minimum jittered offset
-	/// \param max							The maximum jittered offset
-	/// \param selection					The selection weights, if not specified
+	/// \param RandomStream					The random stream to source numbers from
+	/// \param Min							The minimum jittered offset
+	/// \param Max							The maximum jittered offset
+	/// \param Selection					The selection weights, if not specified
 	///										then all points will be jittered at
 	///										maximum strength
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
@@ -556,13 +568,14 @@ public:
 	///  If a *SelectionSet* is provided the delta will be weighted according to the vertex's
 	///   selection weight.
 	///
-	/// \param delta							The translation delta in local space
-	/// \param selection						The selection weights, if not specified
+	/// \param Delta							The translation delta in local space
+	/// \param Selection						The selection weights, if not specified
 	///											then all points will be moved by the
 	///											full delta translation
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="move delta"))
 		void Translate(FVector Delta, USelectionSet *Selection);
+
 	/*
 	##################################################
 	Save Geometry Data
@@ -596,12 +609,12 @@ public:
 	/// 
 	/// This will rebuild the mesh, completely replacing any geometry it has there.
 	///
-	/// \param proceduralMeshComponent		The target *ProceduralMeshComponent
-	/// \param createCollision				Whether to create a collision shape for it
+	/// \param ProceduralMeshComponent		The target *ProceduralMeshComponent
+	/// \param bCreateCollision				Whether to create a collision shape for it
 	/// \return *True* if the update was successful, *False* if not
 	UFUNCTION(BlueprintCallable, Category=MeshGeometry,
 			  meta=(Keywords="pmc output write"))
-		bool SaveToProceduralMeshComponent(UProceduralMeshComponent *ProceduralMeshComponent, bool CreateCollision);
+		bool SaveToProceduralMeshComponent(UProceduralMeshComponent *ProceduralMeshComponent, bool bCreateCollision);
 
 	/*
 	##################################################
@@ -617,10 +630,10 @@ public:
 			  meta=(Keywords="size limits bounds min max"))
 		FBox GetBoundingBox() const;
 	
-	// Return the radius of the mesh (Distance from the origin to the
-	//  furthest vertex, safe bounding sphere radius).
-	// This isn't being exposed on the MDC as there it's unclear whether
-	//  this would include transformations and so on.
+	/// Return the radius of the mesh (Distance from the origin to the
+	///  furthest vertex, safe bounding sphere radius).
+	/// This isn't being exposed on the MDC as there it's unclear whether
+	///  this would include transformations and so on.
 	UFUNCTION(BlueprintPure, Category = MeshGeometry,
 		meta = (Keywords = "size"))
 		float GetRadius() const;

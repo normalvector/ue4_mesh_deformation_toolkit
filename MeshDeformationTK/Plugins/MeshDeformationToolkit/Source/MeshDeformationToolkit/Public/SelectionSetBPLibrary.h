@@ -77,8 +77,8 @@ public:
 
 	/// Divides a float by all the values in a SelectionSet
 	///
-	/// \param Float			The Float to divide (*A*/B)
-	/// \param Value			The SelectionSet to divide by (A/*B*)
+	/// \param Float			The Float to divide [*A*/B]
+	/// \param Value			The SelectionSet to divide by [A/*B]
 	/// \return				A SelectionSet with the values of Float/Value
 	UFUNCTION(
 		BlueprintPure,
@@ -337,6 +337,13 @@ public:
 	)
 		static USelectionSet *OneMinus(USelectionSet *Value);
 
+	/// Return a SelectionSet with values based on those of another SelectionSet raised
+	/// to a power  (SelectionSet ^ Power)
+	///
+	///
+	/// \param Value		The SelectionSet to raise
+	/// \param Exp			The exponent to raise it to
+	/// \return				The result of Value^Exp
 	UFUNCTION(
 		BlueprintPure,
 		meta = (

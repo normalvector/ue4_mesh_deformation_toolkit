@@ -121,6 +121,7 @@ All of these return a new Selection and don't modify the ones provided to them. 
 All of these transform operations can be controlled by providing an optional Selection.  While the actual use of the Selection can vary method nodes it's intended that each one uses it in the most obvious and flexible way for that node's own purpose.
 
 * *Conform*: Project all of the vertices in a provided direction as though it were being draped over other geometry in the level.  This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
+* *ConformDown*: Project all of the vertices downwards to drape over other geometry in the level.  This is a simpler and more limited version of the Conform node for the most used use.
 * *Fit To Spline*: Bend the geometry to follow a provided [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/), with controls for the profile of the geometry for more useful effects.  This is more powerful than UE4's own [Spline Mesh Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/) in that it follows an entire curve rather than just having the two control points at the ends.
 * *Inflate*: Move all of the vertices in or out along their own normals.
 * *Jitter*: Applies random position jitter to the vertices.  This is a fairly crude effect and generally you're better off using Select By Noise and Translate for greater control.
