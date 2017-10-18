@@ -159,6 +159,9 @@ For now though I can only point you towards [a tutorial I wrote which started al
 # Code documentation
 All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter), and will be made available as API docs online at some point.
 
+This is a [test link to internal docs making sure GitHub works as expected](./docs/test_doc.md).
+TODO: REMOVE THIS
+
 # Thanks Go To..
 [Jordan Peck](https://github.com/Auburns) for his splendid [FastNoise](https://github.com/Auburns/FastNoise) C++ library, which is used for all of the noise generation in the plugin.
 
