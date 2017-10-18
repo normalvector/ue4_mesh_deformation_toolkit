@@ -370,3 +370,6 @@ __pycache__/
 
 # Doxygen
 Plugins/MeshDeformationToolkit/doc/
+
+# Deployment script to update API site
+**/deploy_docs.sh

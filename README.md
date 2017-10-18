@@ -71,21 +71,21 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 ## Load Geometry Data
 All of these nodes are provided on the Mesh Deformation Component, and also their stored geometry.
 
-* *Load From Static Mesh*: Use a StaticMesh as the source of the original geometry.
+* *Load From Static Mesh*: Use a StaticMesh as the source of the original geometry. (Demo: *PassthroughDemo/PassthroughMap*, and used in many others)
 
 ## Select Vertices
 Each of these functions returns a Selection which can then be either be either modified further, or passed into any of the nodes for transforming vertices to control their behavior.
 
 * *Select All*: Select all vertices at full strength
-* *Select By Noise*: Select vertices based on a noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range, if this causes problems use a 'Remap By Range' node to remap between zero and one.*
-* *Select By Section*: Selection based on the sections which make up a mesh.
+* *Select By Noise*: Select vertices based on a noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range, if this causes problems use a 'Remap By Range' node to remap between zero and one.* (Demo: *SelectionDemo/SelectByNoiseTranslateMap*, *SelectionDemo/SelectByNoiseVoronoiTranslateMap*)
+* *Select By Normal*: Selection based on a vertex's normal direction. (Demo: *SelectionDemo/SelectByNormalTranslateMap*)
+* *Select By Section*: Selection based on the sections which make up a mesh. (Demo: *SelectionDemo/SelectBySectionTranslateMap*)
 * *Select By Texture*: Use a channel from an RGB texture to select vertices.
-* *Select Facing*: Selection based on a vertex's normal direction.
-* *Select In Volume*: Simple selection based on whether a vertex is within an axis-aligned volume.
+* *Select In Volume*: Simple selection based on whether a vertex is within an axis-aligned volume. (Demo: *SelectionDemo/SelectByVolumeTranslateMap*)
 * *Select Linear*: Selection based on a gradient between two provided points.
-* *Select Near*: Select all vertices near a provided point.
-* *Select Near Line*: Select all vertices near a provided line, which can be an infinite line.
-* *Select Near Spline*: Select all vertices near a [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/).
+* *Select Near*: Select all vertices near a provided point. (Demo: *SelectionDemo/SelectNearTranslateMaterialBallMap*, *SelectionDemo/SelectNearTranslatePlaneMap*)
+* *Select Near Line*: Select all vertices near a provided line, which can be an infinite line. (Demo: *SelectionDemo/SelectNearLineTranslateMap*, *SelectionDemo/SelectNearInfiniteLineTranslateMap*)
+* *Select Near Spline*: Select all vertices near a [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/). (Demo: *SelectionDemo/SelectNearSplineMap*)
 
 ## Modifying And Combining Selections
 These aren't actually on the Mesh Deformation Component and instead are provided in a Blueprint Function Library.
@@ -121,7 +121,6 @@ All of these return a new Selection and don't modify the ones provided to them. 
 All of these transform operations can be controlled by providing an optional Selection.  While the actual use of the Selection can vary method nodes it's intended that each one uses it in the most obvious and flexible way for that node's own purpose.
 
 * *Conform*: Project all of the vertices in a provided direction as though it were being draped over other geometry in the level.  This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
-* *ConformDown*: Project all of the vertices downwards to drape over other geometry in the level.  This is a simpler and more limited version of the Conform node for the most used use.
 * *Fit To Spline*: Bend the geometry to follow a provided [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/), with controls for the profile of the geometry for more useful effects.  This is more powerful than UE4's own [Spline Mesh Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/) in that it follows an entire curve rather than just having the two control points at the ends.
 * *Inflate*: Move all of the vertices in or out along their own normals.
 * *Jitter*: Applies random position jitter to the vertices.  This is a fairly crude effect and generally you're better off using Select By Noise and Translate for greater control.
