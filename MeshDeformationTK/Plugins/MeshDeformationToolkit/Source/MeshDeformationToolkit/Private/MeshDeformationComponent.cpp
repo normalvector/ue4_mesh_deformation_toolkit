@@ -433,6 +433,7 @@ USelectionSet * UMeshDeformationComponent::SelectByNormal(
 		UE_LOG(MDTLog, Warning, TEXT("SelectFacing: No meshGeometry loaded"));
 		return nullptr;
 	}
+
 	return MeshGeometry->SelectByNormal(Facing, InnerRadiusInDegrees, OuterRadiusInDegrees);
 }
 

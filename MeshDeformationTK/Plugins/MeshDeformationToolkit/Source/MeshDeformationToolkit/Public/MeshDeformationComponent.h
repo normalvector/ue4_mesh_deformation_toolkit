@@ -229,16 +229,16 @@ public:
 	///								than this deviation from Facing will not be selected.
 	/// \return A *SelectionSet* for the selected vertices
 	UFUNCTION(
-		BlueprintPure, Category=MeshDeformationComponent,
-		meta=(
-			ToolTip="Select vertices with a given normal facing",
-			Keywords="facing vector"
+		BlueprintPure, Category = MeshDeformationComponent,
+		meta = (
+			ToolTip = "Select vertices with a given normal facing",
+			Keywords = "facing vector"
 			)
 	)
 		USelectionSet *SelectByNormal(
-			FVector Facing=FVector::UpVector,
-			float InnerRadiusInDegrees=0,
-			float OuterRadiusInDegrees=30.0f
+			FVector Facing = FVector::UpVector,
+			float InnerRadiusInDegrees = 0,
+			float OuterRadiusInDegrees = 30.0f
 		) const;
 
 	/// Select all of the vertices in a a single section by a range.  This is useful
