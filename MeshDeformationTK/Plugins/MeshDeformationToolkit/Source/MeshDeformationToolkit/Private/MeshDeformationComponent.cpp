@@ -243,6 +243,48 @@ void UMeshDeformationComponent::LerpVector(
 	MeshGeometry->LerpVector(Position, Alpha, Selection);
 }
 
+bool UMeshDeformationComponent::LoadFromMeshDeformationComponent(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	UMeshDeformationComponent *SourceMeshDeformationComponent)
+{
+	MeshDeformationComponent = this;
+
+	MeshGeometry = NewObject<UMeshGeometry>(this);
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Error, TEXT("LoadFromMeshDeformationComponent: Could not create new MeshGeometry"));
+		return false;
+	}
+
+	bool bSuccess = MeshGeometry->LoadFromMeshGeometry(SourceMeshDeformationComponent->MeshGeometry);
+	if (!bSuccess)
+	{
+		MeshGeometry = nullptr;
+	}
+	return bSuccess;
+}
+
+bool UMeshDeformationComponent::LoadFromMeshGeometry(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	UMeshGeometry *SourceMeshGeometry
+)
+{
+	MeshDeformationComponent = this;
+
+	MeshGeometry = NewObject<UMeshGeometry>(this);
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Error, TEXT("LoadFromMeshGeometry: Could not create new MeshGeometry"));
+		return false;
+	}
+
+	bool bSuccess = MeshGeometry->LoadFromMeshGeometry(SourceMeshGeometry);	if (!bSuccess)
+	{
+		MeshGeometry = nullptr;
+	}
+	return bSuccess;
+}
+
 bool UMeshDeformationComponent::LoadFromStaticMesh(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	UStaticMesh *StaticMesh,

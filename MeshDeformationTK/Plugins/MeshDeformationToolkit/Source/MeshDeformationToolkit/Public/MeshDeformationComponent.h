@@ -74,6 +74,36 @@ public:
 	##################################################
 	*/
 
+	/// Loads the geometry from another MeshDeformationComponent into this one.
+	///
+	/// This replaces any geometry currently stored and creates an independent copy which can be altered
+	/// without changing the original.
+	///
+	/// \param MeshDeformationComponent		This component (Out param, helps with method chaining)
+	/// \param SourceMeshGeometry			The MeshGeometry that we're copying
+	/// \return *True* if we can copy the geometry, *False* if not.
+	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
+		meta = (Keywords = "create mesh geometry"))
+		bool LoadFromMeshDeformationComponent(
+			UMeshDeformationComponent *&MeshDeformationComponent, 
+			UMeshDeformationComponent *SourceMeshDeformationComponent
+		);
+
+	/// Loads the geometry from a MeshGeometry into this one.
+	///
+	/// This replaces any geometry currently stored and creates an independent copy which can be altered
+	/// without changing the original.
+	///
+	/// \param MeshDeformationComponent		This component (Out param, helps with method chaining)
+	/// \param SourceMeshGeometry			The MeshGeometry that we're copying
+	/// \return *True* if we can copy the geometry, *False* if not.
+	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
+		meta = (Keywords = "create mesh geometry"))
+		bool LoadFromMeshGeometry(
+			UMeshDeformationComponent *&MeshDeformationComponent,
+			UMeshGeometry *SourceMeshGeometry
+		);
+
 	/// Loads the geometry from a static mesh
 	///
 	/// This stores the geometryin *meshGeometry* and replaces any existing

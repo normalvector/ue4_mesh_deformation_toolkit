@@ -36,7 +36,7 @@ void UMeshGeometry::Conform(
 	}
 
 	// Get the world content we're operating in
-	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
+	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
 	if (!World)
 	{
 		UE_LOG(MDTLog, Error, TEXT("Conform: Cannot access game world"));
@@ -127,7 +127,7 @@ void UMeshGeometry::ConformDown(
 	}
 
 	// Get the world content we're operating in
-	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject);
+	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
 	if (!World)
 	{
 		UE_LOG(MDTLog, Error, TEXT("Conform: Cannot access game world"));
@@ -625,6 +625,36 @@ void UMeshGeometry::LerpVector(FVector Position, float Alpha /*= 0.0*/, USelecti
 			);
 		}
 	}
+}
+bool UMeshGeometry::LoadFromMeshGeometry(UMeshGeometry *SourceMeshGeometry)
+{
+	// If there's no source geometry we have nothing to do..
+	if (!SourceMeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("LoadFromMeshGeometry: No SourceMeshGeometry provided"));
+		return false;
+	}
+
+	// Clear any existing geometry.
+	this->Sections.Empty();
+
+	// Iterate over the sections
+
+	for (auto &SourceMeshSection : SourceMeshGeometry->Sections)
+	{
+		// Create the geometry for the section
+		FSectionGeometry NewSectionGeometry = FSectionGeometry(SourceMeshSection);
+
+		// Add the finished struct to the mesh's section list
+		this->Sections.Emplace(NewSectionGeometry);
+	}
+
+	// Warn if the mesh doesn't look valid.  For now return it anyway but at least let
+	// them know..
+	CheckGeometryIsValid(TEXT("LoadFromMeshGeometry"));
+
+	// All done
+	return true;
 }
 
 bool UMeshGeometry::LoadFromStaticMesh(UStaticMesh *StaticMesh, int32 LOD /*= 0*/)

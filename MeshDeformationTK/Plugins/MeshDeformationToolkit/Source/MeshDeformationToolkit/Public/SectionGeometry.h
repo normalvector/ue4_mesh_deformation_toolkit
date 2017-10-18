@@ -61,4 +61,15 @@ struct FSectionGeometry
 		Tangents=TArray<FProcMeshTangent>();
 		VertexColors=TArray<FLinearColor>();
 	}
+
+	/// Copy constructor - copies the contents of one SectionGeometry to another
+	FSectionGeometry(const FSectionGeometry &SourceSectionGeometry) {
+		// All of the items can be simply copied using the TArray<> copy constructor
+		Vertices = TArray<FVector>(SourceSectionGeometry.Vertices);
+		Triangles = TArray<int32>(SourceSectionGeometry.Triangles);
+		Normals = TArray<FVector>(SourceSectionGeometry.Normals);
+		UVs = TArray<FVector2D>(SourceSectionGeometry.UVs);
+		Tangents = TArray<FProcMeshTangent>(SourceSectionGeometry.Tangents);
+		VertexColors = TArray<FLinearColor>(SourceSectionGeometry.VertexColors);
+	}
 };

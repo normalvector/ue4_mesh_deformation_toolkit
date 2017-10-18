@@ -13,11 +13,17 @@
 	"CanContainContent": true,
 	"IsBetaVersion": false,
 	"Installed": true,
-	"Modules": [
-		{
-			"Name": "MeshDeformationToolkit",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		}
-	]
+  "Modules": [
+    {
+      "Name": "MeshDeformationToolkit",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "ProceduralMeshComponent",
+      "Enabled":  true
+    }
+  ]
 }

@@ -47,6 +47,17 @@ public:
 	##################################################
 	*/
 
+	/// Loads the geometry from another MeshGeometry into this one.
+	///
+	/// This replaces any geometry currently stored and creates an independent copy which can be altered
+	/// without changing the original.
+	///
+	/// \param SourceMeshGeometry			The MeshGeometry that we're copying
+	/// \return *True* if we can copy the geometry, *False* if not.
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (Keywords = "create mesh geometry"))
+		bool LoadFromMeshGeometry(UMeshGeometry *SourceMeshGeometry);
+
 	/// Loads the geometry from a static mesh
 	/// 
 	/// This replaces any geometry currently stored.
