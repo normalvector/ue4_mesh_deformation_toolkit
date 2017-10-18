@@ -3,17 +3,17 @@ Full mesh deformation toolkit inside UE4, including tools (Move, Scale, Rotate, 
 
 In order to allow complex effects this supports:
 * Multiple transformations, either using the same selection set or different ones.
-* Combining selections for greater control.
+* Combining selection sets for greater control.
 * Can be extended in Blueprint to add custom transformations and selection controls.
 
-**At present this should be considered alpha quality as code needs more bullet-proofing, documentation, and any and all APIs may change**
+**At present this should be considered beta quality.  Most known bugs are fixed but I'm working on docs/demos and final tweaking before release.**
 
 # Introduction
 Any 3d artist has done mesh deformation, even if they're not familiar with the term.
 
-It's where you have some existing geometry, select some or all of the vertices, and move them about using the tools provided.
+It's where you have some existing geometry, select some or all of the points making up the model, and move them about using the tools provided.
 
-Mesh deformation isn't create or destroy geometry, and it's not changing the triangle data connecting the vertices so tearing and so on isn't supported, but it is a flexible toolset for manipulating geometry.
+Mesh deformation doesn't create or destroy geometry, and it won't change the triangle data connecting the vertices so tearing and so on isn't supported, but it is a flexible toolset for manipulating geometry.
 
 This plugin, the Mesh Deformation Toolkit (MDT for short) allows you to do this type of geometry manipulation inside of Unreal Engine via Blueprint.
 
@@ -71,7 +71,9 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 ## Load Geometry Data
 All of these nodes are provided on the Mesh Deformation Component, and also their stored geometry.
 
-* *Load From Static Mesh*: Use a StaticMesh as the source of the original geometry. (Demo: *PassthroughDemo/PassthroughMap*, and used in many others)
+* *Load From Mesh Deformation Component*: Use another MeshDeformationComponent as the source for the geometry, copying the contents.
+* *Load From Mesh Geometry*: Use a MeshGeometry
+* [Load From Static Mesh](./docs/mesh_deformation_component_nodes/load_from_static_mesh.md): Use a StaticMesh as the source of the original geometry.
 
 ## Select Vertices
 Each of these functions returns a Selection which can then be either be either modified further, or passed into any of the nodes for transforming vertices to control their behavior.
@@ -158,9 +160,6 @@ For now though I can only point you towards [a tutorial I wrote which started al
 
 # Code documentation
 All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter), and will be made available as API docs online at some point.
-
-This is a [test link to internal docs making sure GitHub works as expected](./docs/test_doc.md).
-TODO: REMOVE THIS
 
 # Thanks Go To..
 [Jordan Peck](https://github.com/Auburns) for his splendid [FastNoise](https://github.com/Auburns/FastNoise) C++ library, which is used for all of the noise generation in the plugin.
