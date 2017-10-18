@@ -56,7 +56,7 @@ public:
 	/// \return *True* if we can copy the geometry, *False* if not.
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 		meta = (Keywords = "create mesh geometry"))
-		bool LoadFromMeshGeometry(UMeshGeometry *SourceMeshGeometry);
+		bool LoadFromMeshGeometry(const UMeshGeometry *SourceMeshGeometry);
 
 	/// Loads the geometry from a static mesh
 	/// 
@@ -635,6 +635,11 @@ public:
 	If they serve as general data access they should be Pure and have a name starting with *Get*.
 	##################################################
 	*/
+
+	/// Copy a MeshGeometry object, producing an independent clone of it.
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+			  meta = (Keywords = "copy duplicate"))
+		UMeshGeometry *Clone() const;
 
 	/// Return the bounding box for all of the vertices in the mesh.
 	UFUNCTION(BlueprintPure, Category=MeshGeometry,

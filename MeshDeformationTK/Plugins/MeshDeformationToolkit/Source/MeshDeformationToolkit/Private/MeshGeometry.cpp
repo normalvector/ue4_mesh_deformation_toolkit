@@ -18,7 +18,6 @@ UMeshGeometry::UMeshGeometry()
 	Sections = TArray<FSectionGeometry>();
 }
 
-// New experimental version of Conform using line projections
 void UMeshGeometry::Conform(
 	UObject* WorldContextObject,
 	FTransform Transform,
@@ -407,6 +406,21 @@ bool UMeshGeometry::CheckGeometryIsValid(FString NodeNameForWarning) const
 	return bErrorFound;
 }
 
+UMeshGeometry * UMeshGeometry::Clone() const
+{
+	// Create a new MeshGeo with the same outer objec7t as us.
+	UMeshGeometry *NewMeshGeo = NewObject<UMeshGeometry>(this->GetOuter());
+	if (!NewMeshGeo)
+	{
+		return nullptr;
+	}
+
+	// Copy all of our sections
+	NewMeshGeo->LoadFromMeshGeometry(this);
+
+	return NewMeshGeo;
+}
+
 FBox UMeshGeometry::GetBoundingBox() const
 {
 	// Track the two corners of the bounding box
@@ -626,7 +640,7 @@ void UMeshGeometry::LerpVector(FVector Position, float Alpha /*= 0.0*/, USelecti
 		}
 	}
 }
-bool UMeshGeometry::LoadFromMeshGeometry(UMeshGeometry *SourceMeshGeometry)
+bool UMeshGeometry::LoadFromMeshGeometry(const UMeshGeometry *SourceMeshGeometry)
 {
 	// If there's no source geometry we have nothing to do..
 	if (!SourceMeshGeometry)

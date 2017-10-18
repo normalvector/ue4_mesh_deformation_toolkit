@@ -10,8 +10,11 @@ UMeshDeformationComponent::UMeshDeformationComponent()
 {
 	// This component can never tick, it doesn't update itself.
 	PrimaryComponentTick.bCanEverTick = false;
+}
 
-	// ...
+UMeshGeometry * UMeshDeformationComponent::CloneMeshGeometry()
+{
+	return this->MeshGeometry->Clone();
 }
 
 void UMeshDeformationComponent::Conform(

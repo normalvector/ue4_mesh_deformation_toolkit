@@ -895,6 +895,15 @@ public:
 	##################################################
 	*/
 
+	/// Return an independent copy of the MeshGeo inside this component
+	UFUNCTION(
+		BlueprintPure, Category = MeshDeformationComponent,
+		meta = (
+		ToolTip = "Return an independent copy of the MeshGeo inside this component"
+	)
+	)
+		UMeshGeometry *CloneMeshGeometry();
+
 	/// Return a boolean indicating if we have geometry loaded.
 	UFUNCTION(
 		BlueprintPure, Category = MeshDeformationComponent,
