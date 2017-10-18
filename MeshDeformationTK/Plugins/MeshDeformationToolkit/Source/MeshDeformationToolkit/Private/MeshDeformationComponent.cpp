@@ -336,7 +336,9 @@ void UMeshDeformationComponent::RotateAroundAxis(UMeshDeformationComponent *&Mes
 bool UMeshDeformationComponent::SaveToProceduralMeshComponent(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	UProceduralMeshComponent *ProceduralMeshComponent,
-	bool bCreateCollision)
+	bool bCreateCollision,
+	TArray <UMaterialInterface *> Materials
+	)
 {
 	MeshDeformationComponent = this;
 
@@ -346,7 +348,16 @@ bool UMeshDeformationComponent::SaveToProceduralMeshComponent(
 		return false;
 	}
 
-	return MeshGeometry->SaveToProceduralMeshComponent(ProceduralMeshComponent, bCreateCollision);
+	bool bSuccess = MeshGeometry->SaveToProceduralMeshComponent(ProceduralMeshComponent, bCreateCollision);
+	if (!bSuccess) {
+		return bSuccess;
+	}
+
+	for (int MaterialIndex = 0; MaterialIndex < Materials.Num(); ++MaterialIndex) {
+		ProceduralMeshComponent->SetMaterial(MaterialIndex, Materials[MaterialIndex]);
+	}
+
+	return bSuccess;
 }
 
 bool UMeshDeformationComponent::SaveToStaticMesh(

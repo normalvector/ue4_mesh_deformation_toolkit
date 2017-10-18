@@ -845,18 +845,21 @@ public:
 	/// \param MeshDeformationComponent		This component (Out param, helps with method chaining)
 	/// \param ProceduralMeshComponent		The target *ProceduralMeshComponent
 	/// \param bCreateCollision				Whether to create a collision shape for it
+	/// \param Materials					An optional array of materials to apply to the PMC after copy
 	/// \return *True* if the update was successful, *False* if not
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta=(
 			ToolTip="Save the current geometry to a ProceduralMeshComponent, replacing any existing geometry",
-			Keywords="pmc output write"
+			Keywords="pmc output write",
+			AutoCreateRefTerm = "Materials"
 			)
 	)
 		bool SaveToProceduralMeshComponent(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			UProceduralMeshComponent *ProceduralMeshComponent,
-			bool bCreateCollision
+			bool bCreateCollision,
+			TArray <UMaterialInterface *> Materials
 		);
 
 	/// Save the current geometry to a *StaticMesh*, replacing the geometry in the
