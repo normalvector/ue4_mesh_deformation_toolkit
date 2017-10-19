@@ -162,7 +162,8 @@ For now though I can only point you towards [a tutorial I wrote which started al
 All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter), and will be made available as API docs online at some point.
 
 # Thanks Go To..
-[Jordan Peck](https://github.com/Auburns) for his splendid [FastNoise](https://github.com/Auburns/FastNoise) C++ library, which is used for all of the noise generation in the plugin.
+* [Jordan Peck](https://github.com/Auburns) for his splendid [FastNoise](https://github.com/Auburns/FastNoise) C++ library, which is used for all of the noise generation in the plugin.
+* [NASA](https://www.nasa.gov/) for the height map used in the "Small World" demo, and generally being too nifty for words.
 
 # ToDo List
 The ToDo list for this project is on [Trello](https://trello.com/b/eWCcepmW/mesh-deformation-component).
