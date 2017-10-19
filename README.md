@@ -65,7 +65,7 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 2. *Select Vertices*.  While we can do some useful operations on every vertex that makes up the mesh the ability to only change parts of the mesh is much more powerful, and for that we need to select the vertices to control the operation.  These selections aren't limited to a simple yes/no, it's possible to have vertices which are partially selected to allow an operation to be applied at varying strengths on different parts of the mesh.
 3. *Modifying And Combining Selections*.  For even greater control over which parts of the mesh we're affecting it's possible to take selections and alter them to get the exact control needed.
 4. *Transforming Vertices*.  The actual deformations, whether we're moving and rotating points or something stranger this is where the actual work of changing the geometry happens.
-5. *Output Data*.  There's no point in changing the geometry if we then don't do something with it and these nodes are where that happens.
+5. *Save Data*.  There's no point in changing the geometry if we then don't do something with it and these nodes are where that happens.
 6. *Utility*.  This is everything else, including tools which allow you to build your own selection and transform tools.
 
 ## Load Geometry Data
@@ -97,47 +97,35 @@ These aren't actually on the Mesh Deformation Component and instead are provided
 
 All of these return a new Selection and don't modify the ones provided to them.  The short descriptions below are often phrased as though they do but this is because writing 'Return a Selection which is the provided Selection' in each one would make them a lot harder to read.
 
-* *Clamp (SelectionSet)*: Clamp all values in a SelectionSet to the minimum and maximum provided.
-* *Ease*: Remaps a selection by applying a configurable easing function to each value.  Useful for taking the linear fall-off from a selection and turning it into something smoother and more natural looking.
-* *Float - Selection*: Subtract all value in a selection from a constant value, providing a simple reverse and remap.
-* *Float / Selection*: Divide a constant value by all values in a selection.
-* *Lerp (Selection, Float, Float)*: Blends a Selection between its original value and a constant value with a set strength.
-* *Lerp (Selection, Float, Selection)*: Blends a Selection between its original value and a constant value with a strength controlled by a second Selection.
-* *Lerp (Selection, Selection, Float)*: Blend two Selections together with a given strength.
-* *Lerp (Selection, Selection, Selection)*: Blend two Selections together with a strength controlled by a third Selection.
-* *Max (Selection, Float)*: Make sure all values in a Selection are at least equal to a given value.
-* *Max (Selection, Selection)*: Combine two Selections together by taking the maximum value from each one of them.
-* *Min (Selection, Float)*: Make sure all values in a Selection are at most equal to a given value.
-* *Min (Selection, Selection)*: Combined two Selections together by taking the mium value from each of them.
-* *Randomize (Selection, Float, Float)*: Randomize the values in a Selection between the minimum and maximum values provided.
-* *Remap To Curve (Selection, Curve)*:
-* *Remap To Range (Selection, Float, Float)*: Remaps a selection between the minimum and maximum values provided.
-* *SelectionSet + Float*: Adds the given value to all values in a Selection.
-* *Selection + Selection*: Combine two Selections together by adding their values.
-* *Selection - Float*: Subtract a given value from all values in a Selection.
-* *Selection - Selection*: Combine two Selections by subtracting all values in the second Selection from the values in the first Selection.
-* *Selection * Float*: Multiply all values in a Selection by a given value.
-* *Selection * Selection*: Combine two Selections by multiplying their values.
-* *Selection / Float*: Divide all of the values in a Selection by the given value.
-* *Selection / Selection*: Combine two Selections by dividing all the values from the first Selection by those of the second Selection.
-* *Set (Selection, Float)*: Sets all values in a Selection to the given value.
+* **SelectionSet + Float**: Add a constant Float to all values of a SelectionSet.
+* **SelectionSet + SelectionSet**: Add two SelectionSets together.
+* **Clamp (SelectionSet)**: Clamp all values in a SelectionSet to the minimum and maximum provided.
+* **Float / SelectionSet**: Divides a float by all the values in a SelectionSet.
+* **SeletionSet / Float**: Divide the values in a SelectionSet by a float.
+* **SelectionSet / SelectionSet**: Divide the weights from one SelectionSet by another.
+* **Ease (SelectionSet)**: Ease a SelectionSet using a user supplied easing function.  This is useful for tacking the linear fall-off from a selection and turning it into something smoother and more natural-looking.
+* **Lerp (SelectionSet, Float)**: Blend a SelectionSet against a float.
+* **Lerp (SelectionSet, SelectionSet) with Float**: Blend two SelectionSets together using a given alpha.
+* **Lerp (SelectionSet, SelectionSet) with SelectionSet**: Blend two SelectionSets together with alphas taken from a third SelectionSet.
+* **Max (SelectionSet, Float)**: Return the maximum of a SelectionSet and a float.
+* **Max (SelectionSet, SelectionSet)**: Return the maximum values from two SelectionSets.
+* **Min (SelectionSet, Float)**: Return the minimum of a SelectionSet and a float.
+* **Min (SelectionSet, SelectionSet)**: Return the minimum values from two SelectionSets.
+* **SelectionSet * Float**: Multiply the values in a SelectionSet by a float.
+* **SelectionSet * SelectionSet**: Multiplies the values from two SelectionSets.
+* **OneMinus (SelectionSet)**: Return 1-SelectionSet.  If the SelectionSet is in the 0-1 range this will reverse it.
+* **Power (SelectionSet, Float)**: Return a SelectionSet raised to the Exp-th power.
+* **Randomize (SelectionSet)**: Randomizes a SelectionSet's values between two limits.
+* **RemapToCure (SelectionSet, Float Curve)**: Remap the values of a SelectionSet to a Float Curve.
+* **RemapToRange (SelectionSet)**: Remap a SelectionSet to the min/max provided.
+* **RemapRipple (SelectionSet)**: Remap a SelectionSet by 'rippling' it, adding repetitions and optionally converting it to an 'up-down'' pattern.
+* **Set (SelectionSet)**: Set all values in a SelectionSet to the value provided.
+* **SelectionSet - Float**: Subtract a float from all the values in a SelectionSet.
+* **Float - SelectionSet**: Subtract the values in a SelectionSet from a Float, providing a simple reverse and remap.
+* **SelectionSet - SelectionSet**: Subtract the values in a SelectionSet from another SelectionSet.
 
 ## Transforming Vertices
 All of these transform operations can be controlled by providing an optional Selection.  While the actual use of the Selection can vary method nodes it's intended that each one uses it in the most obvious and flexible way for that node's own purpose.
-
-MDC		Yes	Yes
-MDC	Inflate	Yes	Yes
-MDC	Jitter	Yes	Yes
-MDC	Lerp	Yes	Yes
-MDC	Lerp Vector	Yes	Yes
-MDC	Rotate	Yes	Yes
-MDC	Rotate Around Axis	Yes	Yes
-MDC	Scale	Yes	Yes
-MDC	ScaleAlongAxis	Yes	Yes
-MDC	Spherize	Yes	Yes
-MDC	Transform	Yes	Yes
-MDC	Transform UV	Yes	Yes
-MDC	Translate	Yes	Yes
 
 * **Conform**: Conforms the mesh against collision geometry by projecting along a specified vector. This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
 * **Conform Down**: Conforms the mesh against collision geometry by projecting downwards (-Z). This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
@@ -157,16 +145,23 @@ MDC	Translate	Yes	Yes
 * **Transform UV**: Apply a [transformation](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Transform/index.html) to the UV mapping, changing the way textures will be mapped
 * **Translate**: Move all vertices by the provided vector.
 
-## Output Data
-* *Save To Procedural Mesh Component*: Write the geometry data to a standard UE4 [Procedural Mesh Component](https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started).
+## Save Data
+These nodes take the deformed geometry that is built and save them out to another part of UE4.
+
+* **Save to Procedural Mesh Component**: Save the current geometry to a [Procedural Mesh Component](https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started), replacing any existing geometry .
+* **Save to Static Mesh**: Save the current geometry to a [StaticMesh](https://docs.unrealengine.com/latest/INT/Engine/Content/Types/StaticMeshes/), replacing any existing content.  This allows the 'baking' of deformations to a form which don't rely on the MDT plugin anyway, and will only work inside the Editor as it relies on systems which aren't included when a project is built.
 
 ## Utility
 
-* *Get Bounding Box*: Return the bounds of the mesh as a [Box](https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Math/FBox/index.html) which.
-* *Get Summary*: A simple text string summary of how many sections, vertices and triangles are in the current geometry.
-* *Has Geometry*: Returns whether we have any geometry loaded or not
-* *Get Total Triangle Count*: Return the total number of triangles in the mesh.
-* *Get Total Vertex Count*: Return the total number of vertices in the mesh.
+* **Clone** [MeshGeometry only]: Return an independant copy of a MeshGeometry object.
+* **Clone Mesh Geometry** [MDC]: Return an independent copy of the MeshGeometry inside this component.  Calls *Clone* but has a different name as here we're only copying an item inside the component instead of the entire component.
+* **Has Geometry** [MDC only]: Check if we have geometry loaded
+* **Get Bounding Box**: Get the bounding box for the mesh as a [Box](https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Math/FBox/index.html).
+* **Get Radius** [MeshGeometry only]: Return the radius of the mesh (Distance from the origin to the furthest vertex, safe bounding sphere radius).  This is not available on MeshDeformationComponent as it would confuse matters as to whether it includes any scaling.
+* **Get Summary**: Get a brief text description of the mesh, eg. *'4 sections, 1000 vertices, 500 triangles'*.
+* **Get Total Triangle Count**: Returns the number of triangles in the mesh.
+* **Get Total Vertex Count**: Returns the number of vertices in the mesh.
+* **Size** [Called on SelectionSet]:Return the number of weights in this SelectionSet
 
 # How It Works
 When everything is working and finished I will be taking the time to document how exactly this plugin works, including how you can extend it yourself by writing new selection/transform nodes either in C++ or Blueprint.
@@ -178,8 +173,10 @@ For now though I can only point you towards [a tutorial I wrote which started al
 * Every Transform node is actually currently implemented as a method on the mesh geometry which iterates over the vertices in the mesh and applies the transformation to each of them in order.  Selections are handled by basically acting as a lerp between the original position and the fully transformed position, although the nature of the lerp can vary between methods (Translate has a straightfoward spatial lerp, but Rotate actually lerps the rotational angle for better results).  Most of these are implemented in a Blueprint Library class as they're utility functions rather than being called on a class.
 * The MeshDeformationComponent itself just contains a set of mesh geometry and offers BP-callable selection and transform nodes which just delegate the call to the mesh.
 
-# Code documentation
+# Code documentation and quality
 All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter), and will be made available as API docs online at some point.
+
+The demo contents have been arranged to match [Allar's Gamemakin UE4 Style Guide](https://github.com/Allar/ue4-style-guide) using the [Linter tool](https://www.unrealengine.com/marketplace/linter) available from the UE4 Marketplace.  The Linter is not needed to use the Mesh Deformation Toolkit however, it's only used by myself to find potential problems.
 
 # Thanks Go To..
 * [Jordan Peck](https://github.com/Auburns) for his splendid [FastNoise](https://github.com/Auburns/FastNoise) C++ library, which is used for all of the noise generation in the plugin.

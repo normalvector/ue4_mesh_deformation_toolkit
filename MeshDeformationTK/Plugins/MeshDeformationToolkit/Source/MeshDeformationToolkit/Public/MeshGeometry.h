@@ -798,7 +798,7 @@ public:
 	/// \return A text summary
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 		meta = (
-			ToolTip = "Get a brief text description of the mesh, eg. '4 sections, 1000 vertices, 500 triangles'",
+			ToolTip = "Returns a brief text description of the mesh, eg. '4 sections, 1000 vertices, 500 triangles'",
 			Keywords = "info string verts points tris polys faces sections mesh"
 			)
 	)
@@ -811,7 +811,7 @@ public:
 	/// \return The total triangle count
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 		meta = (
-			ToolTip = "Get the number of triangles in the mesh",
+			ToolTip = "Returns the number of triangles in the mesh",
 			Keywords = "tris polys polygons faces"
 			)
 	)
@@ -824,7 +824,7 @@ public:
 	/// \return The total vertex count
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 		meta = (
-			ToolTip = "Get the number of vertices in the mesh",
+			ToolTip = "Returns the number of vertices in the mesh",
 			Keywords = "verts points"
 			)
 	)

@@ -4,7 +4,7 @@
 
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "SelectionSet.h"
-#include "Utility.h"L:\GitRepos\ue4_mesh_deformation_toolkit\notes.md
+#include "Utility.h"
 #include "SelectionSetBPLibrary.generated.h"
 
 
@@ -47,7 +47,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet + SelectionSet",
 			CompactNodeTitle="+",
-			ToolTip="[SelectionSet + SelectionSet] Add two SelectionSets together",
+			ToolTip="[SelectionSet + SelectionSet] ",
 			Keywords="+ add plus",
 			CommutativeAssociativeBinaryOperator="true",
 			Category="Math|SelectionSet"
@@ -236,7 +236,7 @@ public:
 		meta=(
 			DisplayName="Max (SelectionSet, SelectionSet)",
 			CompactNodeTitle="Max",
-			ToolTip="[Max (SelectionSet, SelectionSet)] Return the maximum of two SelectionSets",
+			ToolTip="[Max (SelectionSet, SelectionSet)] Return the maximum values from two SelectionSets",
 			Category="Math|SelectionSet",
 			Keywords="limit"
 		)
@@ -272,10 +272,10 @@ public:
 	/// \return The SelectionSet with the minimum values from A and B
 	UFUNCTION(
 		BlueprintPure,
-		meta=(
-			DisplayName="Min (SelectionSet, SelectionSet)",
-			CompactNodeTitle="Min",
-			ToolTip="[Min (SelectionSet, SelectionSet)] Return the minimum of two SelectionSets",
+		meta = (
+			DisplayName = "Min (SelectionSet, SelectionSet)",
+			CompactNodeTitle = "Min",
+			ToolTip = "[Min (SelectionSet, SelectionSet)] Return the minimum values from two SelectionSets",
 			Category="Math|SelectionSet",
 			Keywords="limit"
 		)
@@ -310,7 +310,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet * SelectionSet",
 			CompactNodeTitle="*",
-			ToolTip="[SelectionSet * SelectionSet] Multiplies the values of two SelectionSets",
+			ToolTip="[SelectionSet * SelectionSet] Multiplies the values from two SelectionSets",
 			Keywords="* multiply times",
 			CommutativeAssociativeBinaryOperator="true",
 			Category="Math|SelectionSet"
@@ -476,7 +476,7 @@ public:
 			DisplayName="Float - SelectionSet",
 			CompactNodeTitle="-",
 			ToolTip="[Float - SelectionSet] Subtract the values in a SelectionSet from a Float",
-			Keywords="+ add plus",
+			Keywords = "- subtract minus",
 			Category="Math|SelectionSet"
 		)
 	)
@@ -493,7 +493,7 @@ public:
 			DisplayName="SelectionSet - SelectionSet",
 			CompactNodeTitle="-",
 			ToolTip="[SelectionSet - SelectionSet] Subtract the values in a SelectionSet from another SelectionSet",
-			Keywords="+ add plus",
+			Keywords = "- subtract minus",
 			Category="Math|SelectionSet"
 		)
 	)
