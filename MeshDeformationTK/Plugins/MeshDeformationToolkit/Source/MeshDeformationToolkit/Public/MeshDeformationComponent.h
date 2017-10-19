@@ -83,7 +83,10 @@ public:
 	/// \param SourceMeshGeometry			The MeshGeometry that we're copying
 	/// \return *True* if we can copy the geometry, *False* if not.
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
-		meta = (Keywords = "create mesh geometry"))
+		meta = (
+			ToolTip = "Load the geometry from a StaticMesh, replacing anything currently stored",
+			Keywords = "create mesh geometry"
+			))
 		bool LoadFromMeshDeformationComponent(
 			UMeshDeformationComponent *&MeshDeformationComponent, 
 			UMeshDeformationComponent *SourceMeshDeformationComponent
@@ -98,7 +101,10 @@ public:
 	/// \param SourceMeshGeometry			The MeshGeometry that we're copying
 	/// \return *True* if we can copy the geometry, *False* if not.
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
-		meta = (Keywords = "create mesh geometry"))
+		meta = (
+			ToolTip = "Load the geometry stored in a MeshGeometry object, replacing anything currently stored",
+			Keywords = "create mesh geometry"
+			))
 		bool LoadFromMeshGeometry(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			UMeshGeometry *SourceMeshGeometry
@@ -141,7 +147,8 @@ public:
 	UFUNCTION(
 		BlueprintPure, Category=MeshDeformationComponent,
 		meta=(
-			ToolTip="Selects all of the vertices at full strength"
+			ToolTip="Selects all of the vertices at full strength",
+			Keywords="everything"
 			)
 	)
 		USelectionSet *SelectAll() const;
@@ -167,7 +174,7 @@ public:
 	UFUNCTION(
 		BlueprintPure, Category=MeshDeformationComponent,
 		meta=(
-			ToolTip="Select vertices based on a configurable noise function",
+			ToolTip="Select vertices based on a configurable noise function, useful for terrain or adding controlled randomness to a model",
 			Keywords="random fastnoise perlin fractal terrain",
 			AutoCreateRefTerm="Transform"
 			)
@@ -185,13 +192,35 @@ public:
 			ECellularDistanceFunction CellularDistanceFunction=ECellularDistanceFunction::Euclidian
 		) const;
 
+	/// Selects vertices with a given normal facing
+	///
+	/// This does a smooth linear selection based on the angle from the specified normal direction.
+	/// \param Facing		The facing to select, in world space
+	/// \param InnerRadiusInDegrees	The inner radius in degrees, all vertices with a normal within
+	///								this deviation from Facing will be selected at full strength.
+	/// \param OuterRadiusInDegrees	The outer radius in degrees, all vertices with a normal greater
+	///								than this deviation from Facing will not be selected.
+	/// \return A *SelectionSet* for the selected vertices
+	UFUNCTION(
+		BlueprintPure, Category = MeshDeformationComponent,
+		meta = (
+			ToolTip = "Select vertices with a given normal facing",
+			Keywords = "facing vector direction"
+			)
+	)
+		USelectionSet *SelectByNormal(
+			FVector Facing = FVector::UpVector,
+			float InnerRadiusInDegrees = 0,
+			float OuterRadiusInDegrees = 30.0f
+		) const;
+
 	/// Select all of the vertices which go to make up one of the Sections that a mesh
 	/// can consist of.  This can be thought of as the same as a Material slot for many
 	/// uses.
 	///
 	/// \param SectionIndex
 	UFUNCTION(
-		BlueprintPure, Category=MeshGeometry,
+		BlueprintPure, Category= MeshDeformationComponent,
 		meta=(
 			ToolTip="Select all of the vertices in one of the Sections making up a mesh",
 			Keywords="material geometry"
@@ -219,28 +248,6 @@ public:
 			ETextureChannel TextureChannel=ETextureChannel::Red
 		) const;
 
-	/// Selects vertices with a given normal facing
-	///
-	/// This does a smooth linear selection based on the angle from the specified normal direction.
-	/// \param Facing		The facing to select, in world space
-	/// \param InnerRadiusInDegrees	The inner radius in degrees, all vertices with a normal within
-	///								this deviation from Facing will be selected at full strength.
-	/// \param OuterRadiusInDegrees	The outer radius in degrees, all vertices with a normal greater
-	///								than this deviation from Facing will not be selected.
-	/// \return A *SelectionSet* for the selected vertices
-	UFUNCTION(
-		BlueprintPure, Category = MeshDeformationComponent,
-		meta = (
-			ToolTip = "Select vertices with a given normal facing",
-			Keywords = "facing vector"
-			)
-	)
-		USelectionSet *SelectByNormal(
-			FVector Facing = FVector::UpVector,
-			float InnerRadiusInDegrees = 0,
-			float OuterRadiusInDegrees = 30.0f
-		) const;
-
 	/// Select all of the vertices in a a single section by a range.  This is useful
 	/// when you know the vertex ordering of an item.
 	///
@@ -250,7 +257,10 @@ public:
 	///							vertex, 3=Every 3 vertices and so on.
 	/// \param SectionIndex		The ID of the section we're taking the range from
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
-			  meta = (Keywords = "for section"))
+			  meta = (
+				  ToolTip = "Select vertices based on their index in the mesh",
+				  Keywords = "for section"
+				))
 		USelectionSet *SelectByVertexRange(
 			int32 RangeStart,
 			int32 RangeEnd,
@@ -282,7 +292,7 @@ public:
 	UFUNCTION(
 		BlueprintPure, Category=MeshDeformationComponent,
 		meta=(
-			ToolTip="Select vertices linearly between two points",
+			ToolTip="Select vertices with strength blended linearly between two points",
 			Keywords="gradient between"
 			)
 	)
@@ -333,7 +343,7 @@ public:
 			ToolTip="Select vertices near a line with the provided start/end points",
 			Keywords="infinite"
 			)
-	)
+		)
 		USelectionSet *SelectNearLine(
 			FVector LineStart,
 			FVector LineEnd,
@@ -400,12 +410,11 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta = (
-			ToolTip="Conforms the mesh against collision geometry by projecting",
+			ToolTip="Conforms the mesh against collision geometry by projecting along a specified vector",
 			Keywords = "drop drape cloth collision soft trace",
 			AutoCreateRefTerm="IgnoredActors",
 			WorldContext="WorldContextObject"
 			)
-
 	)
 		void Conform(
 			UMeshDeformationComponent *&MeshDeformationComponent,
@@ -556,7 +565,7 @@ public:
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta = (
 			ToolTip = "Move vertices a specified offset along their own normals",
-			Keywords = "normal"
+			Keywords = "normal swell grow shrink"
 			)
 	)
 		void Inflate(
@@ -582,7 +591,7 @@ public:
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta=(
 			ToolTip="Add random jitter to the position of the vertices",
-			Keywords="random position"
+			Keywords="random position shake judder"
 			)
 	)
 		void Jitter(
@@ -624,7 +633,7 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (
-			ToolTip="A linear interpolate pulling/pushing vertices relative to the position provided",
+			ToolTip="A linear interpolate blending vertices towards the position provided",
 			Keywords = "blend linear interpolate alpha pull push"
 			)
 	)
@@ -692,8 +701,8 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta=(
-			ToolTip="Scale the mesh about a specified center",
-			Keywords="size"
+			ToolTip="Scale the mesh using normal XYZ scaling about a specified center",
+			Keywords="size grow shrink"
 			)
 	)
 		void Scale(
@@ -720,7 +729,7 @@ public:
 		Category=MeshDeformationComponent,
 		meta=(
 			ToolTip="Scale along an arbitrary axis",
-			Keywords="size"
+			Keywords="size grow shrink"
 			)
 	)
 		void ScaleAlongAxis(
@@ -769,9 +778,9 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (
-		ToolTip = "Applies Scale/Rotate/Translate as a single operation using a Transform",
-		Keywords = "move scale size rotate"
-	)
+			ToolTip = "Applies Scale/Rotate/Translate as a single operation using a Transform",
+			Keywords = "move scale size rotate"
+			)
 	)
 		void Transform(
 			UMeshDeformationComponent *&MeshDeformationComponent,
@@ -793,9 +802,10 @@ public:
 		UFUNCTION(
 			BlueprintCallable, Category = MeshDeformationComponent,
 			meta = (
-			DisplayName = "Transform UV",
-			Keywords = "texture coordinates"
-		)
+				DisplayName = "Transform UV",
+				ToolTip="Apply a transformation to the UV, changing the way textures will be mapped",
+				Keywords = "texture coordinates"
+				)
 		)
 		void TransformUV(
 			UMeshDeformationComponent *&MeshDeformationComponent,
@@ -899,8 +909,8 @@ public:
 	UFUNCTION(
 		BlueprintPure, Category = MeshDeformationComponent,
 		meta = (
-		ToolTip = "Return an independent copy of the MeshGeo inside this component"
-	)
+			ToolTip = "Return an independent copy of the MeshGeometry inside this component"
+			)
 	)
 		UMeshGeometry *CloneMeshGeometry();
 
@@ -908,7 +918,7 @@ public:
 	UFUNCTION(
 		BlueprintPure, Category = MeshDeformationComponent,
 		meta = (
-			ToolTip="Do we have geometry loaded?"
+			ToolTip="Check if we have geometry loaded"
 			)
 	)
 		bool HasGeometry();
@@ -931,7 +941,7 @@ public:
 	UFUNCTION(
 		BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 		meta = (
-			ToolTip = "Get a brief description of the mesh, eg. '4 sections, 1000 vertices, 500 triangles'",
+			ToolTip = "Get a brief text description of the mesh, eg. '4 sections, 1000 vertices, 500 triangles'",
 			Keywords="info string verts points tris polys faces sections mesh"
 			)
 	)

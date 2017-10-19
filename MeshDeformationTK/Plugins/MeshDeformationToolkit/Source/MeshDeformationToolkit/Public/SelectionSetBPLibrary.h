@@ -29,7 +29,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet + Float",
 			CompactNodeTitle = "+",
-			ToolTip = "Add a constant Float to all values of a SelectionSet",
+			ToolTip = "[SelectionSet + Float] Add a constant Float to all values of a SelectionSet",
 			Keywords="+ add plus",
 			CommutativeAssociativeBinaryOperator="true",
 			Category="Math|SelectionSet"
@@ -47,7 +47,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet + SelectionSet",
 			CompactNodeTitle="+",
-			ToolTip="Add two SelectionSets together",
+			ToolTip="[SelectionSet + SelectionSet] Add two SelectionSets together",
 			Keywords="+ add plus",
 			CommutativeAssociativeBinaryOperator="true",
 			Category="Math|SelectionSet"
@@ -66,7 +66,7 @@ public:
 		meta=(
 			DisplayName="Clamp (SelectionSet)",
 			CompactNodeTitle="Clamp",
-			ToopTip="Clamp all values in a SelectionSet to the minimum and maximum provided",
+			ToolTip="[Clamp (SelectionSet)] Clamp all values in a SelectionSet to the minimum and maximum provided",
 			Category="Math|SelectionSet",
 			Keywords="limit mix max range"
 		)
@@ -83,7 +83,7 @@ public:
 		meta = (
 			DisplayName = "Float / SelectionSet",
 			CompactNodeTitle = "/",
-			ToolTip="Divides a float by all the values in a SelectionSet",
+			ToolTip="[Float / SelectionSet] Divides a float by all the values in a SelectionSet",
 			Keywords = "/ divide division",
 			Category = "Math|SelectionSet"
 		)
@@ -100,7 +100,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet / Float",
 			CompactNodeTitle="/",
-			ToolTip="Divide the values in a SelectionSet by a float",
+			ToolTip="[SelectionSet / Float] Divide the values in a SelectionSet by a float",
 			Keywords="/ divide division",
 			Category="Math|SelectionSet"
 		)
@@ -117,7 +117,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet / SelectionSet",
 			CompactNodeTitle="/",
-			ToolTip="Divide the weights from one SelectionSet by another",
+			ToolTip="[SelectionSet / SelectionSet] Divide the weights from one SelectionSet by another",
 			Keywords="/ divide division",
 			Category="Math|SelectionSet"
 		)
@@ -136,7 +136,7 @@ public:
 		meta=(
 			DisplayName="Ease (SelectionSet)",
 			CompactNodeTitle="Ease",
-			ToolTip="Interpolate two SelectionSets using a user supplied easing function",
+			ToolTip="[Ease (SelectionSet)] Ease a SelectionSet using a user supplied easing function",
 			Category="Math|SelectionSet", Keywords="remap easing smooth in out falloff gradient"
 		)
 	)
@@ -158,7 +158,7 @@ public:
 		meta=(
 			DisplayName="Lerp (SelectionSet, Float)",
 			CompactNodeTitle="Lerp",
-			ToolTip="Use linear selection to blend a SelectionSet with a float",
+			ToolTip="[Lerp (SelectionSet, Float)] Blend a SelectionSet against a float",
 			Category="Math|SelectionSet",
 			Keywords="blend linear interpolate alpha"
 		)
@@ -175,7 +175,7 @@ public:
 		meta=(
 			DisplayName="Lerp(SelectionSet, SelectionSet) with Float",
 			CompactNodeTitle = "Lerp",
-			ToolTip="Blend two SelectionSets together with a given alpha",
+			ToolTip="[Lerp(SelectionSet, SelectionSet) with Float] Blend two SelectionSets together using a given alpha",
 			Category="Math|SelectionSet",
 			Keywords="blend linear interpolate alpha"
 		)
@@ -193,7 +193,7 @@ public:
 		meta = (
 			DisplayName = "Lerp(SelectionSet, SelectionSet) with SelectionSet",
 			CompactNodeTitle = "Lerp",
-			ToolTip="Blend two SelectionSets together with alphas from a third SelectionSet",
+			ToolTip="[Lerp(SelectionSet, SelectionSet) with SelectionSet] Blend two SelectionSets together with alphas taken from a third SelectionSet",
 			Category = "Math|SelectionSet",
 			Keywords = "blend linear interpolate alpha"
 		)
@@ -217,7 +217,7 @@ public:
 		meta=(
 			DisplayName="Max (SelectionSet, Float)",
 			CompactNodeTitle="Max",
-			ToolTip="Return the maximum of a SelectionSet and a float",
+			ToolTip="[Max (SelectionSet, Float)] Return the maximum of a SelectionSet and a float",
 			Category="Math|SelectionSet",
 			Keywords="limit"
 		)
@@ -236,7 +236,7 @@ public:
 		meta=(
 			DisplayName="Max (SelectionSet, SelectionSet)",
 			CompactNodeTitle="Max",
-			ToolTip="Return the maximum of two SelectionSets",
+			ToolTip="[Max (SelectionSet, SelectionSet)] Return the maximum of two SelectionSets",
 			Category="Math|SelectionSet",
 			Keywords="limit"
 		)
@@ -256,7 +256,7 @@ public:
 		meta=(
 			DisplayName="Min (SelectionSet, Float)",
 			CompactNodeTitle="Min",
-			ToolTip="Return the minimum of a SelectionSet and a float",
+			ToolTip="[Min (SelectionSet, Float)] Return the minimum of a SelectionSet and a float",
 			Category="Math|SelectionSet",
 			Keywords="limit"
 		)
@@ -275,7 +275,7 @@ public:
 		meta=(
 			DisplayName="Min (SelectionSet, SelectionSet)",
 			CompactNodeTitle="Min",
-			ToolTip="Return the minimum of two SelectionSets",
+			ToolTip="[Min (SelectionSet, SelectionSet)] Return the minimum of two SelectionSets",
 			Category="Math|SelectionSet",
 			Keywords="limit"
 		)
@@ -292,7 +292,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet * Float",
 			CompactNodeTitle="*",
-			ToolTip="Multiply the values in a SelectionSet by a float",
+			ToolTip="[SelectionSet * Float] Multiply the values in a SelectionSet by a float",
 			Keywords="* multiply times",
 			CommutativeAssociativeBinaryOperator="true",
 			Category="Math|SelectionSet"
@@ -310,7 +310,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet * SelectionSet",
 			CompactNodeTitle="*",
-			ToolTip="Multiplies the values of two SelectionSets",
+			ToolTip="[SelectionSet * SelectionSet] Multiplies the values of two SelectionSets",
 			Keywords="* multiply times",
 			CommutativeAssociativeBinaryOperator="true",
 			Category="Math|SelectionSet"
@@ -329,7 +329,7 @@ public:
 		meta=(
 			DisplayName="OneMinus (SelectionSet)",
 			CompactNodeTitle="OneMinus",
-			ToolTip="Return 1-SelectionSet.  If the SelectionSet is in the 0-1 range this will reverse it",
+			ToolTip="[OneMinus (SelectionSet)] Return 1-SelectionSet.  If the SelectionSet is in the 0-1 range this will reverse it",
 			Category="Math|SelectionSet",
 			Keywords="oneminus minus - negate subtrace take invert reverse")
 	)
@@ -347,7 +347,7 @@ public:
 		meta = (
 		DisplayName = "Power (SelectionSet, Float)",
 		CompactNodeTitle = "Power",
-		ToolTip = "Return a SelectionSet raised to the Exp-th power",
+		ToolTip = "[Power (SelectionSet, Float)] Return a SelectionSet raised to the Exp-th power",
 		Keywords = "exponont",
 		Category = "Math|SelectionSet"
 	)
@@ -366,7 +366,7 @@ public:
 		meta=(
 			DisplayName="Randomize (SelectionSet)",
 			CompactNodeTitle="Randomize",
-			ToolTip="Randomizes a SelectionSet's values between two limits",
+			ToolTip="[Randomize (SelectionSet)] Randomizes a SelectionSet's values between two limits",
 			Category="Math|SelectionSet"
 		)
 	)
@@ -385,7 +385,7 @@ public:
 		meta=(
 			DisplayName="RemapToCurve (SelectionSet, Float Curve)",
 			CompactNodeTitle="RemapToCurve",
-			ToolTip="Remap the values of a SelectionSet to a Float Curve",
+			ToolTip="[RemapToCurve (SelectionSet, Float Curve)] Remap the values of a SelectionSet to a Float Curve",
 			Category="Math|SelectionSet"
 		)
 	)
@@ -407,7 +407,7 @@ public:
 		BlueprintPure,
 		meta=(
 			DisplayName="RemapToRange (SelectionSet)",
-			ToolTip="Remap a SelectionSet to the min/max provided",
+			ToolTip="[RemapToRange (SelectionSet)] Remap a SelectionSet to the min/max provided",
 			Category="Math|SelectionSet",
 			Keywords="clamp limit min max")
 	)
@@ -422,7 +422,7 @@ public:
 		BlueprintPure,
 		meta = (
 			DisplayName = "RemapRipple(SelectionSet)",
-			ToolTip="Remap a SelectionSet by 'rippling' it, adding repetitions and optionally converting it to an 'up-down'' pattern",
+			ToolTip="[RemapRipple(SelectionSet)] Remap a SelectionSet by 'rippling' it, adding repetitions and optionally converting it to an 'up-down'' pattern",
 			Category = "Math|SelectionSet"
 			)
 		)
@@ -441,7 +441,7 @@ public:
 		BlueprintPure,
 		meta=(
 			DisplayName="Set (SelectionSet)",
-			ToolTip="Set all values in a SelectionSet to the value provided",
+			ToolTip="[Set (SelectionSet)] Set all values in a SelectionSet to the value provided",
 			Category="Math|SelectionSet",
 			Keywords="constant all"
 		)
@@ -458,7 +458,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet - Float",
 			CompactNodeTitle="-",
-			ToolTip="Subtract a float from all the values in a SelectionSet",
+			ToolTip="[SelectionSet - Float] Subtract a float from all the values in a SelectionSet",
 			Keywords="- subtract minus",
 			Category="Math|SelectionSet"
 		)
@@ -474,8 +474,8 @@ public:
 		BlueprintPure,
 		meta=(
 			DisplayName="Float - SelectionSet",
-			CompactNodeTitle="+",
-			ToolTip="Subtract the values in a SelectionSet from a Float",
+			CompactNodeTitle="-",
+			ToolTip="[Float - SelectionSet] Subtract the values in a SelectionSet from a Float",
 			Keywords="+ add plus",
 			Category="Math|SelectionSet"
 		)
@@ -492,7 +492,7 @@ public:
 		meta=(
 			DisplayName="SelectionSet - SelectionSet",
 			CompactNodeTitle="-",
-			ToolTip="Subtract the values in a SelectionSet from another SelectionSet",
+			ToolTip="[SelectionSet - SelectionSet] Subtract the values in a SelectionSet from another SelectionSet",
 			Keywords="+ add plus",
 			Category="Math|SelectionSet"
 		)

@@ -63,6 +63,10 @@ public:
 	USelectionSet *RandomizeWeights(FRandomStream &RandomStream, float MinWeight=0, float MaxWeight=1);
 
 	/// Return the number of weights in the selection set.
-	UFUNCTION(BlueprintPure, meta=(Keywords="length count maximum num"))
+	UFUNCTION(BlueprintPure, meta=(
+		ToolTip = "Return the number of weights in this SelectionSet",
+		Keywords="length count maximum num"
+		)
+	)
 		int32 Size() const;
 };
