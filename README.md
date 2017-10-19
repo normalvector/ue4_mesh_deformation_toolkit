@@ -71,9 +71,30 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 ## Load Geometry Data
 All of these nodes are provided on the Mesh Deformation Component, any many of them can also be called on the MeshGeometry directly.
 
-* *Load From Mesh Deformation Component*: Use another MeshDeformationComponent as a geometry source, copying the contents
-* *Load From Mesh Geometry*: Use a MeshGeometry which has previously been extracted from a MeshDeformationComponent as a geometry source.  This allows you to create a separate copy of the geometry in one MDC to use in another, with different deformations applied on them. (Demo: *LoadGeometryDemo/LoadFromMeshGeometryMap*)
-* *Load From Static Mesh*: Use a StaticMesh as the source of the original geometry.  This allows you to use all of the deformation tools on one of your imported models and is one of the most important nodes in the system  (Demo: *PassthroughDemo/PassthroughMap*, and used in most other demos)
+### Load From Mesh Deformation Component
+Use another MeshDeformationComponent as a geometry source, copying the geometry as it currently stands.  This provides a separate copy which can be deformed without affecting the original.
+
+This is demonstrated in *LoadGeometryDemo/LoadFromMeshGeometryDemo*.
+
+Common uses:
+* Previewing a player's action on the copy while keeping the original untouched until they confirm.
+
+### Load From Mesh Geometry
+Use MeshGeometry which has previously been extracted from a MeshDeformationComponent as a geometry source.
+
+Common uses:
+* Quickly duplicate deformed geometry for repeated addition deformations
+* Allows us to store MeshGeometry as a variable and then restore it later
+
+This is demonstrated in *LoadGeometryDemo/LoadFromMeshGeometryMap*.
+
+### Load From Static Mesh
+Use a StaticMesh as the source of the original geometry.  This allows you to use all of the deformation tools on one of your imported models and is one of the most important nodes in the system.
+
+This is first demonstrated in *PassthroughDemo/PassthroughMap*, but is then used in most other demos for their starting geometry.
+
+Common uses:
+* The initial geometry in most cases.
 
 ## Select Vertices
 Each of these functions returns a Selection which can then be either be either modified further, or passed into any of the nodes for transforming vertices to control their behavior.
