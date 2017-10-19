@@ -69,16 +69,16 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 6. *Utility*.  This is everything else, including tools which allow you to build your own selection and transform tools.
 
 ## Load Geometry Data
-All of these nodes are provided on the Mesh Deformation Component, and also their stored geometry.
+All of these nodes are provided on the Mesh Deformation Component, any many of them can also be called on the MeshGeometry directly.
 
-* *Load From Mesh Deformation Component*: Use another MeshDeformationComponent as the source for the geometry, copying the contents.
-* *Load From Mesh Geometry*: Use a MeshGeometry
-* [Load From Static Mesh](./docs/mesh_deformation_component_nodes/load_from_static_mesh.md): Use a StaticMesh as the source of the original geometry.
+* *Load From Mesh Deformation Component*: Use another MeshDeformationComponent as a geometry source, copying the contents
+* *Load From Mesh Geometry*: Use a MeshGeometry which has previously been extracted from a MeshDeformationComponent as a geometry source.  This allows you to create a separate copy of the geometry in one MDC to use in another, with different deformations applied on them. (Demo: *LoadGeometryDemo/LoadFromMeshGeometryMap*)
+* *Load From Static Mesh*: Use a StaticMesh as the source of the original geometry.  This allows you to use all of the deformation tools on one of your imported models and is one of the most important nodes in the system  (Demo: *PassthroughDemo/PassthroughMap*, and used in most other demos)
 
 ## Select Vertices
 Each of these functions returns a Selection which can then be either be either modified further, or passed into any of the nodes for transforming vertices to control their behavior.
 
-* *Select All*: Select all vertices at full strength
+* *Select All*: Select all vertices at full strength.  
 * *Select By Noise*: Select vertices based on a noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range, if this causes problems use a 'Remap By Range' node to remap between zero and one.* (Demo: *SelectionDemo/SelectByNoiseTranslateMap*, *SelectionDemo/SelectByNoiseVoronoiTranslateMap*)
 * *Select By Normal*: Selection based on a vertex's normal direction. (Demo: *SelectionDemo/SelectByNormalTranslateMap*)
 * *Select By Section*: Selection based on the sections which make up a mesh. (Demo: *SelectionDemo/SelectBySectionTranslateMap*)
