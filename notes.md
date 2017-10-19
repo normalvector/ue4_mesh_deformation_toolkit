@@ -26,7 +26,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Fit to Spline|Yes|Yes|Yes|
 |MDC|Flip Normals|Yes|Yes|Yes|
 |MDC|Flip Texture UV|Yes|Yes|Yes|
-|MDC|Inflate|Yes|Yes|Yes|
+|MDC|Inflate|Yes|Yes|Yes| TransformDemo/Inflate |
 |MDC|Jitter|Yes|Yes|Yes|
 |MDC|Lerp|Yes|Yes|Yes|
 |MDC|Lerp Vector|Yes|Yes|Yes|
@@ -37,7 +37,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Spherize|Yes|Yes|Yes|
 |MDC|Transform|Yes|Yes|Yes|
 |MDC|Transform UV|Yes|Yes|Yes|
-|MDC|Translate|Yes|Yes|Yes|
+|MDC|Translate|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMap |
 |MDC|Save to Procedural Mesh Component|Yes|Yes|Yes|
 |MDC|Save to Static Mesh|Yes|Yes|Yes|
 |MDC|Clone Mesh Geometry|Yes|Yes|Yes|
