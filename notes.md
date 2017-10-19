@@ -7,20 +7,20 @@ This is a list of all methods exposed as BP nodes together with their status as 
 
 |Class|Display Name|In Editor|Tool Tip|In Node Dictionary|Demo|Wiki|
 |---|
-|MDC|Load from Mesh Deformation Component|Yes|Yes|Yes|
-|MDC|Load from Mesh Geometry|Yes|Yes|Yes|
-|MDC|Load from Static Mesh|Yes|Yes|Yes|
+|MDC|Load from Mesh Deformation Component|Yes|Yes|Yes| LoadGeometryDemo/LoadFromMeshDeformationComponentMap|
+|MDC|Load from Mesh Geometry|Yes|Yes|Yes| LoadGeometryDemo/LoadFromMeshGeometryDemo|
+|MDC|Load from Static Mesh|Yes|Yes|Yes| PassthroughDemo/PassthroughMap |
 |MDC|Select All|Yes|Yes|Yes|
-|MDC|Select by Noise|Yes|Yes|Yes|
-|MDC|Select by Section|Yes|Yes|Yes|
+|MDC|Select by Noise|Yes|Yes|Yes| SelectionDemo/SelectByNoiseTranslateMap, SelectionDemo/SelectByNoiseVoronoiTranslateMap|
+|MDC|Select by Section|Yes|Yes|Yes| SelectionDemo/SelectBySectionTranslateMap|
 |MDC|Select by Texture|Yes|Yes|Yes|
-|MDC|Select by Normal|Yes|Yes|Yes|
+|MDC|Select by Normal|Yes|Yes|Yes| SelectionDemo/SelectByNormalTranslateMap|
 |MDC|Select by Vertex Range|Yes|Yes|Yes|
-|MDC|Select in Volume|Yes|Yes|Yes|
+|MDC|Select in Volume|Yes|Yes|Yes| SelectionDemo/SelectInVolumeTranslateMap|
 |MDC|Select Linear|Yes|Yes|Yes|
-|MDC|Select Near|Yes|Yes|Yes|
-|MDC|Select Near Line|Yes|Yes|Yes|
-|MDC|Select Near Spline|Yes|Yes|Yes|
+|MDC|Select Near|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMaterialBallMap, SelectionDemo/SelectNearTranslatePlaneMap |
+|MDC|Select Near Line|Yes|Yes|Yes| SelectionDemo/SelectNearLineTranslateMap, SelectionDemo/SelectNearLineInfiniteTranslateMap |
+|MDC|Select Near Spline|Yes|Yes|Yes| SelectionDemo/SelectNearSplineMap|
 |MDC|Conform|Yes|Yes|Yes|
 |MDC|Conform Down|Yes|Yes|Yes|
 |MDC|Fit to Spline|Yes|Yes|Yes|
@@ -48,42 +48,42 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Get Total Vertex Count|Yes|Yes|Yes|
 |MG|Load from Mesh Geometry|Yes|Yes| |
 |MG|Load from Static Mesh|Yes|Yes| |
-|MG|Select All|Yes|Yes| |
-|MG|Select by Noise|Yes|Yes| |
-|MG|Select by Normal|Yes|Yes| |
-|MG|Select by Section|Yes|Yes| |
-|MG|Select by VertexRange|Yes|Yes| |
-|MG|Select by Texture|Yes|Yes| |
-|MG|Select in Volume|Yes|Yes| |
-|MG|Select Linear|Yes|Yes| |
-|MG|Select Near|Yes|Yes| |
-|MG|Select Near Line|Yes|Yes| |
-|MG|Select Near Spline|Yes|Yes| |
-|MG|Conform|Yes|Yes| |
-|MG|Conform Down|Yes|Yes| |
-|MG|Fit to Spline|Yes|Yes| |
-|MG|Flip Normals|Yes|Yes| |
-|MG|FlipTextureUV|Yes|Yes| |
-|MG|Inflate|Yes|Yes| |
-|MG|Jitter|Yes|Yes| |
-|MG|Lerp|Yes|Yes| |
-|MG|LerpVector|Yes|Yes| |
-|MG|Rotate|Yes|Yes| |
-|MG|Rotate Around Axis|Yes|Yes| |
-|MG|Scale|Yes|Yes| |
-|MG|Scale Along Axis|Yes|Yes| |
-|MG|Spherize|Yes|Yes| |
-|MG|Transform|Yes|Yes| |
-|MG|TransformUV|Yes|Yes| |
-|MG|Translate|Yes|Yes| |
-|MG|Save to Static Mesh|Yes|Yes| |
-|MG|Save to Procedural Mesh Component|Yes|Yes| |
+|MG|Select All|Yes|Yes| | | |
+|MG|Select by Noise|Yes|Yes| | | |
+|MG|Select by Normal|Yes|Yes| | | |
+|MG|Select by Section|Yes|Yes| | | |
+|MG|Select by VertexRange|Yes|Yes| | | |
+|MG|Select by Texture|Yes|Yes| | | |
+|MG|Select in Volume|Yes|Yes| | | |
+|MG|Select Linear|Yes|Yes| | | |
+|MG|Select Near|Yes|Yes| | | |
+|MG|Select Near Line|Yes|Yes| | | |
+|MG|Select Near Spline|Yes|Yes| | | |
+|MG|Conform|Yes|Yes| | | |
+|MG|Conform Down|Yes|Yes| | | |
+|MG|Fit to Spline|Yes|Yes| | | |
+|MG|Flip Normals|Yes|Yes| | | |
+|MG|FlipTextureUV|Yes|Yes| | | |
+|MG|Inflate|Yes|Yes| | | |
+|MG|Jitter|Yes|Yes| | | |
+|MG|Lerp|Yes|Yes| | | |
+|MG|LerpVector|Yes|Yes| | | |
+|MG|Rotate|Yes|Yes| | | |
+|MG|Rotate Around Axis|Yes|Yes| | | |
+|MG|Scale|Yes|Yes| | | |
+|MG|Scale Along Axis|Yes|Yes| | | |
+|MG|Spherize|Yes|Yes| | | |
+|MG|Transform|Yes|Yes| | | |
+|MG|TransformUV|Yes|Yes| | | |
+|MG|Translate|Yes|Yes| | | |
+|MG|Save to Static Mesh|Yes|Yes| | | |
+|MG|Save to Procedural Mesh Component|Yes|Yes| | | |
 |MG|Clone|Yes|Yes|Yes|
-|MG|Get Bounding Box|Yes|Yes| |
+|MG|Get Bounding Box|Yes|Yes| | | |
 |MG|Get Radius|Yes|Yes|Yes|
-|MG|Get Summary|Yes|Yes| |
-|MG|Get Total Triangle Count|Yes|Yes| |
-|MG|Get Total Vertex Count|Yes|Yes| |
+|MG|Get Summary|Yes|Yes| | | |
+|MG|Get Total Triangle Count|Yes|Yes| | | |
+|MG|Get Total Vertex Count|Yes|Yes| | | |
 |SS|Size|Yes|Yes|Yes|
 |SSBPL|SelectionSet + Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|
