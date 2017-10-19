@@ -84,7 +84,7 @@ public:
 	/// \return *True* if we can copy the geometry, *False* if not.
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (
-			ToolTip = "Load the geometry from a StaticMesh, replacing anything currently stored",
+			ToolTip = "Load the geometry from a another MDC, replacing anything currently stored",
 			Keywords = "create mesh geometry"
 			))
 		bool LoadFromMeshDeformationComponent(
@@ -276,7 +276,7 @@ public:
 	UFUNCTION(
 		BlueprintPure, Category=MeshDeformationComponent,
 		meta=(
-			ToolTip="Select vertices inside a volume defined by two opposite corner points",
+			ToolTip="Select vertices based on a channel from a texture",
 			Keywords="aabb bounds bounding space"
 			)
 	)
@@ -617,7 +617,7 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta=(
-			ToolTip="A linear interpolation against the geometry stored in another MeshDeformationComponent",
+			ToolTip="Blend this geometry against the geometry stored in another MeshDeformationComponent",
 			Keywords="blend linear interpolate alpha"
 			)
 	)
@@ -633,7 +633,7 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (
-			ToolTip="A linear interpolate blending vertices towards the position provided",
+			ToolTip="Blend vertices towards the position provided",
 			Keywords = "blend linear interpolate alpha pull push"
 			)
 	)
@@ -803,7 +803,7 @@ public:
 			BlueprintCallable, Category = MeshDeformationComponent,
 			meta = (
 				DisplayName = "Transform UV",
-				ToolTip="Apply a transformation to the UV, changing the way textures will be mapped",
+				ToolTip="Apply a transformation to the UV mapping, changing the way textures will be mapped",
 				Keywords = "texture coordinates"
 				)
 		)
@@ -827,7 +827,7 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta=(
-			ToolTip="Move all vertices by the provided vector",
+			ToolTip="Move all vertices by the provided vector.  This is the basic Move operation",
 			Keywords="move delta"
 			)
 	)

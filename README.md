@@ -71,51 +71,33 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 ## Load Geometry Data
 All of these nodes are provided on the Mesh Deformation Component, any many of them can also be called on the MeshGeometry directly.
 
-### Load From Mesh Deformation Component
-Use another MeshDeformationComponent as a geometry source, copying the geometry as it currently stands.  This provides a separate copy which can be deformed without affecting the original.
-
-This is demonstrated in *LoadGeometryDemo/LoadFromMeshGeometryDemo*.
-
-Common uses:
-* Previewing a player's action on the copy while keeping the original untouched until they confirm.
-
-### Load From Mesh Geometry
-Use MeshGeometry which has previously been extracted from a MeshDeformationComponent as a geometry source.
-
-Common uses:
-* Quickly duplicate deformed geometry for repeated addition deformations
-* Allows us to store MeshGeometry as a variable and then restore it later
-
-This is demonstrated in *LoadGeometryDemo/LoadFromMeshGeometryMap*.
-
-### Load From Static Mesh
-Use a StaticMesh as the source of the original geometry.  This allows you to use all of the deformation tools on one of your imported models and is one of the most important nodes in the system.
-
-This is first demonstrated in *PassthroughDemo/PassthroughMap*, but is then used in most other demos for their starting geometry.
-
-Common uses:
-* The initial geometry in most cases.
+* **Load From Mesh Deformation Component**: Load the geometry from a another MDC, replacing anything currently stored.
+* **Load from Mesh Geometry**: Load the geometry stored in a MeshGeometry object, replacing anything currently stored.
+* **Load from Static Mesh**: Load geometry from a StaticMesh, replacing anything currently stored.
 
 ## Select Vertices
 Each of these functions returns a Selection which can then be either be either modified further, or passed into any of the nodes for transforming vertices to control their behavior.
 
-* *Select All*: Select all vertices at full strength.  
-* *Select By Noise*: Select vertices based on a noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range, if this causes problems use a 'Remap By Range' node to remap between zero and one.* (Demo: *SelectionDemo/SelectByNoiseTranslateMap*, *SelectionDemo/SelectByNoiseVoronoiTranslateMap*)
-* *Select By Normal*: Selection based on a vertex's normal direction. (Demo: *SelectionDemo/SelectByNormalTranslateMap*)
-* *Select By Section*: Selection based on the sections which make up a mesh. (Demo: *SelectionDemo/SelectBySectionTranslateMap*)
-* *Select By Texture*: Use a channel from an RGB texture to select vertices.
-* *Select In Volume*: Simple selection based on whether a vertex is within an axis-aligned volume. (Demo: *SelectionDemo/SelectByVolumeTranslateMap*)
-* *Select Linear*: Selection based on a gradient between two provided points.
-* *Select Near*: Select all vertices near a provided point. (Demo: *SelectionDemo/SelectNearTranslateMaterialBallMap*, *SelectionDemo/SelectNearTranslatePlaneMap*)
-* *Select Near Line*: Select all vertices near a provided line, which can be an infinite line. (Demo: *SelectionDemo/SelectNearLineTranslateMap*, *SelectionDemo/SelectNearInfiniteLineTranslateMap*)
-* *Select Near Spline*: Select all vertices near a [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/). (Demo: *SelectionDemo/SelectNearSplineMap*)
+Many of these can be called either on a MeshDeformationComponent, or directly the MeshGeometry that the MDC contains.
+
+* **Select All**: Selects all of the vertices at full strength.
+* **Select by Noise**: Select vertices based on a configurable noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range, if this causes problems use a 'Remap By Range' node to remap between zero and one.*
+* **Select by Normal**: Select vertices with a given normal facing.
+* **Select by Section**: Select all of the vertices in one of the Sections making up a mesh.
+* **Select by Texture**: Select vertices based on a channel from a texture.
+* **Select by Vertex Range**: Select vertices based on their index in the mesh.  This is most useful when a mesh has been authored to have their vertices in a known order.
+* **Select in Volume**: Select vertices based on a channel from a texture
+* **Select Linear**: Select vertices with strength blended linearly between two points.
+* **Select Near**: Select the vertices near a point in space.
+* **Select Near Line**: Select vertices near a line with the provided start/end points.
+* **Select Near Spline**: Select all vertices near a [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/).
 
 ## Modifying And Combining Selections
 These aren't actually on the Mesh Deformation Component and instead are provided in a Blueprint Function Library.
 
 All of these return a new Selection and don't modify the ones provided to them.  The short descriptions below are often phrased as though they do but this is because writing 'Return a Selection which is the provided Selection' in each one would make them a lot harder to read.
 
-* *Clamp (Selection, Float, Float)*: Clamps the range of a Selection between the minimum and maximum provided.
+* *Clamp (SelectionSet)*: Clamp all values in a SelectionSet to the minimum and maximum provided.
 * *Ease*: Remaps a selection by applying a configurable easing function to each value.  Useful for taking the linear fall-off from a selection and turning it into something smoother and more natural looking.
 * *Float - Selection*: Subtract all value in a selection from a constant value, providing a simple reverse and remap.
 * *Float / Selection*: Divide a constant value by all values in a selection.
@@ -143,20 +125,37 @@ All of these return a new Selection and don't modify the ones provided to them. 
 ## Transforming Vertices
 All of these transform operations can be controlled by providing an optional Selection.  While the actual use of the Selection can vary method nodes it's intended that each one uses it in the most obvious and flexible way for that node's own purpose.
 
-* *Conform*: Project all of the vertices in a provided direction as though it were being draped over other geometry in the level.  This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
-* *Fit To Spline*: Bend the geometry to follow a provided [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/), with controls for the profile of the geometry for more useful effects.  This is more powerful than UE4's own [Spline Mesh Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/) in that it follows an entire curve rather than just having the two control points at the ends.
-* *Inflate*: Move all of the vertices in or out along their own normals.
-* *Jitter*: Applies random position jitter to the vertices.  This is a fairly crude effect and generally you're better off using Select By Noise and Translate for greater control.
-* *Lerp (MeshDeformationComponent, Float)*: Blend this with the geometry stored in another MeshDeformationComponent with a given strength.
-* *Lerp (MeshGeometry, Float)*: Blend this mesh with another with a given strength.  *NOTE: This should be exposed on MeshDeformationComponent too*.
-* *Lerp (Vector)*: Blend all vertices towards a single given point.
-* *Rotate*: Rotate vertices using a standard UE4 [Rotator](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Rotator/index.html).
-* *Rotate Around Axis*: Rotate all of the points around a given axis and center of rotation.  This is more difficult to use than Rotate, but is also more flexible.
-* *Scale*: Scale vertices by the vector provided.
-* *Scale Along Axis*: Scale vertices along a provided axis and center of scale
-* *Spherize*: Blend all vertices towards a position on a sphere with the provided center and radius.
-* *Transform*: Apply the provided transform matrix to all vertices.
-* *Translate*: Add a provided vector to all vertices.  This is the basic Move operation.
+MDC		Yes	Yes
+MDC	Inflate	Yes	Yes
+MDC	Jitter	Yes	Yes
+MDC	Lerp	Yes	Yes
+MDC	Lerp Vector	Yes	Yes
+MDC	Rotate	Yes	Yes
+MDC	Rotate Around Axis	Yes	Yes
+MDC	Scale	Yes	Yes
+MDC	ScaleAlongAxis	Yes	Yes
+MDC	Spherize	Yes	Yes
+MDC	Transform	Yes	Yes
+MDC	Transform UV	Yes	Yes
+MDC	Translate	Yes	Yes
+
+* **Conform**: Conforms the mesh against collision geometry by projecting along a specified vector. This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
+* **Conform Down**: Conforms the mesh against collision geometry by projecting downwards (-Z). This is a difficult node to get to grips with but is very useful for making roads which follow the underlying terrain and similar effects.
+* **Fit To Spline**: Bend the mesh to follow a [Spline Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/), with controls for the profile of the geometry for more useful effects.  This is more powerful than UE4's own [Spline Mesh Component](https://docs.unrealengine.com/latest/INT/Engine/BlueprintSplines/Overview/) in that it follows an entire curve rather than just having the two control points at the ends, along with additional controls.
+* **Flip Normals**: Flip the surface normals.  As it's impossible to 'partly flip' a normal the SelectionSet is used a simple filter here with a flip only happening with weighting >=0.5.
+* **Flip Texture UV**: Flip the texture map channel in U (horizontal), V(vertical), both, or neither.
+* **Inflate**: Move vertices a specified offset along their own normals.
+* **Jitter**: Add random jitter to the position of the vertices.  This is a fairly crude approach and often you'll get better results using *SelectByNoise*.
+* **Lerp**: A linear interpolation against the geometry stored in another MeshDeformationComponent.
+* **Lerp Vector**: Blend vertices towards the position provided.
+* **Rotate**: Rotate the vertices round a specified center using a standard UE4 [Rotator](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Rotator/index.html).
+* **Rotate Around Axis**: Rotate vertices around an arbitrary axis.  This is more difficult to use than *Rotate*, but is more flexible in what's possible.
+* **Scale**: Scale the mesh using normal XYZ scaling about a specified center.
+* **Scale Along Axis**: Scale along an arbitrary axis.
+* **Spherize**: Morph geometry into a sphere by moving points along their normals.
+* **Transform**: Applies Scale/Rotate/Translate as a single operation using a [Transform](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Transform/index.html).
+* **Transform UV**: Apply a [transformation](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Transform/index.html) to the UV mapping, changing the way textures will be mapped
+* **Translate**: Move all vertices by the provided vector.
 
 ## Output Data
 * *Save To Procedural Mesh Component*: Write the geometry data to a standard UE4 [Procedural Mesh Component](https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started).

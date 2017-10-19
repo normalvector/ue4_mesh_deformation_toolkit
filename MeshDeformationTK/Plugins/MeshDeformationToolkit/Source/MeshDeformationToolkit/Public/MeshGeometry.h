@@ -522,7 +522,7 @@ public:
 	/// \param Selection					The SelectionSet which controls the blend between the two MeshGeometry items
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 		meta = (
-			ToolTip = "A linear interpolation against the geometry stored in another MeshDeformationComponent",
+			ToolTip = "Blend this geometry against the geometry stored in another MeshDeformationComponent",
 			Keywords = "blend linear interpolate alpha"
 			)
 	)
@@ -532,7 +532,7 @@ public:
 	/// vector provided.
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 		meta = (
-			ToolTip = "A linear interpolate blending vertices towards the position provided",
+			ToolTip = "Blend vertices towards the position provided",
 			Keywords = "blend linear interpolate alpha pull push"
 			)
 	)
@@ -677,7 +677,7 @@ public:
 		BlueprintCallable, Category = MeshGeometry,
 		meta = (
 			DisplayName = "Transform UV",
-			ToolTip = "Apply a transformation to the UV, changing the way textures will be mapped",
+			ToolTip = "Apply a transformation to the UV mapping, changing the way textures will be mapped",
 			Keywords = "texture coordinates"
 			)
 	)
@@ -698,7 +698,7 @@ public:
 	///											full delta translation
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 		meta = (
-			ToolTip = "Move all vertices by the provided vector",
+			ToolTip = "Move all vertices by the provided vector.  This is the basic Move operation",
 			Keywords = "move delta"
 			)
 	)
