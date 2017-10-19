@@ -10,12 +10,12 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Load from Mesh Deformation Component|Yes|Yes|Yes| LoadGeometryDemo/LoadFromMeshDeformationComponentMap|
 |MDC|Load from Mesh Geometry|Yes|Yes|Yes| LoadGeometryDemo/LoadFromMeshGeometryDemo|
 |MDC|Load from Static Mesh|Yes|Yes|Yes| PassthroughDemo/PassthroughMap |
-|MDC|Select All|Yes|Yes|Yes|
+|MDC|Select All|Yes|Yes|Yes| SelectionDemo/SelectAllTranslateMap |ByVertex
 |MDC|Select by Noise|Yes|Yes|Yes| SelectionDemo/SelectByNoiseTranslateMap, SelectionDemo/SelectByNoiseVoronoiTranslateMap|
 |MDC|Select by Section|Yes|Yes|Yes| SelectionDemo/SelectBySectionTranslateMap|
 |MDC|Select by Texture|Yes|Yes|Yes| SelectionDemo/SelectByTextureTranslateMap|
 |MDC|Select by Normal|Yes|Yes|Yes| SelectionDemo/SelectByNormalTranslateMap|
-|MDC|Select by Vertex Range|Yes|Yes|Yes|
+|MDC|Select by Vertex Range|Yes|Yes|Yes| SelectionDemo/SelectByVertexRangeTranslateMap|
 |MDC|Select in Volume|Yes|Yes|Yes| SelectionDemo/SelectInVolumeTranslateMap|
 |MDC|Select Linear|Yes|Yes|Yes| SelectionDemo/SelectLinearTranslateMap |
 |MDC|Select Near|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMaterialBallMap, SelectionDemo/SelectNearTranslatePlaneMap |
