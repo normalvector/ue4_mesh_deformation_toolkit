@@ -84,7 +84,7 @@ public:
 	/// \return *True* if we can copy the geometry, *False* if not.
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (
-			ToolTip = "Load the geometry from a another MDC, replacing anything currently stored",
+			ToolTip = "Load the geometry from another MDC, replacing anything currently stored",
 			Keywords = "create mesh geometry"
 			))
 		bool LoadFromMeshDeformationComponent(
@@ -655,7 +655,7 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta = (
-			ToolTip="Rotate the vertices round a specified center"
+			ToolTip="Rotate the vertices around a specified center"
 			)
 	)
 		void Rotate(

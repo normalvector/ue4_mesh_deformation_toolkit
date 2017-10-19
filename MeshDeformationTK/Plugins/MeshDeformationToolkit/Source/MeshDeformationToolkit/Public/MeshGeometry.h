@@ -550,7 +550,7 @@ public:
 	///											specified
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 		meta = (
-			ToolTip = "Rotate the vertices round a specified center"
+			ToolTip = "Rotate the vertices around a specified center"
 			)
 	)
 		void Rotate(
@@ -765,7 +765,7 @@ public:
 	/// Copy a MeshGeometry object, producing an independent clone of it.
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 			  meta = (
-				  ToolTip = "Return an independant copy of this MeshGeometry",
+				  ToolTip = "Return an independent copy of this MeshGeometry",
 				  Keywords = "copy duplicate"
 				  )
 	)

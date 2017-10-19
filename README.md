@@ -1,5 +1,5 @@
 # Mesh Deformation toolkit
-Full mesh deformation toolkit inside UE4, including tools (Move, Scale, Rotate, Spherize etc) based on popular 3d modelling packages, and a set of utilities to control which parts of a mesh will be affected.
+Full mesh deformation toolkit inside UE4, including tools (Move, Scale, Rotate, Spherize etc) based on popular 3d modeling packages, and a set of utilities to control which parts of a mesh will be affected.
 
 In order to allow complex effects this supports:
 * Multiple transformations, either using the same selection set or different ones.
@@ -17,24 +17,24 @@ Mesh deformation doesn't create or destroy geometry, and it won't change the tri
 
 This plugin, the Mesh Deformation Toolkit (MDT for short) allows you to do this type of geometry manipulation inside of Unreal Engine via Blueprint.
 
-This is done by providing a UE4 Component called **MeshDeformationComponent** which allows you to store and deform mesh  geometry, using the selection and transformation nodes provided, and then output it to your UE4 level.  All inside Unreal Engine, and available either inside the editor or at runtime.
+This is done by providing a UE4 Component called **MeshDeformationComponent** which allows you to store and deform mesh geometry, using the selection and transformation nodes provided, and then output it to your UE4 level.  All inside Unreal Engine, and available either inside the editor or at runtime.
 
 If you like SplineMeshComponent you should love MeshDeformationComponent.
 
 ## Basic Workflow
-The workflow for this plugin is based on that a 3d artist would use in their tools.
+The workflow for this plugin is based on that a 3d artist would use with their tools.
 
 ### Step 1: Load the geometry
-In a 3d package this is where you either use the tools provided to create a base mesh, or load one in.
+In a 3d package this would be you either using the tools provided to create a base mesh, or load one in.
 
-In the plugin this is done by the "Load" nodes, although at present there is only one of these- "Load from Static Mesh" which uses a standard StaticMesh.
+In the plugin this where "Load" nodes pull source geometry into the system.
 
 ### Step 2: Select the vertices to modify
 In your 3d package this is where you drag your mouse over the vertices and choose those you want to move.
 
 In the plugin this is the various "Select" nodes which each allow a different type of selection- such as vertices near a provided position, or near a provided spline path.  Similar to many 3d packages this selection isn't an all-or-nothing selection, some points can be 'partly selected' which makes it easier to gets smoother results.
 
-There are also selection modifiers which allow you to invert selections, apply easing functions to make selections smoother, or combine selections by adding, subtracing, blending, or more.
+There are also selection modifiers which allow you to invert selections, apply easing functions to make selections smoother, or combine selections by adding, subtracting, blending, or more.
 
 ### Step 3: Transform the vertices
 There are a lot of tools for this in a 3d package, some allowing basic operations such as Move, Scale, Rotate, and other stranger ones such as Inflate which moves points along their normals, or Spherize which blends a mesh towards a spherical shape.
@@ -51,7 +51,7 @@ This can be done by just chaining selections/transformations together.
 #### Step 5: Save the result
 In a 3d package this is where you save your results to disk ready for rendering, or to import into another tool such as UE4.
 
-In the plugin this is the "Save" nodes.  Again at present there's only one of these, "Update Procedural Mesh Component" (*NB:* This is going to get renamed to Save To Procedrual Mesh Component) which takes the transformed geometry and writes it out to one of Unreal's ProceduralMeshComponents which can then be added to the scene.
+In the plugin this is the "Save" nodes.  Again at present there's only one of these, "Update Procedural Mesh Component" (*NB:* This is going to get renamed to Save To Procedural Mesh Component) which takes the transformed geometry and writes it out to one of Unreal's ProceduralMeshComponents which can then be added to the scene.
 
 # Installing the plugin
 When the plugin hits public beta I'll be releasing compiled plugins for Windows and Mac, and possibly other platforms too.
@@ -63,7 +63,7 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 
 1. *Loading Geometry Data*.  Before we do anything else we need some geometry data to operate on.
 2. *Select Vertices*.  While we can do some useful operations on every vertex that makes up the mesh the ability to only change parts of the mesh is much more powerful, and for that we need to select the vertices to control the operation.  These selections aren't limited to a simple yes/no, it's possible to have vertices which are partially selected to allow an operation to be applied at varying strengths on different parts of the mesh.
-3. *Modifying And Combining Selections*.  For even greater control over which parts of the mesh we're affecting it's possible to take selections and alter them to get the exact control needed.
+3. *Modifying And Combining Selections*.  For even greater control over which parts of the mesh we're affecting it's possible to make selections and then alter them to get the exact control needed.
 4. *Transforming Vertices*.  The actual deformations, whether we're moving and rotating points or something stranger this is where the actual work of changing the geometry happens.
 5. *Save Data*.  There's no point in changing the geometry if we then don't do something with it and these nodes are where that happens.
 6. *Utility*.  This is everything else, including tools which allow you to build your own selection and transform tools.
@@ -71,17 +71,17 @@ Here is a list of all of the nodes the system provides, broken down into six cat
 ## Load Geometry Data
 All of these nodes are provided on the Mesh Deformation Component, any many of them can also be called on the MeshGeometry directly.
 
-* **Load From Mesh Deformation Component**: Load the geometry from a another MDC, replacing anything currently stored.
+* **Load From Mesh Deformation Component**: Load the geometry from another MDC, replacing anything currently stored.
 * **Load from Mesh Geometry**: Load the geometry stored in a MeshGeometry object, replacing anything currently stored.
 * **Load from Static Mesh**: Load geometry from a StaticMesh, replacing anything currently stored.
 
 ## Select Vertices
-Each of these functions returns a Selection which can then be either be either modified further, or passed into any of the nodes for transforming vertices to control their behavior.
+Each of these functions returns a Selection which can then be either be either modified further or passed into any of the nodes for transforming vertices to control their behavior.
 
-Many of these can be called either on a MeshDeformationComponent, or directly the MeshGeometry that the MDC contains.
+Many of these can be called either on a MeshDeformationComponent or directly the MeshGeometry that the MDC contains.
 
 * **Select All**: Selects all of the vertices at full strength.
-* **Select by Noise**: Select vertices based on a configurable noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range, if this causes problems use a 'Remap By Range' node to remap between zero and one.*
+* **Select by Noise**: Select vertices based on a configurable noise function, useful for terrain or adding controlled randomness to a model. *This can return values outside of the standard zero to one range.  If this causes problems use a 'Remap By Range' node to remap between zero and one.*
 * **Select by Normal**: Select vertices with a given normal facing.
 * **Select by Section**: Select all of the vertices in one of the Sections making up a mesh.
 * **Select by Texture**: Select vertices based on a channel from a texture.
@@ -136,8 +136,8 @@ All of these transform operations can be controlled by providing an optional Sel
 * **Jitter**: Add random jitter to the position of the vertices.  This is a fairly crude approach and often you'll get better results using *SelectByNoise*.
 * **Lerp**: A linear interpolation against the geometry stored in another MeshDeformationComponent.
 * **Lerp Vector**: Blend vertices towards the position provided.
-* **Rotate**: Rotate the vertices round a specified center using a standard UE4 [Rotator](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Rotator/index.html).
-* **Rotate Around Axis**: Rotate vertices around an arbitrary axis.  This is more difficult to use than *Rotate*, but is more flexible in what's possible.
+* **Rotate**: Rotate the vertices around a specified center using a standard UE4 [Rotator](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Rotator/index.html).
+* **Rotate Around Axis**: Rotate vertices around an arbitrary axis.  This is more difficult to use than *Rotate* but is more flexible in what's possible.
 * **Scale**: Scale the mesh using normal XYZ scaling about a specified center.
 * **Scale Along Axis**: Scale along an arbitrary axis.
 * **Spherize**: Morph geometry into a sphere by moving points along their normals.
@@ -148,12 +148,12 @@ All of these transform operations can be controlled by providing an optional Sel
 ## Save Data
 These nodes take the deformed geometry that is built and save them out to another part of UE4.
 
-* **Save to Procedural Mesh Component**: Save the current geometry to a [Procedural Mesh Component](https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started), replacing any existing geometry .
-* **Save to Static Mesh**: Save the current geometry to a [StaticMesh](https://docs.unrealengine.com/latest/INT/Engine/Content/Types/StaticMeshes/), replacing any existing content.  This allows the 'baking' of deformations to a form which don't rely on the MDT plugin anyway, and will only work inside the Editor as it relies on systems which aren't included when a project is built.
+* **Save to Procedural Mesh Component**: Save the current geometry to a [Procedural Mesh Component](https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started), replacing any existing geometry.
+* **Save to Static Mesh**: Save the current geometry to a [StaticMesh](https://docs.unrealengine.com/latest/INT/Engine/Content/Types/StaticMeshes/), replacing any existing content.  This allows the 'baking' of deformations to a form which doesn't rely on the MDT plugin.  This node will only work inside the Editor as it relies on systems which are not present in a compiled project.
 
 ## Utility
 
-* **Clone** [MeshGeometry only]: Return an independant copy of a MeshGeometry object.
+* **Clone** [MeshGeometry only]: Return an independent copy of a MeshGeometry object.
 * **Clone Mesh Geometry** [MDC]: Return an independent copy of the MeshGeometry inside this component.  Calls *Clone* but has a different name as here we're only copying an item inside the component instead of the entire component.
 * **Has Geometry** [MDC only]: Check if we have geometry loaded
 * **Get Bounding Box**: Get the bounding box for the mesh as a [Box](https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Math/FBox/index.html).
@@ -167,18 +167,18 @@ These nodes take the deformed geometry that is built and save them out to anothe
 When everything is working and finished I will be taking the time to document how exactly this plugin works, including how you can extend it yourself by writing new selection/transform nodes either in C++ or Blueprint.
 
 For now though I can only point you towards [a tutorial I wrote which started all of this](http://normalvector.com/tutorials/low_poly_world/) which has the basic approach to deforming geometry (In pure Blueprint too!), and add the following quick notes.
-* Geometry is basically stored in the format which ProceduralMeshComponent wants, and so a mesh contains a list of sections- each of which has it's own vertex list.  It is this vertex list which the plugin manipulates.
-* All any Selection node does is iterate over all of the vertices in a mesh and apply a selection rule to each to obtain the selection weight, storing these in an array in SelectionSet.  The array is ordered the same as the mesh vertices to prevent any other metadata being needed.
+* Geometry is basically stored in the format which ProceduralMeshComponent uses, and so a mesh contains a list of sections- each of which has it's own vertex list.  It is this vertex list which the plugin manipulates.
+* All any Select node does is iterate over all of the vertices in a mesh and calculate the weighting for them before storing the weighting in an array in SelectionSet.  The array is ordered the same as the mesh vertices to prevent any other metadata being needed.
 * The selection modification nodes just take one (or more) SelectionSets and return another SelectionSet with the weights tweaked as needed.
-* Every Transform node is actually currently implemented as a method on the mesh geometry which iterates over the vertices in the mesh and applies the transformation to each of them in order.  Selections are handled by basically acting as a lerp between the original position and the fully transformed position, although the nature of the lerp can vary between methods (Translate has a straightfoward spatial lerp, but Rotate actually lerps the rotational angle for better results).  Most of these are implemented in a Blueprint Library class as they're utility functions rather than being called on a class.
+* Every Transform node is actually currently implemented as a method on the mesh geometry which iterates over the vertices in the mesh and applies the transformation to each of them in order.  Selections are handled by basically acting as a blend between the original position and the fully transformed position, although the nature of the lerp can vary between methods (Translate has a straightforward spatial blend, but Rotate actually blends the rotational angle for better results).  Most of these are implemented in a Blueprint Library class as they're utility functions rather than being called on a class.
 * The MeshDeformationComponent itself just contains a set of mesh geometry and offers BP-callable selection and transform nodes which just delegate the call to the mesh.
 
 # Code documentation and quality
-All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter), and will be made available as API docs online at some point.
+All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter) and will be made available as API docs online at some point.
 
 The demo contents have been arranged to match [Allar's Gamemakin UE4 Style Guide](https://github.com/Allar/ue4-style-guide) using the [Linter tool](https://www.unrealengine.com/marketplace/linter) available from the UE4 Marketplace.  The Linter is not needed to use the Mesh Deformation Toolkit however, it's only used by myself to find potential problems.
 
-# Thanks Go To..
+# Thanks
 * [Jordan Peck](https://github.com/Auburns) for his splendid [FastNoise](https://github.com/Auburns/FastNoise) C++ library, which is used for all of the noise generation in the plugin.
 * [NASA](https://www.nasa.gov/) for the height map used in the "Small World" demo, and generally being too nifty for words.
 
