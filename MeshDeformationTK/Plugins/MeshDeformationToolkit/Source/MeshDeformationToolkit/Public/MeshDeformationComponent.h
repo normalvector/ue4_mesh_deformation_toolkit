@@ -79,8 +79,8 @@ public:
 	/// This replaces any geometry currently stored and creates an independent copy which can be altered
 	/// without changing the original.
 	///
-	/// \param MeshDeformationComponent		This component (Out param, helps with method chaining)
-	/// \param SourceMeshGeometry			The MeshGeometry that we're copying
+	/// \param MeshDeformationComponent					This component (Out param, helps with method chaining)
+	/// \param SourceMeshDeformationComponent			The MDC that we're copying
 	/// \return *True* if we can copy the geometry, *False* if not.
 	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (
