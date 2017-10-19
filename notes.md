@@ -13,11 +13,11 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Select All|Yes|Yes|Yes|
 |MDC|Select by Noise|Yes|Yes|Yes| SelectionDemo/SelectByNoiseTranslateMap, SelectionDemo/SelectByNoiseVoronoiTranslateMap|
 |MDC|Select by Section|Yes|Yes|Yes| SelectionDemo/SelectBySectionTranslateMap|
-|MDC|Select by Texture|Yes|Yes|Yes|
+|MDC|Select by Texture|Yes|Yes|Yes| SelectionDemo/SelectByTextureTranslateMap|
 |MDC|Select by Normal|Yes|Yes|Yes| SelectionDemo/SelectByNormalTranslateMap|
 |MDC|Select by Vertex Range|Yes|Yes|Yes|
 |MDC|Select in Volume|Yes|Yes|Yes| SelectionDemo/SelectInVolumeTranslateMap|
-|MDC|Select Linear|Yes|Yes|Yes|
+|MDC|Select Linear|Yes|Yes|Yes| SelectionDemo/SelectLinearTranslateMap |
 |MDC|Select Near|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMaterialBallMap, SelectionDemo/SelectNearTranslatePlaneMap |
 |MDC|Select Near Line|Yes|Yes|Yes| SelectionDemo/SelectNearLineTranslateMap, SelectionDemo/SelectNearLineInfiniteTranslateMap |
 |MDC|Select Near Spline|Yes|Yes|Yes| SelectionDemo/SelectNearSplineMap|
