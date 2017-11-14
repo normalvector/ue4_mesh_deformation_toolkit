@@ -975,7 +975,7 @@ public:
 	)
 		int32 GetTotalVertexCount() const;
 
-	/// Calculates the tangents and normals for the mesh
+	/// Calculates the tangents and normals for the mesh based on deformed geometry
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 		meta = (
 			ToolTip = "Rebuild all of the normals and tangents based on deformed geometry",

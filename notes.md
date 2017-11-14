@@ -27,7 +27,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Flip Normals|Yes|Yes|Yes|
 |MDC|Flip Texture UV|Yes|Yes|Yes|
 |MDC|Inflate|Yes|Yes|Yes| TransformDemo/Inflate |
-|MDC|Jitter|Yes|Yes|Yes|
+|MDC|Jitter|Yes|Yes|Yes| TransformDemo/Jitter |
 |MDC|Lerp|Yes|Yes|Yes|
 |MDC|Lerp Vector|Yes|Yes|Yes|
 |MDC|Rotate|Yes|Yes|Yes|
@@ -46,6 +46,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Get Summary|Yes|Yes|Yes|
 |MDC|Get Total Triangle Count|Yes|Yes|Yes|
 |MDC|Get Total Vertex Count|Yes|Yes|Yes|
+|MDC|RebuildNormals|Yes|Yes|Yes|
 |MG|Load from Mesh Geometry|Yes|Yes| |
 |MG|Load from Static Mesh|Yes|Yes| |
 |MG|Select All|Yes|Yes| | | |
@@ -84,6 +85,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MG|Get Summary|Yes|Yes| | | |
 |MG|Get Total Triangle Count|Yes|Yes| | | |
 |MG|Get Total Vertex Count|Yes|Yes| | | |
+|MDC|RebuildNormals| | | |
 |SS|Size|Yes|Yes|Yes|
 |SSBPL|SelectionSet + Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|

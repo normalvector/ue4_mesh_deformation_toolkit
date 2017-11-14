@@ -161,6 +161,7 @@ These nodes take the deformed geometry that is built and save them out to anothe
 * **Get Summary**: Get a brief text description of the mesh, eg. *'4 sections, 1000 vertices, 500 triangles'*.
 * **Get Total Triangle Count**: Returns the number of triangles in the mesh.
 * **Get Total Vertex Count**: Returns the number of vertices in the mesh.
+* **Rebuild Normals**: Calculates the tangents and normals for the mesh based on deformed geometry.
 * **Size** [Called on SelectionSet]:Return the number of weights in this SelectionSet
 
 # How It Works
