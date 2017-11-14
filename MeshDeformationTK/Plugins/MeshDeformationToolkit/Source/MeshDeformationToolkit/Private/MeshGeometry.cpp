@@ -788,6 +788,7 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(
 		return false;
 	}
 
+
 	// Clear the geometry
 	ProceduralMeshComponent->ClearAllMeshSections();
 
@@ -797,8 +798,10 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(
 	{
 		// Create the PMC section with the StaticMesh's data.
 		ProceduralMeshComponent->CreateMeshSection_LinearColor(
-			NextSectionIndex++, section.Vertices, section.Triangles, section.Normals, section.UVs,
-			section.VertexColors, section.Tangents, bCreateCollision
+			NextSectionIndex++,
+			section.Vertices, section.Triangles, section.Normals,
+			section.UVs, section.VertexColors, section.Tangents,
+			bCreateCollision
 		);
 	}
 	return true;
@@ -1519,6 +1522,18 @@ float UMeshGeometry::MiniumProjectionPlaneDistance(FVector Projection)
 		}
 	}
 	return FurthestPlane;
+}
+
+void UMeshGeometry::RebuildNormals()
+{
+	// Iterate over the sections
+	for (auto &Section : this->Sections)
+	{
+		UKismetProceduralMeshLibrary::CalculateTangentsForMesh(
+			Section.Vertices, Section.Triangles, Section.UVs,	// These are inputs
+			Section.Normals, Section.Tangents					// These are outputs
+		);
+	}
 }
 
 bool UMeshGeometry::SelectionSetIsRightSize(USelectionSet *Selection, FString NodeNameForWarning) const

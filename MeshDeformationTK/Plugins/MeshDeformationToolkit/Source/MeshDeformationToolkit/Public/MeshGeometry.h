@@ -751,7 +751,9 @@ public:
 			AutoCreateRefTerm = "Materials"
 			)
 	)
-		bool SaveToProceduralMeshComponent(UProceduralMeshComponent *ProceduralMeshComponent, bool bCreateCollision);
+		bool SaveToProceduralMeshComponent(
+			UProceduralMeshComponent *ProceduralMeshComponent,
+			bool bCreateCollision);
 
 	/*
 	##################################################
@@ -829,6 +831,15 @@ public:
 			)
 	)
 		int32 GetTotalVertexCount() const;
+
+	/// Calculates the tangents and normals for the mesh
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+		meta = (
+			ToolTip = "Rebuild all of the normals and tangents based on deformed geometry",
+			Keywords = "rebuild normals calculate tangents"
+			)
+	)
+		void RebuildNormals();
 
 private:
 	/// Calculate the minimum distance from the original that a plane with the provided
