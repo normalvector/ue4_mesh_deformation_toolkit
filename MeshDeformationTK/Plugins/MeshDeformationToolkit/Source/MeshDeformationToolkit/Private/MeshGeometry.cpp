@@ -608,10 +608,17 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 			// Get the existing data from the two components.
 			FVector VertexFromThis = this->Sections[SectionIndex].Vertices[VertexIndex];
 			FVector VertexFromTarget = TargetMeshGeometry->Sections[SectionIndex].Vertices[VertexIndex];
+			FVector NormalFromThis = this->Sections[SectionIndex].Normals[VertexIndex];
+			FVector NormalFromTarget = TargetMeshGeometry->Sections[SectionIndex].Normals[VertexIndex];
 
 			// TODO: World/local logic should live here.
 			this->Sections[SectionIndex].Vertices[VertexIndex] = FMath::Lerp(
 				VertexFromThis, VertexFromTarget,
+				Alpha * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f)
+			);
+			// TODO: World/local logic should live here.
+			this->Sections[SectionIndex].Normals[VertexIndex] = FMath::Lerp(
+				NormalFromThis, NormalFromTarget,
 				Alpha * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f)
 			);
 		}
