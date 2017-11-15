@@ -21,8 +21,8 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Select Near|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMaterialBallMap, SelectionDemo/SelectNearTranslatePlaneMap |
 |MDC|Select Near Line|Yes|Yes|Yes| SelectionDemo/SelectNearLineTranslateMap, SelectionDemo/SelectNearLineInfiniteTranslateMap |
 |MDC|Select Near Spline|Yes|Yes|Yes| SelectionDemo/SelectNearSplineMap|
-|MDC|Conform|Yes|Yes|Yes|
-|MDC|Conform Down|Yes|Yes|Yes|
+|MDC|Conform|Yes|Yes|Yes| TransformDemo/Conform |
+|MDC|Conform Down|Yes|Yes|Yes| TransformDemo/ConformDown |
 |MDC|Fit to Spline|Yes|Yes|Yes|
 |MDC|Flip Normals|Yes|Yes|Yes|
 |MDC|Flip Texture UV|Yes|Yes|Yes|
