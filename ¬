@@ -1,0 +1,16 @@
+Now have a number of FitToSpline demos.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is ahead of 'origin/master' by 2 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	new file:   MeshDeformationTK/Content/MDT/Demo/Blueprints/BP_FitToSplineAnimated.uasset
+#	new file:   MeshDeformationTK/Content/MDT/Demo/Curves/BumpyProfile.uasset
+#	new file:   MeshDeformationTK/Content/MDT/Demo/Maps/TransformDemo/FitToSpline.umap
+#	new file:   MeshDeformationTK/Content/MDT/Demo/Maps/TransformDemo/FitToSplineAnimated.umap
+#	new file:   MeshDeformationTK/Content/MDT/Demo/Maps/TransformDemo/FitToSplineProfile.umap
+#	modified:   notes.md
+#
