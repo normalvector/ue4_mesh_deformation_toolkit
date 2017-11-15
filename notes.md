@@ -23,7 +23,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Select Near Spline|Yes|Yes|Yes| SelectionDemo/SelectNearSplineMap|
 |MDC|Conform|Yes|Yes|Yes| TransformDemo/Conform |
 |MDC|Conform Down|Yes|Yes|Yes| TransformDemo/ConformDown |
-|MDC|Fit to Spline|Yes|Yes|Yes|
+|MDC|Fit to Spline|Yes|Yes|Yes| TransformDemo/FitToSpline , TransformDemo/FitToSplineProfile, TransformDemo/FitToSplineAnimated |
 |MDC|Flip Normals|Yes|Yes|Yes|
 |MDC|Flip Texture UV|Yes|Yes|Yes|
 |MDC|Inflate|Yes|Yes|Yes| TransformDemo/Inflate |
@@ -85,7 +85,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MG|Get Summary|Yes|Yes| | | |
 |MG|Get Total Triangle Count|Yes|Yes| | | |
 |MG|Get Total Vertex Count|Yes|Yes| | | |
-|MDC|RebuildNormals| | | |
+|MG|RebuildNormals| | | |
 |SS|Size|Yes|Yes|Yes|
 |SSBPL|SelectionSet + Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|
