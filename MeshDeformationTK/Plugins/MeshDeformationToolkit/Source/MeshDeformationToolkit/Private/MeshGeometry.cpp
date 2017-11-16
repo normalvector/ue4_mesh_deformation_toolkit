@@ -489,8 +489,13 @@ FString UMeshGeometry::GetSummary() const
 {
 	return FString::Printf(
 		TEXT("%d sections, %d vertices, %d triangles"),
-		this->Sections.Num(), this->GetTotalVertexCount(), this->GetTotalTriangleCount()
+		this->GetSectionCount, this->GetTotalVertexCount(), this->GetTotalTriangleCount()
 	);
+}
+
+int32 UMeshGeometry::GetSectionCount() const
+{
+	return this->Sections.Num();
 }
 
 int32 UMeshGeometry::GetTotalTriangleCount() const

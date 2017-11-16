@@ -806,6 +806,17 @@ public:
 	)
 		FString GetSummary() const;
 
+	/// Return the number of sections making up the mesh.
+	///
+	/// \return The number of sections making up the mesh.
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+			  meta = (
+				  ToolTip = "Return the number of sections making up the mesh",
+				  Keywords = "info"
+				)
+	)
+		int32 GetSectionCount() const;
+
 	/// Return the number of total triangles in the geometry.
 	///
 	/// This is the combined sum of the triangles in each of the sections which make up this mesh.
@@ -814,7 +825,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 		meta = (
 			ToolTip = "Returns the number of triangles in the mesh",
-			Keywords = "tris polys polygons faces"
+			Keywords = "info tris polys polygons faces"
 			)
 	)
 		int32 GetTotalTriangleCount() const;
@@ -827,7 +838,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshGeometry,
 		meta = (
 			ToolTip = "Returns the number of vertices in the mesh",
-			Keywords = "verts points"
+			Keywords = "info verts points"
 			)
 	)
 		int32 GetTotalVertexCount() const;
