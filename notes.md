@@ -30,9 +30,9 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Jitter|Yes|Yes|Yes| TransformDemo/Jitter |
 |MDC|Lerp|Yes|Yes|Yes|
 |MDC|Lerp Vector|Yes|Yes|Yes|
-|MDC|Rotate|Yes|Yes|Yes|
-|MDC|Rotate Around Axis|Yes|Yes|Yes|
-|MDC|Scale|Yes|Yes|Yes|
+|MDC|Rotate|Yes|Yes|Yes| TransformDemo/Rotate |
+|MDC|Rotate Around Axis|Yes|Yes|Yes| TransformDemo/RotateAboutAxis |
+|MDC|Scale|Yes|Yes|Yes| TransformDemo/Scale |
 |MDC|ScaleAlongAxis|Yes|Yes|Yes|
 |MDC|Spherize|Yes|Yes|Yes|
 |MDC|Transform|Yes|Yes|Yes|
