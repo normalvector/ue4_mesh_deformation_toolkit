@@ -33,9 +33,9 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Rotate|Yes|Yes|Yes| TransformDemo/Rotate |
 |MDC|Rotate Around Axis|Yes|Yes|Yes| TransformDemo/RotateAboutAxis |
 |MDC|Scale|Yes|Yes|Yes| TransformDemo/Scale |
-|MDC|ScaleAlongAxis|Yes|Yes|Yes|
+|MDC|ScaleAlongAxis|Yes|Yes|Yes| TransformDemo/ScaleAlongAxis |
 |MDC|Spherize|Yes|Yes|Yes|
-|MDC|Transform|Yes|Yes|Yes|
+|MDC|Transform|Yes|Yes|Yes| TransformDemo/TransformMap |
 |MDC|Transform UV|Yes|Yes|Yes|
 |MDC|Translate|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMap |
 |MDC|Save to Procedural Mesh Component|Yes|Yes|Yes|
