@@ -43,9 +43,9 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Clone Mesh Geometry|Yes|Yes|Yes|
 |MDC|Has Geometry|Yes|Yes|Yes|
 |MDC|Get Bounding Box|Yes|Yes|Yes|
-|MDC|Get Summary|Yes|Yes|Yes|
-|MDC|Get Total Triangle Count|Yes|Yes|Yes|
-|MDC|Get Total Vertex Count|Yes|Yes|Yes|
+|MDC|Get Summary|Yes|Yes|Yes| UtilityDemo/MetadataMap |
+|MDC|Get Total Triangle Count|Yes|Yes|Yes| UtilityDemo/MetadataMap |
+|MDC|Get Total Vertex Count|Yes|Yes|Yes| UtilityDemo/MetadataMap |
 |MDC|RebuildNormals|Yes|Yes|Yes|
 |MG|Load from Mesh Geometry|Yes|Yes| |
 |MG|Load from Static Mesh|Yes|Yes| |
