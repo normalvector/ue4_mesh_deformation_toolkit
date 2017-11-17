@@ -257,6 +257,22 @@ void UMeshDeformationComponent::LerpVector(
 	MeshGeometry->LerpVector(Position, Alpha, Selection);
 }
 
+void UMeshDeformationComponent::MoveTowards(
+	UMeshDeformationComponent *&MeshDeformationComponent,
+	FVector Position, float Distance, bool bLimitAtPosition /*= false*/,
+	USelectionSet *Selection /*= nullptr */)
+{
+	MeshDeformationComponent = this;
+
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("MoveTowards: No meshGeometry loaded"));
+		return;
+	}
+
+	MeshGeometry->MoveTowards(Position, Distance, bLimitAtPosition, Selection);
+}
+
 bool UMeshDeformationComponent::LoadFromMeshDeformationComponent(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	UMeshDeformationComponent *SourceMeshDeformationComponent)

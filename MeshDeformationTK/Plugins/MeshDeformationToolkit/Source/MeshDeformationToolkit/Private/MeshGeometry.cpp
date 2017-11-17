@@ -11,6 +11,7 @@
 #include "Runtime/AssetRegistry/Public/AssetRegistryModule.h" // Allows registering new static meshes
 
 #include "MeshGeometry.h"
+#include "Engine.h" // GEngine
 
 UMeshGeometry::UMeshGeometry()
 {
@@ -480,6 +481,7 @@ float UMeshGeometry::GetRadius() const
 				FMath::Max(Radius, Vertex.Size()) :
 				Vertex.Size();
 		}
+		bHaveProcessedFirstVector = true;
 	}
 
 	return Radius;
@@ -489,7 +491,7 @@ FString UMeshGeometry::GetSummary() const
 {
 	return FString::Printf(
 		TEXT("%d sections, %d vertices, %d triangles"),
-		this->GetSectionCount, this->GetTotalVertexCount(), this->GetTotalTriangleCount()
+		this->GetSectionCount(), this->GetTotalVertexCount(), this->GetTotalTriangleCount()
 	);
 }
 
@@ -652,6 +654,40 @@ void UMeshGeometry::LerpVector(FVector Position, float Alpha /*= 0.0*/, USelecti
 		}
 	}
 }
+
+void UMeshGeometry::MoveTowards(FVector Position, float Distance, bool bLimitAtPosition, USelectionSet *Selection /*= nullptr */)
+{
+	// Check selectionSet size- log and abort if there's a problem. 
+	if (!SelectionSetIsRightSize(Selection, TEXT("MoveTowards")))
+	{
+		return;
+	}
+
+	// Iterate over the sections, and the vertices in the sections.
+	int32 NextVertexIndex = 0;
+	for (auto &Section:this->Sections)
+	{
+		for (auto &Vertex:Section.Vertices)
+		{
+			// Calculate the actual distance including the SelectionSet strength.
+			float AdjustedDistance = Distance * (Selection ? Selection->Weights[NextVertexIndex++] : 1.0f);
+
+			// If we're moving 'past' the position and are limited then stop there, otherwise move
+			// the point
+			if (bLimitAtPosition && AdjustedDistance>=FVector::Distance(Vertex, Position))
+			{
+				// We're not allowed to move through the Position so move to it.
+				Vertex = Position;
+			}
+			else
+			{
+				// Move the vertex the correct distance
+				Vertex = Vertex+(AdjustedDistance * (Position-Vertex).GetSafeNormal());
+			}
+		}
+	}
+}
+
 bool UMeshGeometry::LoadFromMeshGeometry(const UMeshGeometry *SourceMeshGeometry)
 {
 	// If there's no source geometry we have nothing to do..

@@ -641,6 +641,25 @@ public:
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			FVector Position, float Alpha = 0.0, USelectionSet *Selection = nullptr);
 
+	/// Move points towards a provided point- or if the distance is negative moves them away.
+	///
+	/// \param MeshDeformationComponent		This component
+	/// \param Position						The target position to move away from/to
+	/// \param Distance						The distance to move each point
+	/// \param bLimitAtPosition				Whether to stop points if they would move through Position
+	/// \param Selection					The SelectionSet which scales the movement on a per-vertex basis.
+	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
+			  meta = (
+			  ToolTip = "Move vertices towards/away from the position provided",
+			  Keywords = "pull push away to from"
+	)
+	)
+		void MoveTowards(
+			UMeshDeformationComponent *&MeshDeformationComponent,
+			FVector Position, float Distance,
+			bool bLimitAtPosition = false, USelectionSet *Selection = nullptr
+		);
+
 	/// Rotates the vertices of the mesh a specified amount round the specified position.
 	///
 	/// If a SelectionSet is provided then the actual rotator will be scaled accordingly allowing

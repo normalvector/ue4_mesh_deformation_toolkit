@@ -530,6 +530,10 @@ public:
 
 	/// Does a linear interpolate pulling/pushing all vertices relative to the
 	/// vector provided.
+	///
+	/// \param Position						The point to lerp towards
+	/// \param Alpha						An overall strength of the lerp, 0=Return this mesh, 1=Collapse completely.
+	/// \param Selection					The SelectionSet which controls the blend strength on a per-vertex basis.
 	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
 		meta = (
 			ToolTip = "Blend vertices towards the position provided",
@@ -537,6 +541,23 @@ public:
 			)
 	)
 		void LerpVector(FVector Position, float Alpha = 0.0, USelectionSet *Selection = nullptr);
+
+	/// Move points towards a provided point- or if the distance is negative moves them away.
+	///
+	/// \param Position						The target position to move away from/to
+	/// \param Distance						The distance to move each point
+	/// \param bLimitAtPosition				Whether to stop points if they would move through Position
+	/// \param Selection					The SelectionSet which scales the movement on a per-vertex basis.
+	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+			  meta = (
+			  ToolTip = "Move vertices towards/away from the position provided",
+			  Keywords = "pull push away to from"
+				)
+	)
+		void MoveTowards(
+			FVector Position, float Distance,
+			bool bLimitAtPosition=false, USelectionSet *Selection = nullptr
+		);
 
 	/// Rotates the vertices of the mesh a specified amount round the specified position.
 	/// 
