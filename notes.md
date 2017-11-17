@@ -35,7 +35,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Rotate Around Axis|Yes|Yes|Yes| TransformDemo/RotateAboutAxis |
 |MDC|Scale|Yes|Yes|Yes| TransformDemo/Scale |
 |MDC|ScaleAlongAxis|Yes|Yes|Yes| TransformDemo/ScaleAlongAxis |
-|MDC|Spherize|Yes|Yes|Yes|
+|MDC|Spherize|Yes|Yes|Yes| TransformDemo/Spherize |
 |MDC|Transform|Yes|Yes|Yes| TransformDemo/TransformMap |
 |MDC|Transform UV|Yes|Yes|Yes|
 |MDC|Translate|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMap |
@@ -47,7 +47,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Get Summary|Yes|Yes|Yes| UtilityDemo/MetadataMap |
 |MDC|Get Total Triangle Count|Yes|Yes|Yes| UtilityDemo/MetadataMap |
 |MDC|Get Total Vertex Count|Yes|Yes|Yes| UtilityDemo/MetadataMap |
-|MDC|RebuildNormals|Yes|Yes|Yes|
+|MDC|RebuildNormals|Yes|Yes|Yes| UtilityDemo/RebuildNormals |
 |MG|Load from Mesh Geometry|Yes|Yes| |
 |MG|Load from Static Mesh|Yes|Yes| |
 |MG|Select All|Yes|Yes| | | |
