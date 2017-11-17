@@ -136,6 +136,7 @@ All of these transform operations can be controlled by providing an optional Sel
 * **Jitter**: Add random jitter to the position of the vertices.  This is a fairly crude approach and often you'll get better results using *SelectByNoise*.
 * **Lerp**: A linear interpolation against the geometry stored in another MeshDeformationComponent.
 * **Lerp Vector**: Blend vertices towards the position provided.
+* **Move Towards**: Move vertices a specified distance towards/away from a specified point.
 * **Rotate**: Rotate the vertices around a specified center using a standard UE4 [Rotator](https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Rotator/index.html).
 * **Rotate Around Axis**: Rotate vertices around an arbitrary axis.  This is more difficult to use than *Rotate* but is more flexible in what's possible.
 * **Scale**: Scale the mesh using normal XYZ scaling about a specified center.

@@ -1629,9 +1629,13 @@ void UMeshGeometry::Spherize(
 			const FVector VertexRelativeToCenter = Vertex-SphereCenter;
 
 			// Calculate the required length- incorporating both the SphereRadius and Selection.
-			const float TargetVectorLength = FMath::Lerp(VertexRelativeToCenter.Size(), SphereRadius, FilterStrength * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f));
+			const float TargetVectorLength = FMath::Lerp(
+				VertexRelativeToCenter.Size(),
+				SphereRadius,
+				FilterStrength * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f)
+			);
 
-			Vertex = SphereCenter+(VertexRelativeToCenter * TargetVectorLength);
+			Vertex = SphereCenter+(VertexRelativeToCenter.GetSafeNormal() * TargetVectorLength);
 		}
 	}
 }

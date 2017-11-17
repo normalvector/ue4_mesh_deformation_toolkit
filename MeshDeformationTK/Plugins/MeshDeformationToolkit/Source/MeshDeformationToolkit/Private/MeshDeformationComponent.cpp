@@ -164,8 +164,10 @@ int32 UMeshDeformationComponent::GetTotalVertexCount() const
 	return MeshGeometry->GetTotalVertexCount();
 }
 
-void UMeshDeformationComponent::RebuildNormals()
+void UMeshDeformationComponent::RebuildNormals(UMeshDeformationComponent *&MeshDeformationComponent)
 {
+	MeshDeformationComponent = this;
+
 	if (!MeshGeometry)
 	{
 		UE_LOG(MDTLog, Warning, TEXT("RebuildNormals: No meshGeometry loaded"));

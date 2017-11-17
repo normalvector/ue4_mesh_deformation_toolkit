@@ -23,13 +23,14 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Select Near Spline|Yes|Yes|Yes| SelectionDemo/SelectNearSplineMap|
 |MDC|Conform|Yes|Yes|Yes| TransformDemo/Conform |
 |MDC|Conform Down|Yes|Yes|Yes| TransformDemo/ConformDown |
-|MDC|Fit to Spline|Yes|Yes|Yes| TransformDemo/FitToSpline , TransformDemo/FitToSplineProfile, TransformDemo/FitToSplineAnimated |
+|MDC|Fit to Spline|Yes|Yes|Yes| TransformDemo/FitToSpline , TransformDemo/FitToSplineProfile, TransformDemo/FitToSplineAnimated, TransformDemo/FitToSplineConformDown |
 |MDC|Flip Normals|Yes|Yes|Yes|
 |MDC|Flip Texture UV|Yes|Yes|Yes|
 |MDC|Inflate|Yes|Yes|Yes| TransformDemo/Inflate |
 |MDC|Jitter|Yes|Yes|Yes| TransformDemo/Jitter |
 |MDC|Lerp|Yes|Yes|Yes|
 |MDC|Lerp Vector|Yes|Yes|Yes|
+|MDC|Move Towards|Yes|Yes|Yes| TransformDemo/MoveTowards |
 |MDC|Rotate|Yes|Yes|Yes| TransformDemo/Rotate |
 |MDC|Rotate Around Axis|Yes|Yes|Yes| TransformDemo/RotateAboutAxis |
 |MDC|Scale|Yes|Yes|Yes| TransformDemo/Scale |
