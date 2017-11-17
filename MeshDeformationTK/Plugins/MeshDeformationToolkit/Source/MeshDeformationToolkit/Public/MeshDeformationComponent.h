@@ -952,13 +952,24 @@ public:
 	)
 		FBox GetBoundingBox() const;
 
+	/// Return the number of sections making up the mesh.
+	///
+	/// \return The number of sections making up the mesh.
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
+			  meta = (
+			  ToolTip = "Return the number of sections making up the mesh",
+			  Keywords = "info"
+	)
+	)
+		int32 GetSectionCount() const;
+
 	/// Get a brief description of this geometry in the form *"4 sections, 1000 vertices, 500 triangles"*
 	///
 	/// This is mainly for debug purposes and making sure things have not broken.
 	///
 	/// \return A text summary
 	UFUNCTION(
-		BlueprintCallable, BlueprintPure, Category = MeshGeometry,
+		BlueprintCallable, BlueprintPure, Category = MeshDeformationComponent,
 		meta = (
 			ToolTip = "Returns a brief text description of the mesh, eg. '4 sections, 1000 vertices, 500 triangles'",
 			Keywords="info string verts points tris polys faces sections mesh"
@@ -972,7 +983,7 @@ public:
 	///
 	/// \return The total triangle count
 	UFUNCTION(
-		BlueprintCallable, BlueprintPure, Category=MeshGeometry,
+		BlueprintCallable, BlueprintPure, Category= MeshDeformationComponent,
 		meta=(
 			ToolTip="Returns the number of weights in this SelectionSet the number of triangles in the mesh",
 			Keywords="tris polys polygons faces"
@@ -986,7 +997,7 @@ public:
 	///
 	/// \return The total vertex count
 	UFUNCTION(
-		BlueprintCallable, BlueprintPure, Category=MeshGeometry,
+		BlueprintCallable, BlueprintPure, Category= MeshDeformationComponent,
 		meta=(
 			ToolTip="Returns the number of weights in this SelectionSet the number of vertices in the mesh",
 			Keywords="verts points"
@@ -997,7 +1008,7 @@ public:
 	/// Calculates the tangents and normals for the mesh based on deformed geometry
 	///
 	/// \param MeshDeformationComponent			This component, used for method chaining.
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
+	UFUNCTION(BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (
 			ToolTip = "Rebuild all of the normals and tangents based on deformed geometry",
 			Keywords = "rebuild normals calculate tangents"

@@ -131,6 +131,18 @@ FBox UMeshDeformationComponent::GetBoundingBox() const
 	return MeshGeometry->GetBoundingBox();
 }
 
+int32 UMeshDeformationComponent::GetSectionCount() const
+{
+
+	if (!MeshGeometry)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("GetSectionCount: No meshGeometry loaded"));
+		return 0;
+	}
+
+	return MeshGeometry->GetSectionCount();
+}
+
 FString UMeshDeformationComponent::GetSummary() const
 {
 	if (!MeshGeometry)
