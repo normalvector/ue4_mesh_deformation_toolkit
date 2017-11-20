@@ -89,28 +89,28 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MG|RebuildNormals| | | |
 |SS|Size|Yes|Yes|Yes|
 |SSBPL|SelectionSet + Float|Yes|Yes|Yes|
-|SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|
+|SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|  SelectionSetMathsDemo/AddSelectionSets |
 |SSBPL|Clamp (SelectionSet)|Yes|Yes|Yes|
 |SSBPL|Float / SelectionSet|Yes|Yes|Yes|
 |SSBPL|SeletionSet / Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet / SelectionSet|Yes|Yes|Yes|
-|SSBPL|Ease (SelectionSet)|Yes|Yes|Yes|
+|SSBPL|Ease (SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/Ease |
 |SSBPL|Lerp (SelectionSet, Float)|Yes|Yes|Yes|
 |SSBPL|Lerp (SelectionSet, SelectionSet) with Float|Yes|Yes|Yes|
 |SSBPL|Lerp (SelectionSet, SelectionSet) with SelectionSet|Yes|Yes|Yes|
 |SSBPL|Max (SelectionSet, Float)|Yes|Yes|Yes|
-|SSBPL|Max (SelectionSet, SelectionSet)|Yes|Yes|Yes|
+|SSBPL|Max (SelectionSet, SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/MaxSelectionSets |
 |SSBPL|Min (SelectionSet, Float)|Yes|Yes|Yes|
-|SSBPL|Min (SelectionSet, SelectionSet)|Yes|Yes|Yes|
+|SSBPL|Min (SelectionSet, SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/MinSelectionSets |
 |SSBPL|SelectionSet * Float|Yes|Yes|Yes|
-|SSBPL|SelectionSet * SelectionSet|Yes|Yes|Yes|
+|SSBPL|SelectionSet * SelectionSet|Yes|Yes|Yes| SelectionSetMathsDemo/MultiplyingSelectionSets |
 |SSBPL|OneMinus (SelectionSet)|Yes|Yes|Yes|
 |SSBPL|Power (SelectionSet, Float)|Yes|Yes|Yes|
 |SSBPL|Randomize (SelectionSet)|Yes|Yes|Yes|
-|SSBPL|RemapToCure (SelectionSet, Float Curve)|Yes|Yes|Yes|
+|SSBPL|RemapToCurve (SelectionSet, Float Curve)|Yes|Yes|Yes| SelectionSetMathsDemo/RemapToCurve, SelectionSetMathsDemo/SelectByNoiseRemapToCurve |
 |SSBPL|RemapToRange (SelectionSet)|Yes|Yes|Yes|
 |SSBPL|RemapRipple (SelectionSet)|Yes|Yes|Yes|
 |SSBPL|Set (SelectionSet)|Yes|Yes|Yes|
 |SSBPL|SelectionSet - Float|Yes|Yes|Yes|
 |SSBPL|Float - SelectionSet|Yes|Yes|Yes|
-|SSBPL|SelectionSet - SelectionSet|Yes|Yes|Yes|
+|SSBPL|SelectionSet - SelectionSet|Yes|Yes|Yes| SelectionSetMathsDemo/SubtractSelectionSets |
