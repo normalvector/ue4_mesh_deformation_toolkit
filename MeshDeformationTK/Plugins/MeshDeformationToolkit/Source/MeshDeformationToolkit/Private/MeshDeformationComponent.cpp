@@ -90,20 +90,6 @@ void UMeshDeformationComponent::FitToSpline(
 	);
 }
 
-void UMeshDeformationComponent::FlipNormals(
-	UMeshDeformationComponent *&MeshDeformationComponent,
-	USelectionSet *Selection /*= nullptr*/)
-{
-	MeshDeformationComponent = this;
-
-	if (!MeshGeometry)
-	{
-		UE_LOG(MDTLog, Warning, TEXT("FlipNormals: No meshGeometry loaded"));
-		return;
-	}
-	MeshGeometry->FlipNormals(Selection);
-}
-
 void UMeshDeformationComponent::FlipTextureUV(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	bool bFlipU /*= false*/,
@@ -118,7 +104,6 @@ void UMeshDeformationComponent::FlipTextureUV(
 		return;
 	}
 	MeshGeometry->FlipTextureUV(bFlipU, bFlipV, Selection);
-
 }
 
 FBox UMeshDeformationComponent::GetBoundingBox() const

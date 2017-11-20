@@ -277,34 +277,6 @@ void UMeshGeometry::FitToSpline(
 	}
 }
 
-void UMeshGeometry::FlipNormals(USelectionSet *Selection /*= nullptr*/)
-{
-	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetIsRightSize(Selection, TEXT("FlipNormals")))
-	{
-		return;
-	}
-
-	// Iterate over the sections, and the normals in the sections.
-	int32 NextWeightIndex = 0;
-	for (auto &Section:this->Sections)
-	{
-		for (auto &Normal:Section.Normals)
-		{
-			// Obtain the next weighting and check if it's >=0.5
-			const bool bShouldFlip =
-				Selection ? Selection->Weights[NextWeightIndex++]>=0.5 : true;
-
-			// If we need to flip then rebuild the UV based on which channels we're
-			//  flipping.
-			if (bShouldFlip)
-			{
-				Normal = -Normal;
-			}
-		}
-	}
-}
-
 void UMeshGeometry::FlipTextureUV(
 	bool bFlipU /*= false*/,
 	bool bFlipV /*= false*/,

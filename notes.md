@@ -24,8 +24,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Conform|Yes|Yes|Yes| TransformDemo/Conform |
 |MDC|Conform Down|Yes|Yes|Yes| TransformDemo/ConformDown |
 |MDC|Fit to Spline|Yes|Yes|Yes| TransformDemo/FitToSpline , TransformDemo/FitToSplineProfile, TransformDemo/FitToSplineAnimated, TransformDemo/FitToSplineConformDown |
-|MDC|Flip Normals|Yes|Yes|Yes|
-|MDC|Flip Texture UV|Yes|Yes|Yes|
+|MDC|Flip Texture UV|Yes|Yes|Yes| TransformDemo/FlipTextureUV |
 |MDC|Inflate|Yes|Yes|Yes| TransformDemo/Inflate |
 |MDC|Jitter|Yes|Yes|Yes| TransformDemo/Jitter |
 |MDC|Lerp|Yes|Yes|Yes|
@@ -64,7 +63,6 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MG|Conform|Yes|Yes| | | |
 |MG|Conform Down|Yes|Yes| | | |
 |MG|Fit to Spline|Yes|Yes| | | |
-|MG|Flip Normals|Yes|Yes| | | |
 |MG|FlipTextureUV|Yes|Yes| | | |
 |MG|Inflate|Yes|Yes| | | |
 |MG|Jitter|Yes|Yes| | | |
@@ -90,7 +88,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |SS|Size|Yes|Yes|Yes|
 |SSBPL|SelectionSet + Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|  SelectionSetMathsDemo/AddSelectionSets |
-|SSBPL|Clamp (SelectionSet)|Yes|Yes|Yes|
+|SSBPL|Clamp (SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/Clamp |
 |SSBPL|Float / SelectionSet|Yes|Yes|Yes|
 |SSBPL|SeletionSet / Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet / SelectionSet|Yes|Yes|Yes|

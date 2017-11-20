@@ -446,18 +446,6 @@ public:
 			USelectionSet *Selection=nullptr
 		);
 
-	/// Flip the surface normals.
-	///
-	/// \param Selection						The SelectionSet to be applied- this will
-	///											be used as a true/false filter based on
-	///											whether each weighting is >=0.5.
-	UFUNCTION(BlueprintCallable, Category = MeshGeometry,
-		meta = (
-			ToolTip = "Flip the surface normals"
-			)
-	)
-		void FlipNormals(USelectionSet *Selection = nullptr);
-
 	/// Flip the texture map channel in U (horizontal), V(vertical), both, or neither.
 	///
 	/// \param bFlipU							Flip the texture horizontally
