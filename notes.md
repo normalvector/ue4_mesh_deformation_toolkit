@@ -109,7 +109,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |SSBPL|Randomize (SelectionSet)|Yes|Yes|Yes|
 |SSBPL|RemapToCurve (SelectionSet, Float Curve)|Yes|Yes|Yes| SelectionSetMathsDemo/RemapToCurve, SelectionSetMathsDemo/SelectByNoiseRemapToCurve |
 |SSBPL|RemapToRange (SelectionSet)|Yes|Yes|Yes|
-|SSBPL|RemapRipple (SelectionSet)|Yes|Yes|Yes|
+|SSBPL|RemapPeriodic (SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/RemapPeriodic |
 |SSBPL|Set (SelectionSet)|Yes|Yes|Yes|
 |SSBPL|SelectionSet - Float|Yes|Yes|Yes|
 |SSBPL|Float - SelectionSet|Yes|Yes|Yes|

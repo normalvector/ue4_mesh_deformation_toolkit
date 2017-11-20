@@ -414,19 +414,24 @@ public:
 		static USelectionSet *RemapToRange(USelectionSet *Value, float Min=0.0f, float Max=1.0f);
 
 
-	/// Remaps a SelectionSet by applying a number of ripples.
+	/// Remaps a SelectionSet by making it repeat
 	///
 	/// This can be used to create repeated gradients, or to convert a selection into a series
 	/// of rings.
+	///
+	/// \param Value				The SelectionSet to remap
+	/// \param NumberOfRepeats		The number of repeats (periods) we're remapping to
+	/// \param bIncludeReversals	Whether to reverse every other mapping
 	UFUNCTION(
 		BlueprintPure,
 		meta = (
-			DisplayName = "RemapRipple(SelectionSet)",
-			ToolTip="[RemapRipple(SelectionSet)] Remap a SelectionSet by 'rippling' it, adding repetitions and optionally converting it to an 'up-down'' pattern",
-			Category = "Math|SelectionSet"
+			DisplayName = "RemapPeriodic(SelectionSet)",
+			ToolTip="[RemapPeriodic(SelectionSet)] Remap a SelectionSet by mapping it to a period, adding repetitions and optionally converting it to an 'up-down' pattern by including inverts",
+			Category = "Math|SelectionSet",
+			Keywords = "ripple repeat repetitions"
 			)
 		)
-		static USelectionSet *RemapRipple(USelectionSet *Value, int32 NumberOfRipples = 4, bool UpAndDown = true);
+		static USelectionSet *RemapPeriodic(USelectionSet *Value, int32 NumberOfRepeats = 4, bool bIncludeReversals = true);
 
 	/// Set all values of a SelectionSet to the same Float
 	///

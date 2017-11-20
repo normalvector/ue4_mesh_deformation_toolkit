@@ -648,20 +648,20 @@ USelectionSet * USelectionSetBPLibrary::RemapToRange(USelectionSet *Value, float
 }
 
 
-USelectionSet * USelectionSetBPLibrary::RemapRipple(
-	USelectionSet *Value, int32 NumberOfRipples /*= 4*/, bool bUpAndDown /*= true*/)
+USelectionSet * USelectionSetBPLibrary::RemapPeriodic(
+	USelectionSet *Value, int32 NumberOfRepeats /*= 4*/, bool bIncludeReversals /*= true*/)
 {
 	// Need a SelectionSet
 	if (!Value)
 	{
-		UE_LOG(MDTLog, Warning, TEXT("RemapRipple: Need a SelectionSet"));
+		UE_LOG(MDTLog, Warning, TEXT("RemapPeriodic: Need a SelectionSet"));
 		return nullptr;
 	}
 
 	// Create a zeroed SelectionSet to store results, sized correctly for performance
 	const int32 Size = Value->Size();
 	USelectionSet *Result = USelectionSet::CreateAndCheckValid(
-		Size, Value->GetOuter(), TEXT("RemapRipple"));
+		Size, Value->GetOuter(), TEXT("RemapPeriodic"));
 	if (!Result)
 	{
 		return nullptr;
@@ -669,9 +669,9 @@ USelectionSet * USelectionSetBPLibrary::RemapRipple(
 
 	// Perform the remap
 	for (int32 WeightIndex=0; WeightIndex<Size; WeightIndex++) {
-		const float ScaledValue = Value->Weights[WeightIndex] * NumberOfRipples;
+		const float ScaledValue = Value->Weights[WeightIndex] *NumberOfRepeats;
 		const bool bIsOdd = (FPlatformMath::FloorToInt(ScaledValue) % 2) ==1;
-		const bool bShouldInvert = bUpAndDown && bIsOdd;
+		const bool bShouldInvert = bIncludeReversals && bIsOdd;
 	
 		Result->Weights[WeightIndex] = bShouldInvert ?
 			1.0f-FMath::Fmod(ScaledValue, 1.0f) :
