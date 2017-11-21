@@ -393,7 +393,7 @@ bool UMeshDeformationComponent::SaveToStaticMesh(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	UStaticMesh *StaticMesh,
 	UProceduralMeshComponent *ProceduralMeshComponent,
-	TArray<UMaterialInstance *> Materials)
+	TArray <UMaterialInterface *> Materials)
 {
 	MeshDeformationComponent = this;
 

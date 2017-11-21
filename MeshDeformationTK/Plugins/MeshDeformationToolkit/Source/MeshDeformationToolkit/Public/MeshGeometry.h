@@ -743,7 +743,7 @@ public:
 		bool SaveToStaticMesh(
 			UStaticMesh *StaticMesh,
 			UProceduralMeshComponent *ProceduralMeshComponent,
-			TArray<UMaterialInstance *> Materials
+			TArray<UMaterialInterface *> Materials
 		);
 
 	/// Save the current geometry to a *ProceduralMeshComponent*.

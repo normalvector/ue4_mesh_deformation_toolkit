@@ -898,7 +898,7 @@ public:
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			UStaticMesh *StaticMesh,
 			UProceduralMeshComponent *ProceduralMeshComponent,
-			TArray<UMaterialInstance *> Materials);
+			TArray<UMaterialInterface *> Materials);
 
 	/*
 	##################################################

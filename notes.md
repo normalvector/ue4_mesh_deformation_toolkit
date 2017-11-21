@@ -35,8 +35,8 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Scale|Yes|Yes|Yes| TransformDemo/Scale |
 |MDC|ScaleAlongAxis|Yes|Yes|Yes| TransformDemo/ScaleAlongAxis |
 |MDC|Spherize|Yes|Yes|Yes| TransformDemo/Spherize |
-|MDC|Transform|Yes|Yes|Yes| TransformDemo/TransformMap |
-|MDC|Transform UV|Yes|Yes|Yes|
+|MDC|Transform|Yes|Yes|Yes| TransformDemo/Transform |
+|MDC|Transform UV|Yes|Yes|Yes| TransformDemo/TransformUV |
 |MDC|Translate|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMap |
 |MDC|Save to Procedural Mesh Component|Yes|Yes|Yes|
 |MDC|Save to Static Mesh|Yes|Yes|Yes|
@@ -89,26 +89,26 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |SSBPL|SelectionSet + Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|  SelectionSetMathsDemo/AddSelectionSets |
 |SSBPL|Clamp (SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/Clamp |
-|SSBPL|Float / SelectionSet|Yes|Yes|Yes|
-|SSBPL|SeletionSet / Float|Yes|Yes|Yes|
-|SSBPL|SelectionSet / SelectionSet|Yes|Yes|Yes|
+|SSBPL|Float / SelectionSet|Yes|Yes|Yes| |
+|SSBPL|SeletionSet / Float|Yes|Yes|Yes| |
+|SSBPL|SelectionSet / SelectionSet|Yes|Yes|Yes| |
 |SSBPL|Ease (SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/Ease |
 |SSBPL|Lerp (SelectionSet, Float)|Yes|Yes|Yes|
 |SSBPL|Lerp (SelectionSet, SelectionSet) with Float|Yes|Yes|Yes|
 |SSBPL|Lerp (SelectionSet, SelectionSet) with SelectionSet|Yes|Yes|Yes|
-|SSBPL|Max (SelectionSet, Float)|Yes|Yes|Yes|
+|SSBPL|Max (SelectionSet, Float)|Yes|Yes|Yes| |
 |SSBPL|Max (SelectionSet, SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/MaxSelectionSets |
-|SSBPL|Min (SelectionSet, Float)|Yes|Yes|Yes|
+|SSBPL|Min (SelectionSet, Float)|Yes|Yes|Yes| |
 |SSBPL|Min (SelectionSet, SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/MinSelectionSets |
-|SSBPL|SelectionSet * Float|Yes|Yes|Yes|
+|SSBPL|SelectionSet * Float|Yes|Yes|Yes| |
 |SSBPL|SelectionSet * SelectionSet|Yes|Yes|Yes| SelectionSetMathsDemo/MultiplyingSelectionSets |
-|SSBPL|OneMinus (SelectionSet)|Yes|Yes|Yes|
-|SSBPL|Power (SelectionSet, Float)|Yes|Yes|Yes|
-|SSBPL|Randomize (SelectionSet)|Yes|Yes|Yes|
+|SSBPL|OneMinus (SelectionSet)|Yes|Yes|Yes| |
+|SSBPL|Power (SelectionSet, Float)|Yes|Yes|Yes| |
+|SSBPL|Randomize (SelectionSet)|Yes|Yes|Yes| |
 |SSBPL|RemapToCurve (SelectionSet, Float Curve)|Yes|Yes|Yes| SelectionSetMathsDemo/RemapToCurve, SelectionSetMathsDemo/SelectByNoiseRemapToCurve |
 |SSBPL|RemapToRange (SelectionSet)|Yes|Yes|Yes|
 |SSBPL|RemapPeriodic (SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/RemapPeriodic |
-|SSBPL|Set (SelectionSet)|Yes|Yes|Yes|
-|SSBPL|SelectionSet - Float|Yes|Yes|Yes|
-|SSBPL|Float - SelectionSet|Yes|Yes|Yes|
-|SSBPL|SelectionSet - SelectionSet|Yes|Yes|Yes| SelectionSetMathsDemo/SubtractSelectionSets |
+|SSBPL|Set (SelectionSet)|Yes|Yes|Yes| |
+|SSBPL|SelectionSet - Float|Yes|Yes|Yes| |
+|SSBPL|Float - SelectionSet|Yes|Yes|Yes| |
+|SSBPL|SelectionSet - SelectionSet|Yes|Yes|Yes| | SelectionSetMathsDemo/SubtractSelectionSets |

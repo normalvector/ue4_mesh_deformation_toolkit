@@ -830,7 +830,7 @@ bool UMeshGeometry::SaveToProceduralMeshComponent(
 bool UMeshGeometry::SaveToStaticMesh(
 	UStaticMesh *StaticMesh,
 	UProceduralMeshComponent *ProceduralMeshComponent,
-	TArray<UMaterialInstance *> Materials)
+	TArray<UMaterialInterface *> Materials)
 {
 	// This will only work in the editor..
 #if !WITH_EDITOR
