@@ -42,7 +42,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Save to Static Mesh|Yes|Yes|Yes|
 |MDC|Clone Mesh Geometry|Yes|Yes|Yes|
 |MDC|Has Geometry|Yes|Yes|Yes|
-|MDC|Get Bounding Box|Yes|Yes|Yes|
+|MDC|Get Bounding Box|Yes|Yes|Yes| UtilityDemo/GetBoundingBox |
 |MDC|Get Summary|Yes|Yes|Yes| UtilityDemo/MetadataMap |
 |MDC|Get Total Triangle Count|Yes|Yes|Yes| UtilityDemo/MetadataMap |
 |MDC|Get Total Vertex Count|Yes|Yes|Yes| UtilityDemo/MetadataMap |
@@ -85,7 +85,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MG|Get Total Triangle Count|Yes|Yes| | | |
 |MG|Get Total Vertex Count|Yes|Yes| | | |
 |MG|RebuildNormals| | | |
-|SS|Size|Yes|Yes|Yes|
+|SS|Size|Yes|Yes|Yes| |
 |SSBPL|SelectionSet + Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|  SelectionSetMathsDemo/AddSelectionSets |
 |SSBPL|Clamp (SelectionSet)|Yes|Yes|Yes| SelectionSetMathsDemo/Clamp |
