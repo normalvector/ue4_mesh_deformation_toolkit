@@ -38,8 +38,8 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Transform|Yes|Yes|Yes| TransformDemo/Transform |
 |MDC|Transform UV|Yes|Yes|Yes| TransformDemo/TransformUV |
 |MDC|Translate|Yes|Yes|Yes| SelectionDemo/SelectNearTranslateMap |
-|MDC|Save to Procedural Mesh Component|Yes|Yes|Yes|
-|MDC|Save to Static Mesh|Yes|Yes|Yes|
+|MDC|Save to Procedural Mesh Component|Yes|Yes|Yes| PassthroughDemo/Passthrough |
+|MDC|Save to Static Mesh|Yes|Yes|Yes| UtilityDemo/SaveToStaticMesh |
 |MDC|Clone Mesh Geometry|Yes|Yes|Yes|
 |MDC|Has Geometry|Yes|Yes|Yes|
 |MDC|Get Bounding Box|Yes|Yes|Yes| UtilityDemo/GetBoundingBox |
@@ -77,14 +77,14 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MG|TransformUV|Yes|Yes| | | |
 |MG|Translate|Yes|Yes| | | |
 |MG|Save to Static Mesh|Yes|Yes| | | |
-|MG|Save to Procedural Mesh Component|Yes|Yes| | | |
+|MG|Save to Procedural Mesh Component|Yes|Yes| | | | |
 |MG|Clone|Yes|Yes|Yes|
 |MG|Get Bounding Box|Yes|Yes| | | |
 |MG|Get Radius|Yes|Yes|Yes|
 |MG|Get Summary|Yes|Yes| | | |
 |MG|Get Total Triangle Count|Yes|Yes| | | |
 |MG|Get Total Vertex Count|Yes|Yes| | | |
-|MG|RebuildNormals| | | |
+|MG|RebuildNormals| | | | |
 |SS|Size|Yes|Yes|Yes| |
 |SSBPL|SelectionSet + Float|Yes|Yes|Yes|
 |SSBPL|SelectionSet + SelectionSet|Yes|Yes|Yes|  SelectionSetMathsDemo/AddSelectionSets |
