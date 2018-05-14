@@ -4,7 +4,7 @@ using UnrealBuildTool;
 
 public class MeshDeformationToolkit : ModuleRules
 {
-	public MeshDeformationToolkit(ReadOnlyTargetRules targetRules)
+	public MeshDeformationToolkit(ReadOnlyTargetRules targetRules) : base(targetRules)
 	{
 		
 		PublicIncludePaths.AddRange(
