@@ -317,7 +317,7 @@ public:
 	##################################################
 	*/
 
-	/// Conforms the mesh against collision geometry by projecting along an arbitrary vector.
+	/// Projects the mesh against collision geometry by projecting along an arbitrary vector.
 	///
 	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
 	/// for each vertex in the source mesh.
@@ -328,7 +328,7 @@ public:
 	///	\param Transform				The base transformation of the object.  It's important this is
 	///									specified as it's needed to position the line traces.
 	/// \param IgnoredActors			An optional array of actors which will be ignored by the line trace.
-	/// \param Projection				The projection to conform.  Each vertex will be moved along this
+	/// \param Projection				The projection to perform.  Each vertex will be moved along this
 	///									vector until it hits something.
 	/// \param HeightAdjust				An offset which will be applied to each vertex which collides with
 	///									an object.  If this is +ve then the object will be move up and away
@@ -342,12 +342,12 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category=MeshGeometry,
 		meta = (
-			ToolTip = "Conforms the mesh against collision geometry by projecting along a specified vector",
+			ToolTip = "Projects the mesh against collision geometry by projecting along a specified vector",
 			AutoCreateRefTerm="IgnoredActors",
 			WorldContext="WorldContextObject",
-			Keywords="drop drape cloth collision soft trace")
+			Keywords="drop drape cloth collision soft trace conform project")
 	)
-		void Conform(
+		void Project(
 			UObject* WorldContextObject,
 			FTransform Transform,
 			TArray <AActor *> IgnoredActors,
@@ -358,7 +358,7 @@ public:
 			USelectionSet *Selection=nullptr
 		);
 
-	/// Conforms the mesh against collision geometry by projecting downwards (-Z).
+	/// Projects the mesh against collision geometry by projecting downwards (-Z).
 	///
 	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
 	/// for each vertex in the source mesh.
@@ -386,10 +386,10 @@ public:
 			ToolTip = "Conforms the mesh against collision geometry by projecting downwards (-Z)",
 			AutoCreateRefTerm = "IgnoredActors",
 			WorldContext = "WorldContextObject",
-			Keywords = "drop drape cloth collision soft trace"
+			Keywords = "drop drape cloth collision soft trace conform project"
 			)
 	)
-		void ConformDown(
+		void ProjectDown(
 			UObject* WorldContextObject,
 			FTransform Transform,
 			TArray <AActor *> IgnoredActors,

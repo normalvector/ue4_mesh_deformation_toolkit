@@ -384,7 +384,7 @@ public:
 	##################################################
 	*/
 
-	/// Conforms the mesh against collision geometry by projecting it along a specified vector.
+	/// Projects the mesh against collision geometry by projecting it along a specified vector.
 	///
 	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
 	/// for each vertex in the source mesh.
@@ -410,13 +410,13 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category=MeshDeformationComponent,
 		meta = (
-			ToolTip="Conforms the mesh against collision geometry by projecting along a specified vector",
-			Keywords = "drop drape cloth collision soft trace",
+			ToolTip="Projects the mesh against collision geometry by projecting along a specified vector",
+			Keywords = "drop drape cloth collision soft trace project conform",
 			AutoCreateRefTerm="IgnoredActors",
 			WorldContext="WorldContextObject"
 			)
 	)
-		void Conform(
+		void Project(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			UObject* WorldContextObject,
 			FTransform Transform,
@@ -428,7 +428,7 @@ public:
 			USelectionSet *Selection=nullptr
 		);
 
-	/// Conforms the mesh against collision geometry by projecting downwards (-Z).
+	/// Projects the mesh against collision geometry by projecting downwards (-Z).
 	///
 	/// This is a very expensive operation with a lot of vector math operations and a LineTrace
 	/// for each vertex in the source mesh.
@@ -454,13 +454,13 @@ public:
 	UFUNCTION(
 		BlueprintCallable, Category = MeshDeformationComponent,
 		meta = (
-			ToolTip="Conforms the mesh against collision geometry by projecting downwards (-Z)",
+			ToolTip="Projects the mesh against collision geometry by projecting downwards (-Z)",
 			Keywords = "drop drape cloth collision soft trace",
 			AutoCreateRefTerm = "IgnoredActors",
 			WorldContext = "WorldContextObject"
 			)
 	)
-		void ConformDown(
+		void ProjectDown(
 			UMeshDeformationComponent *&MeshDeformationComponent,
 			UObject* WorldContextObject,
 			FTransform Transform,

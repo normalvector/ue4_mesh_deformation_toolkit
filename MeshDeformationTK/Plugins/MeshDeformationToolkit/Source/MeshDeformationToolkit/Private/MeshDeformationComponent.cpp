@@ -17,7 +17,7 @@ UMeshGeometry * UMeshDeformationComponent::CloneMeshGeometry()
 	return this->MeshGeometry->Clone();
 }
 
-void UMeshDeformationComponent::Conform(
+void UMeshDeformationComponent::Project(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	UObject* WorldContextObject,
 	FTransform Transform,
@@ -32,17 +32,17 @@ void UMeshDeformationComponent::Conform(
 
 	if (!MeshGeometry)
 	{
-		UE_LOG(MDTLog, Warning, TEXT("Conform: No meshGeometry loaded"));
+		UE_LOG(MDTLog, Warning, TEXT("Project: No meshGeometry loaded"));
 		return;
 	}
 
-	MeshGeometry->Conform(
+	MeshGeometry->Project(
 		WorldContextObject, Transform, IgnoredActors, Projection, HeightAdjust, bTraceComplex,
 		CollisionChannel, Selection
 	);
 }
 
-void UMeshDeformationComponent::ConformDown(
+void UMeshDeformationComponent::ProjectDown(
 	UMeshDeformationComponent *&MeshDeformationComponent,
 	UObject* WorldContextObject,
 	FTransform Transform,
@@ -57,11 +57,11 @@ void UMeshDeformationComponent::ConformDown(
 
 	if (!MeshGeometry)
 	{
-		UE_LOG(MDTLog, Warning, TEXT("ConformDown: No meshGeometry loaded"));
+		UE_LOG(MDTLog, Warning, TEXT("ProjectDown: No meshGeometry loaded"));
 		return;
 	}
 
-	MeshGeometry->ConformDown(
+	MeshGeometry->ProjectDown(
 		WorldContextObject, Transform, IgnoredActors, ProjectionLength, HeightAdjust,
 		bTraceComplex, CollisionChannel, Selection
 	);

@@ -19,7 +19,7 @@ UMeshGeometry::UMeshGeometry()
 	Sections = TArray<FSectionGeometry>();
 }
 
-void UMeshGeometry::Conform(
+void UMeshGeometry::Project(
 	UObject* WorldContextObject,
 	FTransform Transform,
 	TArray <AActor *> IgnoredActors,
@@ -30,7 +30,7 @@ void UMeshGeometry::Conform(
 	USelectionSet *Selection /*= nullptr */
 ) {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("Project")))
 	{
 		return;
 	}
@@ -39,12 +39,12 @@ void UMeshGeometry::Conform(
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
 	if (!World)
 	{
-		UE_LOG(MDTLog, Error, TEXT("Conform: Cannot access game world"));
+		UE_LOG(MDTLog, Error, TEXT("Project: Cannot access game world"));
 		return;
 	}
 
 	// Prepare the trace query parameters
-	const FName TraceTag("ConformTraceTag");
+	const FName TraceTag("ProjectTraceTag");
 	FCollisionQueryParams TraceQueryParams = FCollisionQueryParams();
 	TraceQueryParams.TraceTag = TraceTag;
 	TraceQueryParams.bTraceComplex = bTraceComplex;
@@ -67,7 +67,7 @@ void UMeshGeometry::Conform(
 	{
 		for (auto &Vertex : Section.Vertices)
 		{
-			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
+			// Scale the Projection vector according to the selectionSet, giving varying strength projections, all in World Space
 			const FVector ScaledProjection = Projection * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f);
 
 			// Compute the start/end positions of the trace
@@ -110,7 +110,7 @@ void UMeshGeometry::Conform(
 	}
 }
 
-void UMeshGeometry::ConformDown(
+void UMeshGeometry::ProjectDown(
 	UObject* WorldContextObject, 
 	FTransform Transform,
 	TArray <AActor *> IgnoredActors /*= nullptr*/,
@@ -121,7 +121,7 @@ void UMeshGeometry::ConformDown(
 	USelectionSet *Selection /*= nullptr */)
 {
 	// Check selectionSet size- log and abort if there's a problem. 
-	if (!SelectionSetIsRightSize(Selection, TEXT("Conform")))
+	if (!SelectionSetIsRightSize(Selection, TEXT("ProjectDown")))
 	{
 		return;
 	}
@@ -130,12 +130,12 @@ void UMeshGeometry::ConformDown(
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
 	if (!World)
 	{
-		UE_LOG(MDTLog, Error, TEXT("Conform: Cannot access game world"));
+		UE_LOG(MDTLog, Error, TEXT("ProjectDown: Cannot access game world"));
 		return;
 	}
 
 	// Prepare the trace query parameters
-	const FName TraceTag("ConformTraceTag");
+	const FName TraceTag("ProjectDownTraceTag");
 	FCollisionQueryParams TraceQueryParams = FCollisionQueryParams();
 	TraceQueryParams.TraceTag = TraceTag;
 	TraceQueryParams.bTraceComplex = bTraceComplex;
@@ -150,7 +150,7 @@ void UMeshGeometry::ConformDown(
 	{
 		for (auto &Vertex : Section.Vertices)
 		{
-			// Scale the Projection vector according to the selectionSet, giving varying strength conform, all in World Space
+			// Scale the Projection vector according to the selectionSet, giving varying strength projections, all in World Space
 			const FVector ScaledProjection = Projection * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f);
 
 			// Compute the start/end positions of the trace
