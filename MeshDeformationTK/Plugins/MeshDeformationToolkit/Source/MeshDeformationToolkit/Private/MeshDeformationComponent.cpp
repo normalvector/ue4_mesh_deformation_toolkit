@@ -214,6 +214,7 @@ void UMeshDeformationComponent::Lerp(
 {
 	MeshDeformationComponent = this;
 
+	UE_LOG(MDTLog, Warning, TEXT("IN MESH LERP"))
 	if (!MeshGeometry)
 	{
 		UE_LOG(MDTLog, Warning, TEXT("Lerp: No meshGeometry loaded"));

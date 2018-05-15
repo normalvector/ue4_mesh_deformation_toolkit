@@ -28,7 +28,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Inflate|Yes|Yes|Yes| TransformDemo/Inflate |
 |MDC|Jitter|Yes|Yes|Yes| TransformDemo/Jitter |
 |MDC|Lerp|Yes|Yes|Yes|
-|MDC|Lerp Vector|Yes|Yes|Yes|
+|MDC|Lerp Vector|Yes|Yes|Yes| TransformDemo/LerpVector |
 |MDC|Move Towards|Yes|Yes|Yes| TransformDemo/MoveTowards |
 |MDC|Rotate|Yes|Yes|Yes| TransformDemo/Rotate |
 |MDC|Rotate Around Axis|Yes|Yes|Yes| TransformDemo/RotateAboutAxis |

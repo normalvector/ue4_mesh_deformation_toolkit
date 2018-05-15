@@ -549,6 +549,9 @@ void UMeshGeometry::Jitter(FRandomStream &RandomStream, FVector Min, FVector Max
 
 void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f*/, USelectionSet *Selection /*= nullptr*/)
 {
+	UE_LOG(
+		MDTLog, Warning, TEXT("Performing LERP")
+	);
 	// Check selectionSet size- log and abort if there's a problem. 
 	if (!SelectionSetIsRightSize(Selection, TEXT("Lerp")))
 	{
@@ -587,6 +590,7 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 			// Get the existing data from the two components.
 			FVector VertexFromThis = this->Sections[SectionIndex].Vertices[VertexIndex];
 			FVector VertexFromTarget = TargetMeshGeometry->Sections[SectionIndex].Vertices[VertexIndex];
+
 			FVector NormalFromThis = this->Sections[SectionIndex].Normals[VertexIndex];
 			FVector NormalFromTarget = TargetMeshGeometry->Sections[SectionIndex].Normals[VertexIndex];
 
@@ -595,11 +599,13 @@ void UMeshGeometry::Lerp(UMeshGeometry *TargetMeshGeometry, float Alpha /*= 0.0f
 				VertexFromThis, VertexFromTarget,
 				Alpha * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f)
 			);
+			
 			// TODO: World/local logic should live here.
-			this->Sections[SectionIndex].Normals[VertexIndex] = FMath::Lerp(
-				NormalFromThis, NormalFromTarget,
-				Alpha * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f)
-			);
+			this->Sections[SectionIndex].Normals[VertexIndex] = 
+				FMath::Lerp(
+					NormalFromThis, NormalFromTarget,
+					Alpha * (Selection ? Selection->Weights[NextWeightIndex++] : 1.0f)
+				).GetSafeNormal();
 		}
 	}
 }
