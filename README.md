@@ -188,9 +188,9 @@ Every vertex in the mesh has an associated [normal](https://en.wikipedia.org/wik
 tl;dr; Shading looks weird after a deformation operation?  Use 'Rebuild Normals`.
 
 # Code documentation and quality
-All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter) and will be made available as API docs online at some point.
+API documentation for this plugin is available at [http://mdtapi.normalvector.com](http://mdtapi.normalvector.com) and was build from comments processed using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter) and will be made available as API docs online at some point.
 
-The demo contents have been arranged to match [Allar's Gamemakin UE4 Style Guide](https://github.com/Allar/ue4-style-guide) using the [Linter tool](https://www.unrealengine.com/marketplace/linter) available from the UE4 Marketplace.  The Linter is not needed to use the Mesh Deformation Toolkit however, it's only used by myself to find potential problems.
+Most of  the demo contents have been arranged to match [Allar's Gamemakin UE4 Style Guide](https://github.com/Allar/ue4-style-guide) using the [Linter tool](https://www.unrealengine.com/marketplace/linter) available from the UE4 Marketplace.  The Linter is not needed to use the Mesh Deformation Toolkit however, it's only used by myself to find potential problems.  The rest of the content will be linted once the plugin, or it's replacement, becomes available.
 
 # Thanks
 * [Jordan Peck](https://github.com/Auburns) for his splendid [FastNoise](https://github.com/Auburns/FastNoise) C++ library, which is used for all of the noise generation in the plugin.
