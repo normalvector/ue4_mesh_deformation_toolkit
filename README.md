@@ -179,7 +179,13 @@ For now though I can only point you towards [a tutorial I wrote which started al
 * The MeshDeformationComponent itself just contains a set of mesh geometry and offers BP-callable selection and transform nodes which just delegate the call to the mesh.
 
 # General Guidelines
+## Performance
 This plugin can be used in the editor, at runtime, and even dynamically to make objects deform dynamically during gameplay.  Remember though that some deformation operations such as 'Rebuild Normals' can take some time and so be careful as it could cause significant hitches in framerate.  There're less requirements to restirct yourself with modifications during `Begin Play` as that will only run once and generally you can hide it with a level loading screen, and with things called in the construction script you can do a lot of work as all you have to pay is the storage cost for the mesh.
+
+## Normals
+Every vertex in the mesh has an associated [normal](https://en.wikipedia.org/wiki/Normal_\(geometry\)) which indicates the direction the surface is pointing at that point, and which is used by the lighting system to get the shading correct.  When a mesh is deformed and the shape is changed this should also affect the normals but this is an expensive operation and isn't done by default.  To fix this thee's a 'Rebuild Normals' node which will recalculate the surface normals based on the current position of the vertices to make the shading look right again.
+
+tl;dr; Shading looks weird after a deformation operation?  Use 'Rebuild Normals`.
 
 # Code documentation and quality
 All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter) and will be made available as API docs online at some point.
