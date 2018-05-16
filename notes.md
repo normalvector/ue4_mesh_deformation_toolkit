@@ -112,3 +112,26 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |SSBPL|SelectionSet - Float|Yes|Yes|Yes| |
 |SSBPL|Float - SelectionSet|Yes|Yes|Yes| |
 |SSBPL|SelectionSet - SelectionSet|Yes|Yes|Yes| | SelectionSetMathsDemo/SubtractSelectionSets |
+
+Order of demos:
+* PasthroughDemo/Passthrough
+* SelectionDemo/SelectAllTranslate
+* SelectionDemo/SelectNearTranslatePlane
+* SelectionDemo/SelectNearTranslateMaterialBall
+* SelectionDemo/SelectNearLineTranslate
+* SelectionDemo/SelectNearLineInfiniteTranslate
+* SelectionDemo/SelectNearSplineTranslate
+* SelectionDemo/SelectInVolumeTranslate
+* SelectionDemo/SelectLinearTranslate
+* SelectionDemo/SelectByNoiseTranslate
+* SelectionDemo/SelectByNoiseVoronoiTranslate
+* SelectionDemo/SelectByNormalTranslate
+* SelectionDemo/SelectByTextureTranslate
+* SelectionDemo/SelectBySectionTranslate
+* SelectionDemo/SelectByVertexRangeTranslate
+
+Texture Encoding:
+* Greyscale: Texture: Compression Grayscale (R8, RGB8 sRGB), Pixel Format PF G8, SRGB No
+* Default: Texture: Compression Default (DXT1/5, BC1/3 on DX11), Pixel Format PF DXT1, SRGB Yes
+* Masks: Texture: Compression Masks (no sRGB), Pixel Format PF DXT1, SRGB No
+* User Interface: Texture: Compression UserInterface2D (RGBA), Pixel Format PF B8G8R8A8, SRGB Yes

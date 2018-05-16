@@ -9,6 +9,20 @@
 class MESHDEFORMATIONTOOLKIT_API Utility
 {
 public:
+
+	/// A useful utility to convert enumerations to strings- mainly for debug purposes.
+	///
+	/// This is used as follows:
+	///   ETeam Team = ETeam::Alpha;
+	///   FString message = TEXT("Our enum value: ") + EnumToString(TEXT("ETeam"), static_cast<uint8>(Team));
+	///  This prints: "Our enum value: ETeam::Alpha"
+	///
+	/// This is based on code from https://forums.unrealengine.com/development-discussion/c-gameplay-programming/32761-uenum-and-getvalueasstring
+	///
+	/// \param Enum				The name of the enum, TEXT("EMyEnum")
+	/// \param EnumValue		The value to convert
+	static const FString EnumToString(const TCHAR* Enum, int32 EnumValue);
+
 	/// Given a plane this returns the nearest point on it to the vertex provided
 	static FVector NearestPointOnPlane(FVector Vertex, FVector PointOnPlane, FVector PlaneNormal);
 

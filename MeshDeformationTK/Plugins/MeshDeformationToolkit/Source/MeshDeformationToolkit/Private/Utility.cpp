@@ -3,6 +3,19 @@
 #include "MeshDeformationToolkit.h"
 #include "Utility.h"
 
+const FString Utility::EnumToString(const TCHAR* Enum, int32 EnumValue)
+{
+	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);
+	if (!EnumPtr)
+		return NSLOCTEXT("Invalid", "Invalid", "Invalid").ToString();
+
+#if WITH_EDITOR
+	return EnumPtr->GetDisplayNameTextByIndex(EnumValue).ToString();
+#else
+	return EnumPtr->GetEnumName(EnumValue);
+#endif
+}
+
 bool Utility::HaveTwoSelectionSetsOfSameSize(
 	USelectionSet *SelectionA,
 	USelectionSet *SelectionB,
@@ -65,3 +78,4 @@ FVector Utility::NearestPointOnPlane(FVector Vertex, FVector PointOnPlane, FVect
 		FVector::PointPlaneDist(Vertex, PointOnPlane, PlaneNormal.GetSafeNormal());
 	return (Vertex-(PlaneNormal * DistanceToPlane));
 }
+

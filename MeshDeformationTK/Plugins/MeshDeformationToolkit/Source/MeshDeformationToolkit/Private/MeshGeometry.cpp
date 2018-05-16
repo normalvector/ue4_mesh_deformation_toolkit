@@ -1164,25 +1164,47 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 		UE_LOG(MDTLog, Warning, TEXT("SelectByTexture: No Texture2D provided"));
 		return nullptr;
 	}
+	if (Texture2D->GetPixelFormat() != EPixelFormat::PF_G8 &&
+		Texture2D->GetPixelFormat() != EPixelFormat::PF_B8G8R8A8)
+	{
+		UE_LOG(MDTLog, Warning, TEXT("SelectByTexture: Cannot handle provided texture format, encode as grayscale or UserInterface2D"));
+		return nullptr;
+	}
+	
+	// Warn if the texture has SRGB turned on - warn if it's not but don't exit.
+	if (Texture2D->SRGB) {
+		UE_LOG(MDTLog, Warning, TEXT("SelectByTexture: Texture has SRGB enabled, this is for color maps and can cause problems with masks"));
+	}
 
 	/// \todo Log a message when we do this...
-	Texture2D->SRGB = false;
-	Texture2D->CompressionSettings = TC_VectorDisplacementmap;
-	Texture2D->UpdateResource();
+	//Texture2D->SRGB = false;
+	//Texture2D->CompressionSettings = TC_VectorDisplacementmap;
+	//Texture2D->UpdateResource();
 
 	// Get the raw color data from the texture
 	FTexture2DMipMap *MipMap0 = &Texture2D->PlatformData->Mips[0];
 	int32 TextureWidth = MipMap0->SizeX;
 	int32 TextureHeight = MipMap0->SizeY;
 	FByteBulkData *BulkData = &MipMap0->BulkData;
-
-	// Check we got the data and lock it
 	if (!BulkData)
+	{
+		UE_LOG(MDTLog, Error, TEXT("SelectByTexture: Could not access bulk data for texture"));
+		return nullptr;
+	}
+
+	// Lock the bulkdata
+	void *LockedBulkData = BulkData->Lock(LOCK_READ_ONLY);
+	if (!LockedBulkData)
 	{
 		UE_LOG(MDTLog, Error, TEXT("SelectByTexture: Could not lock bulk data for texture"));
 		return nullptr;
 	}
-	FColor *ColorArray = static_cast<FColor*>(BulkData->Lock(LOCK_READ_ONLY));
+	UE_LOG(MDTLog, Log, TEXT("SelectByTexture: Texture LOCKED"));
+
+
+	// Prepare arrays of colors and grayscale settings- we can use the correct one later
+	FColor *ColorArray = static_cast<FColor*>(LockedBulkData);
+	uint8 *GrayscaleArray = static_cast<uint8*>(LockedBulkData);
 
 	// Iterate over the sections, and the vertices in each section.
 	for (auto &Section:this->Sections)
@@ -1197,12 +1219,21 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 			TextureX = FMath::Clamp(TextureX, 0, TextureWidth-1);
 			TextureY = FMath::Clamp(TextureY, 0, TextureHeight-1);
 
-			// Get the color and access the correct channel.
-			int32 ArrayIndex = (TextureY * TextureWidth)+TextureX;
-			FLinearColor Color = ColorArray[ArrayIndex];
+			// Calculate the index into the texture arrays
+			int32 ArrayIndex = (TextureY * TextureWidth) + TextureX;
 
-			switch (TextureChannel)
-			{
+			// We now have things different based on grayscale vs color
+			if (Texture2D->GetPixelFormat() == PF_G8) {
+				// Grayscale- simple return ignoring texture channel
+				float weight = (float)GrayscaleArray[ArrayIndex] / 256.0f;
+				NewSelectionSet->Weights.Emplace(weight);
+			}
+			else {
+				// Get the color and access the correct channel.
+				FLinearColor Color = ColorArray[ArrayIndex];
+
+				switch (TextureChannel)
+				{
 				case ETextureChannel::Red:
 					NewSelectionSet->Weights.Emplace(Color.R);
 					break;
@@ -1215,12 +1246,14 @@ USelectionSet * UMeshGeometry::SelectByTexture(UTexture2D *Texture2D, ETextureCh
 				case ETextureChannel::Alpha:
 					NewSelectionSet->Weights.Emplace(Color.A);
 					break;
+				}
 			}
 		}
 	}
 
 	// Unlock the texture data
 	BulkData->Unlock();
+	UE_LOG(MDTLog, Log, TEXT("SelectByTexture: Texture UNLOCKED"));
 
 	return NewSelectionSet;
 }
