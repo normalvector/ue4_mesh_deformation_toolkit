@@ -178,6 +178,9 @@ For now though I can only point you towards [a tutorial I wrote which started al
 * Every Transform node is actually currently implemented as a method on the mesh geometry which iterates over the vertices in the mesh and applies the transformation to each of them in order.  Selections are handled by basically acting as a blend between the original position and the fully transformed position, although the nature of the lerp can vary between methods (Translate has a straightforward spatial blend, but Rotate actually blends the rotational angle for better results).  Most of these are implemented in a Blueprint Library class as they're utility functions rather than being called on a class.
 * The MeshDeformationComponent itself just contains a set of mesh geometry and offers BP-callable selection and transform nodes which just delegate the call to the mesh.
 
+# General Guidelines
+This plugin can be used in the editor, at runtime, and even dynamically to make objects deform dynamically during gameplay.  Remember though that some deformation operations such as 'Rebuild Normals' can take some time and so be careful as it could cause significant hitches in framerate.  There're less requirements to restirct yourself with modifications during `Begin Play` as that will only run once and generally you can hide it with a level loading screen, and with things called in the construction script you can do a lot of work as all you have to pay is the storage cost for the mesh.
+
 # Code documentation and quality
 All C++ code has been documented using [Doxygen](http://www.stack.nl/~dimitri/doxygen/) together with [my Doxygen source filter to remove UE4 macros](https://github.com/normalvector/ue4_doxygen_source_filter) and will be made available as API docs online at some point.
 
