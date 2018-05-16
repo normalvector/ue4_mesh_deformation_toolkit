@@ -1,8 +1,7 @@
 <p align="center">
-  <img width="512" height="512" src="https://raw.githubusercontent.com/normalvector/ue4_mesh_deformation_toolkit/master/GithubContent/mdt_logo.png" alt="Mesh Deformation Toolkit">
+  <img width="256" height="256" src="https://raw.githubusercontent.com/normalvector/ue4_mesh_deformation_toolkit/master/GithubContent/mdt_logo.png" alt="Mesh Deformation Toolkit">
 </p>
 
-# Introduction
 Full mesh deformation toolkit inside UE4, including tools (Move, Scale, Rotate, Spherize etc) based on popular 3d modeling packages, and a set of utilities to control which parts of a mesh will be affected.
 
 In order to allow complex effects this supports:
