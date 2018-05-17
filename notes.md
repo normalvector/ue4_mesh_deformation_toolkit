@@ -114,8 +114,11 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |SSBPL|SelectionSet - SelectionSet|Yes|Yes|Yes| | SelectionSetMathsDemo/SubtractSelectionSets |
 
 Order of demos and final sign-off:
+## Passthrough
 * PassthroughDemo/Passthrough
-* SelectionDemo/SelectNearTranslateMaterialBall
+
+## SelectionDemo
+* SelectNearTranslatePlane
 * SelectionDemo/SelectNearTranslatePlane
 * SelectionDemo/SelectNearLineTranslate
 * SelectionDemo/SelectNearLineInfiniteTranslate
@@ -130,9 +133,32 @@ Order of demos and final sign-off:
 * SelectionDemo/SelectByVertexRangeTranslate
 * SelectionDemo/SelectAllTranslate
 
+## TransformDemo
+* SelectionDemo/SelectNearTranslatePlane (it's a translate demo)
+* TransformDemo/Rotate
+* TransformDemo/RotateAroundAxis
+* TransformDemo/Scale
+* TransformDemo/ScaleAlongAxis
+* TransformDemo/Transform
+* TransformDemo/MoveTowards
+* TransformDemo/Jitter
+* TransformDemo/Inflate
+* TransformDemo/Sphereize
+* TransformDemo/TransformUV
+* TransformDemo/FlipTextureUV
+* TransformDemo/FitToSpline
+* TransformDemo/FitToSplineProfile
+* TransformDemo/FitToSplineAnimated
+* TransformDemo/ProjectDown
+* TransformDemo/Project
+* TransformDemo/FitToSplineProjectDown
+* TransformDemo/LerpVector
+* TransformDemo/Lerp
+
 Signed-off directories:
 * PassthroughDemo
 * SelectedionDemo
+* TransformDemo
 
 
 Texture Encoding:
