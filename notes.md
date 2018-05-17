@@ -155,10 +155,26 @@ Order of demos and final sign-off:
 * TransformDemo/LerpVector
 * TransformDemo/Lerp
 
+## SelectionSetMathsDemo
+* SelectionSetMathsDemo/AddSelectionSets
+* SelectionSetMathsDemo/SubtractSelectionSets
+* SelectionSetMathsDemo/MultiplyingSelectionSets
+* SelectionSetMathsDemo/MaxSelectionSets
+* SelectionSetMathsDemo/MinSelectionSets
+* SelectionSetMathsDemo/Clamp
+* SelectionSetMathsDemo/Ease
+* SelectionSetMathsDemo/EaseSelectByNoise
+* SelectionSetMathsDemo/RemapToCurve
+* SelectionSetMathsDemo/RemapPeriodic
+* SelectionSetMathsDemo/SelectByNoiseRemapToCurver
+
+
+
 Signed-off directories:
 * PassthroughDemo
 * SelectedionDemo
 * TransformDemo
+* SelectionSetMathsDemo
 
 
 Texture Encoding:
