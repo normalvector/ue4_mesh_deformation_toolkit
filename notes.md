@@ -168,13 +168,28 @@ Order of demos and final sign-off:
 * SelectionSetMathsDemo/RemapPeriodic
 * SelectionSetMathsDemo/SelectByNoiseRemapToCurver
 
+## LoadGeometryDemo
+* LoadGeometryDemo/LoadFromMeshGeometry
+* LoadGeometryDemo/LoadFromMeshDeformationComponent
 
+## UtilityDemo
+* UtilityDemo/RebuildNormals
+* UtilityDemo/GetBoundingBox
+* UtilityDemo/Metadata
+
+
+## Complex Demos
+* SmallWorldDemo/SmallWorld
+* LandscapeDemo/Landscape
+* RealtimeDeformationDemo/RealtimeDeformation
 
 Signed-off directories:
 * PassthroughDemo
 * SelectedionDemo
 * TransformDemo
 * SelectionSetMathsDemo
+* LoadGeometryDemo
+* LandscapeDemo
 
 
 Texture Encoding:
