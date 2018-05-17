@@ -27,7 +27,7 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |MDC|Flip Texture UV|Yes|Yes|Yes| TransformDemo/FlipTextureUV |
 |MDC|Inflate|Yes|Yes|Yes| TransformDemo/Inflate |
 |MDC|Jitter|Yes|Yes|Yes| TransformDemo/Jitter |
-|MDC|Lerp|Yes|Yes|Yes|
+|MDC|Lerp|Yes|Yes|Yes| TransformDemo/Lerp |
 |MDC|Lerp Vector|Yes|Yes|Yes| TransformDemo/LerpVector |
 |MDC|Move Towards|Yes|Yes|Yes| TransformDemo/MoveTowards |
 |MDC|Rotate|Yes|Yes|Yes| TransformDemo/Rotate |
@@ -113,11 +113,10 @@ This is a list of all methods exposed as BP nodes together with their status as 
 |SSBPL|Float - SelectionSet|Yes|Yes|Yes| |
 |SSBPL|SelectionSet - SelectionSet|Yes|Yes|Yes| | SelectionSetMathsDemo/SubtractSelectionSets |
 
-Order of demos:
-* PasthroughDemo/Passthrough
-* SelectionDemo/SelectAllTranslate
-* SelectionDemo/SelectNearTranslatePlane
+Order of demos and final sign-off:
+* PassthroughDemo/Passthrough
 * SelectionDemo/SelectNearTranslateMaterialBall
+* SelectionDemo/SelectNearTranslatePlane
 * SelectionDemo/SelectNearLineTranslate
 * SelectionDemo/SelectNearLineInfiniteTranslate
 * SelectionDemo/SelectNearSplineTranslate
@@ -129,6 +128,12 @@ Order of demos:
 * SelectionDemo/SelectByTextureTranslate
 * SelectionDemo/SelectBySectionTranslate
 * SelectionDemo/SelectByVertexRangeTranslate
+* SelectionDemo/SelectAllTranslate
+
+Signed-off directories:
+* PassthroughDemo
+* SelectedionDemo
+
 
 Texture Encoding:
 * Greyscale: Texture: Compression Grayscale (R8, RGB8 sRGB), Pixel Format PF G8, SRGB No
