@@ -9,7 +9,7 @@ public class MeshDeformationToolkit : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"MeshDeformationToolkit/Public"
+				//"MeshDeformationToolkit/Public"
 				// ... add public include paths required here ...
 			}
 			);
@@ -17,7 +17,7 @@ public class MeshDeformationToolkit : ModuleRules
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
-				"MeshDeformationToolkit/Private",
+				//"MeshDeformationToolkit/Private",
 				// ... add other private include paths required here ...
 			}
 			);

@@ -31,7 +31,6 @@ public:
 			CompactNodeTitle = "+",
 			ToolTip = "[SelectionSet + Float] Add a constant Float to all values of a SelectionSet",
 			Keywords="+ add plus",
-			CommutativeAssociativeBinaryOperator="true",
 			Category="Math|SelectionSet"
 			)
 	)
@@ -294,7 +293,6 @@ public:
 			CompactNodeTitle="*",
 			ToolTip="[SelectionSet * Float] Multiply the values in a SelectionSet by a float",
 			Keywords="* multiply times",
-			CommutativeAssociativeBinaryOperator="true",
 			Category="Math|SelectionSet"
 		)
 	)
