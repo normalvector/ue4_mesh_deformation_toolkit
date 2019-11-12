@@ -112,7 +112,7 @@
 		},
 		{
 			"Name": "PluginBrowser",
-			"Enabled": false
+			"Enabled": true
 		},
 		{
 			"Name": "ProxyLODPlugin",
@@ -263,10 +263,6 @@
 		},
 		{
 			"Name": "PhysXVehicles",
-			"Enabled": false
-		},
-		{
-			"Name": "RuntimePhysXCooking",
 			"Enabled": false
 		},
 		{
